@@ -220,6 +220,10 @@ export default function BookAppointment() {
                 <p className="text-slate-500 mb-1 font-medium">Time</p>
                 <p className="font-bold text-slate-900">{selectedTime}</p>
               </div>
+              <div>
+                <p className="text-slate-500 mb-1 font-medium">Priority</p>
+                <p className={`font-bold capitalize ${patientDetails.priority === 'urgent' ? 'text-red-600' : 'text-slate-900'}`}>{patientDetails.priority || 'Routine'}</p>
+              </div>
             </div>
           </div>
 
