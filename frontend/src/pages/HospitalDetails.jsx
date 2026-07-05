@@ -126,11 +126,23 @@ export default function HospitalDetails() {
               <div className="space-y-4 mb-8">
                 <div className="flex items-start gap-3 text-slate-600">
                   <MapPin className="text-blue-600 shrink-0 mt-0.5" size={20} />
-                  <span className="text-sm font-medium">{hospital.address}</span>
+                  <a 
+                    href={`https://www.google.com/maps/search/?api=1&query=${hospital.latitude},${hospital.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium hover:text-blue-600 hover:underline transition-colors"
+                  >
+                    {hospital.address}
+                  </a>
                 </div>
                 <div className="flex items-start gap-3 text-slate-600">
                   <Phone className="text-blue-600 shrink-0 mt-0.5" size={20} />
-                  <span className="text-sm font-medium">{hospital.phone || "+1-800-MEDISLOT"}</span>
+                  <a 
+                    href={`tel:${hospital.phone || "+18000000000"}`}
+                    className="text-sm font-medium hover:text-blue-600 hover:underline transition-colors"
+                  >
+                    {hospital.phone || "+1-800-MEDISLOT"}
+                  </a>
                 </div>
                 <div className="flex items-start gap-3 text-slate-600">
                   <Calendar className="text-blue-600 shrink-0 mt-0.5" size={20} />

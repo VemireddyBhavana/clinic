@@ -37,7 +37,12 @@ exports.getNearbyHospitals = async (req, res) => {
       const overpassQuery = `[out:json];node(around:15000,${latitude},${longitude})[amenity=hospital];out 15;`;
       const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
       
-      const response = await axios.get(overpassUrl, { timeout: 8000 }); // 8s timeout to keep it snappy
+      const response = await axios.get(overpassUrl, { 
+        timeout: 8000,
+        headers: {
+          'User-Agent': 'MediSlot-AI-App/1.0 (Contact: admin@medislot.ai)'
+        }
+      });
       
       if (response.data && response.data.elements && response.data.elements.length > 0) {
         const bulkOps = [];

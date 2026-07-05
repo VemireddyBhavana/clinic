@@ -121,11 +121,23 @@ export default function Hospitals() {
                       <div className="space-y-2 mb-4">
                         <div className="flex items-start gap-2 text-slate-500 text-xs">
                           <MapPin size={14} className="shrink-0 mt-0.5 text-blue-500" />
-                          <span>{hospital.address}</span>
+                          <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${hospital.latitude},${hospital.longitude}`} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="hover:text-blue-600 hover:underline transition-colors"
+                          >
+                            {hospital.address}
+                          </a>
                         </div>
                         <div className="flex items-start gap-2 text-slate-500 text-xs">
                           <Phone size={14} className="shrink-0 mt-0.5 text-blue-500" />
-                          <span>{hospital.phone || "+1 (800) MEDISLOT"}</span>
+                          <a 
+                            href={`tel:${hospital.phone || "+18000000000"}`} 
+                            className="hover:text-blue-600 hover:underline transition-colors"
+                          >
+                            {hospital.phone || "+1 (800) MEDISLOT"}
+                          </a>
                         </div>
                         <div className="flex items-start gap-2 text-slate-500 text-xs">
                           <Clock size={14} className="shrink-0 mt-0.5 text-blue-500" />
