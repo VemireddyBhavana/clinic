@@ -118,9 +118,12 @@ export default function BookAppointment() {
     try {
       const appointmentData = {
         doctorId: selectedDoctorId,
-        date: selectedDate,
-        timeSlot: selectedTime,
-        ...patientDetails
+        appointmentDate: selectedDate,
+        appointmentTime: selectedTime,
+        patientName: patientDetails.patientName,
+        patientPhone: patientDetails.patientPhone,
+        patientEmail: patientDetails.patientEmail || 'no-email@provided.com',
+        notes: patientDetails.reasonForVisit
       };
       
       await bookAppointment(appointmentData);
