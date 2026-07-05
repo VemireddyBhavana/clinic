@@ -18,7 +18,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-4 items-center">
             
             {/* Left Content */}
-            <div className="lg:col-span-6 z-10 pr-0 lg:pr-8">
+            <div className="lg:col-span-5 z-10 pr-0 lg:pr-8">
               <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-bold mb-6 border border-blue-100">
                 <Activity size={14} />
                 AI-Powered Smart Scheduling
@@ -85,33 +85,24 @@ export default function Home() {
             </div>
             
             {/* Right Content */}
-            <div className="lg:col-span-6 relative flex justify-center lg:justify-end mt-12 lg:mt-0">
-              {/* Doctor Image & Background */}
-              <div className="relative w-full max-w-[500px]">
-                {/* Gray rounded background behind doctor */}
-                <div className="absolute bottom-10 right-0 left-10 h-[70%] bg-slate-50 rounded-3xl -z-10"></div>
+            <div className="lg:col-span-7 relative flex justify-end mt-12 lg:mt-0">
+              {/* Container for Doctor and Form */}
+              <div className="w-full flex flex-col lg:flex-row items-center justify-end gap-6 lg:gap-8">
                 
-                {/* Doctor Image */}
-                <img 
-                  src="https://res.cloudinary.com/de8opipom/image/upload/v1783233370/WhatsApp_Image_2026-07-05_at_12.03.42_PM_yh82us.jpg" 
-                  alt="Doctor" 
-                  className="relative z-10 w-full h-auto object-contain max-h-[500px]"
-                />
-
-                {/* Floating Recommended Slot Badge */}
-                <div className="absolute top-1/4 -left-6 z-20 bg-white p-3 rounded-xl shadow-lg border border-slate-100 flex gap-3 items-center">
-                  <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                    <Calendar size={16} />
-                  </div>
-                  <div>
-                    <div className="text-[10px] text-slate-500 font-medium uppercase tracking-wider mb-0.5">Recommended Slot</div>
-                    <div className="text-sm font-bold text-slate-900 leading-none mb-1">Today, 10:30 AM</div>
-                    <div className="text-[10px] text-green-700 font-bold bg-green-50 inline-block px-1.5 py-0.5 rounded">Recommended</div>
-                  </div>
+                {/* Doctor Image Group */}
+                <div className="relative w-full lg:w-1/2 max-w-[400px]">
+                  {/* Gray rounded background behind doctor */}
+                  <div className="absolute bottom-4 right-0 left-4 h-[80%] bg-blue-50/50 rounded-[40px] -z-10"></div>
+                  
+                  <img 
+                    src="https://res.cloudinary.com/de8opipom/image/upload/v1783233370/WhatsApp_Image_2026-07-05_at_12.03.42_PM_yh82us.jpg" 
+                    alt="Doctor" 
+                    className="relative z-10 w-full h-auto object-contain"
+                  />
                 </div>
                 
-                {/* Embedded Booking Form Overlay */}
-                <div className="absolute -bottom-16 lg:-bottom-24 -left-4 lg:-left-20 right-4 lg:right-0 z-30 bg-white p-6 rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.08)] border border-slate-100">
+                {/* Embedded Booking Form - Positioned strictly beside */}
+                <div className="w-full lg:w-[420px] shrink-0 z-30 bg-white p-6 rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.08)] border border-slate-100">
                   <h3 className="text-lg font-bold text-slate-900 mb-1">Book Your Appointment</h3>
                   <p className="text-[13px] text-slate-500 mb-5">Get AI-recommended slots based on availability & lower wait time.</p>
                   
@@ -126,16 +117,22 @@ export default function Home() {
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold text-slate-700 mb-1.5">Select Specialization</label>
-                      <select className="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-500 bg-white">
-                        <option>Select specialization</option>
+                      <select className="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-700 bg-white cursor-pointer">
+                        <option value="" disabled selected>Select specialization</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="dermatology">Dermatology</option>
+                        <option value="neurology">Neurology</option>
+                        <option value="orthopedics">Orthopedics</option>
+                        <option value="pediatrics">Pediatrics</option>
+                        <option value="general">General Medicine</option>
                       </select>
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold text-slate-700 mb-1.5">Preferred Date</label>
-                      <div className="relative">
-                        <input type="text" placeholder="Select date" className="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
-                        <Calendar size={14} className="absolute right-3 top-3 text-slate-400" />
-                      </div>
+                      <input 
+                        type="date" 
+                        className="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-700 cursor-pointer" 
+                      />
                     </div>
                   </div>
                   
@@ -145,21 +142,21 @@ export default function Home() {
 
                   {/* Form Trust Indicators */}
                   <div className="flex justify-between items-start border-t border-slate-100 pt-4">
-                    <div className="flex items-start gap-2">
+                    <div className="flex items-start gap-1.5">
                       <Clock size={16} className="text-blue-600 shrink-0 mt-0.5" />
                       <div>
                         <div className="text-[11px] font-bold text-slate-900 leading-tight mb-0.5">Lower Wait Time</div>
                         <div className="text-[10px] text-slate-500">AI finds the best slot</div>
                       </div>
                     </div>
-                    <div className="flex items-start gap-2">
+                    <div className="flex items-start gap-1.5">
                       <ShieldCheck size={16} className="text-blue-600 shrink-0 mt-0.5" />
                       <div>
                         <div className="text-[11px] font-bold text-slate-900 leading-tight mb-0.5">No-Show Reduction</div>
                         <div className="text-[10px] text-slate-500">Smart reminders</div>
                       </div>
                     </div>
-                    <div className="flex items-start gap-2">
+                    <div className="flex items-start gap-1.5">
                       <Lock size={16} className="text-blue-600 shrink-0 mt-0.5" />
                       <div>
                         <div className="text-[11px] font-bold text-slate-900 leading-tight mb-0.5">Secure Booking</div>

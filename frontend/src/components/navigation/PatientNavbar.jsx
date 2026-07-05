@@ -31,10 +31,6 @@ export default function PatientNavbar() {
         
         {/* Actions */}
         <div className="flex items-center space-x-3 lg:space-x-5">
-          <div className="hidden lg:flex items-center text-gray-700 space-x-1.5 mr-2">
-            <Phone size={18} className="text-blue-600" />
-            <span className="text-sm font-semibold">+91 98765 43210</span>
-          </div>
           <Link to="/doctors">
             <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 px-6 rounded-lg transition-colors shadow-sm">
               Book Appointment
