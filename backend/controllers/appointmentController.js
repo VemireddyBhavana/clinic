@@ -59,8 +59,10 @@ exports.bookAppointment = async (req, res) => {
     // 3. Create Notification Log entries automatically in DB
     const emailNotification = new Notification({
       appointmentId: savedAppointment._id,
+      patientName: patientName,
       patientEmail: patientEmail,
-      type: 'email',
+      type: 'booking_confirmation',
+      channel: 'email',
       message: `Your appointment with ${doctor.name} at ${hospitalName} is confirmed for ${appointmentDate} at ${appointmentTime}.`,
       status: 'pending'
     });
@@ -68,12 +70,29 @@ exports.bookAppointment = async (req, res) => {
 
     const whatsappNotification = new Notification({
       appointmentId: savedAppointment._id,
+      patientName: patientName,
       patientPhone: patientPhone,
-      type: 'whatsapp',
+      type: 'booking_confirmation',
+      channel: 'whatsapp',
       message: `Hello ${patientName}, your appointment at ${hospitalName} is confirmed for ${appointmentDate} at ${appointmentTime}.`,
       status: 'pending'
     });
     await whatsappNotification.save();
+
+    // Create a scheduled reminder (1 day before)
+    const appointmentDateObj = new Date(appointmentDate);
+    appointmentDateObj.setDate(appointmentDateObj.getDate() - 1);
+    const reminderNotification = new Notification({
+      appointmentId: savedAppointment._id,
+      patientName: patientName,
+      patientPhone: patientPhone,
+      type: 'reminder',
+      channel: 'whatsapp',
+      scheduledFor: appointmentDateObj,
+      message: `Reminder: You have an appointment tomorrow at ${hospitalName} with ${doctor.name} at ${appointmentTime}.`,
+      status: 'pending'
+    });
+    await reminderNotification.save();
 
     // 4. Send External Notifications (WhatsApp & Email)
     const emailSubject = 'Booking Confirmation - MediSlot AI';
@@ -168,12 +187,27 @@ exports.updateAppointment = async (req, res) => {
     );
     if (!updatedAppointment) return res.status(404).json({ message: 'Appointment not found' });
     
-    // Auto trigger notification if status changed to no-show
-    if (req.body.status === 'no-show') {
+    // Auto trigger notification if status changed to no-show or cancelled
+    if (req.body.status === 'no-show' || req.body.status === 'cancelled') {
       await Notification.create({
         appointmentId: updatedAppointment._id,
-        message: `Patient ${updatedAppointment.patientName} was a no-show for appointment with ${updatedAppointment.doctorName}.`,
+        patientName: updatedAppointment.patientName,
+        patientPhone: updatedAppointment.patientPhone,
+        patientEmail: updatedAppointment.patientEmail,
+        type: 'follow_up',
+        channel: 'whatsapp',
+        message: `Hi ${updatedAppointment.patientName}, you missed your appointment with Dr. ${updatedAppointment.doctorName}. Would you like to reschedule?`,
+        status: 'pending',
+        scheduledFor: new Date() // send immediately
+      });
+      
+      // Also keep the internal alert
+      await Notification.create({
+        appointmentId: updatedAppointment._id,
+        patientName: updatedAppointment.patientName,
         type: 'alert',
+        channel: 'system',
+        message: `Patient ${updatedAppointment.patientName} was a ${req.body.status} for appointment with Dr. ${updatedAppointment.doctorName}.`,
         status: 'pending'
       });
     }

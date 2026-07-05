@@ -36,15 +36,17 @@ export default function AdminNotifications() {
   const getTypeIcon = (type) => {
     switch (type) {
       case 'alert': return <AlertTriangle size={16} className="text-red-500" />;
-      case 'follow-up': return <CheckCircle2 size={16} className="text-purple-500" />;
+      case 'follow_up': return <CheckCircle2 size={16} className="text-purple-500" />;
+      case 'reminder': return <Clock size={16} className="text-yellow-500" />;
+      case 'booking_confirmation': return <CheckCircle2 size={16} className="text-emerald-500" />;
       default: return <Bell size={16} className="text-blue-500" />;
     }
   };
 
   const getStatusBadge = (status) => {
-    return status === 'sent' 
-      ? <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">Sent</span>
-      : <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">Pending</span>;
+    if (status === 'sent') return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">Sent</span>;
+    if (status === 'failed') return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200">Failed</span>;
+    return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">Pending</span>;
   };
 
   const filteredNotifications = notifications.filter(n => typeFilter === 'all' || n.type === typeFilter);
@@ -75,7 +77,8 @@ export default function AdminNotifications() {
                 { value: 'all', label: 'All Types' },
                 { value: 'alert', label: 'Alerts' },
                 { value: 'reminder', label: 'Reminders' },
-                { value: 'follow-up', label: 'Follow-ups' }
+                { value: 'follow_up', label: 'Follow-ups' },
+                { value: 'booking_confirmation', label: 'Confirmations' }
               ]}
             />
           </div>
@@ -94,8 +97,8 @@ export default function AdminNotifications() {
               <thead className="bg-slate-50 border-b border-slate-200 text-slate-500">
                 <tr>
                   <th className="px-6 py-4 font-semibold w-1/4">Notification Details</th>
-                  <th className="px-6 py-4 font-semibold w-1/2">Message Context</th>
-                  <th className="px-6 py-4 font-semibold">Time</th>
+                  <th className="px-6 py-4 font-semibold w-1/3">Message Context</th>
+                  <th className="px-6 py-4 font-semibold">Scheduled For</th>
                   <th className="px-6 py-4 font-semibold text-right">Status</th>
                 </tr>
               </thead>
@@ -105,31 +108,50 @@ export default function AdminNotifications() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className={clsx(
-                          'w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0',
+                          'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0',
                           notif.type === 'alert' ? 'bg-red-50' : 
-                          notif.type === 'follow-up' ? 'bg-purple-50' : 'bg-blue-50'
+                          notif.type === 'follow_up' ? 'bg-purple-50' : 
+                          notif.type === 'reminder' ? 'bg-yellow-50' :
+                          notif.type === 'booking_confirmation' ? 'bg-emerald-50' : 'bg-blue-50'
                         )}>
                           {getTypeIcon(notif.type)}
                         </div>
                         <div>
-                          <p className="font-mono font-medium text-slate-900">{notif._id.substring(0, 8).toUpperCase()}</p>
-                          <p className="text-xs text-blue-600 cursor-pointer hover:underline">Ref: {notif.appointmentId?._id ? notif.appointmentId._id.substring(0,8).toUpperCase() : notif.appointmentId}</p>
+                          <p className="font-bold text-slate-900 capitalize flex items-center gap-2">
+                            {notif.type.replace('_', ' ')}
+                            <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded uppercase">
+                              {notif.channel || 'System'}
+                            </span>
+                          </p>
+                          <p className="text-xs font-medium text-slate-500 mt-0.5">
+                            {notif.patientName ? `Patient: ${notif.patientName}` : `Ref: ${notif.appointmentId?._id ? notif.appointmentId._id.substring(0,8).toUpperCase() : notif.appointmentId}`}
+                          </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <p className={clsx(
-                        'text-sm truncate max-w-md',
+                        'text-sm truncate max-w-sm whitespace-normal',
                         notif.type === 'alert' ? 'text-red-700 font-medium' : 'text-gray-600'
                       )}>
                         {notif.message}
                       </p>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-gray-500 flex items-center gap-1.5 text-xs font-medium">
-                        <Clock size={14} />
-                        {new Date(notif.createdAt).toLocaleDateString()}
-                      </span>
+                      {notif.scheduledFor ? (
+                        <div className="flex flex-col">
+                          <span className="text-slate-800 text-sm font-medium">
+                            {new Date(notif.scheduledFor).toLocaleDateString()}
+                          </span>
+                          <span className="text-slate-500 text-xs">
+                            {new Date(notif.scheduledFor).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-gray-500 flex items-center gap-1.5 text-xs font-medium">
+                          Immediate
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-right">
                       {getStatusBadge(notif.status)}
