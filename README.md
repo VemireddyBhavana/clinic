@@ -57,11 +57,3 @@ npm run dev
 cd frontend
 npm run dev
 ```
-
-## 🎥 Hackathon Evaluation Guide (What to look for)
-If you are evaluating this project asynchronously, here is the recommended flow to see the smart features in action:
-1. **AI Chatbot**: Open `http://localhost:5173`. Click the floating Chatbot on the bottom right and tell it your symptoms.
-2. **Live Map & Booking**: Click "Book Appointment". Notice the fluid Framer Motion animations. Select a hospital (data pulled dynamically).
-3. **Smart Slots & Priority**: During the "Patient Details" step, select "Urgent" priority. Complete the booking.
-4. **Admin Dashboard**: Go to `http://localhost:5173/admin/login` and login. Notice the **Workload Balancing** widget computing doctor loads, and the **Action Required** queue highlighting your Urgent booking!
-5. **Smart Reminders**: Navigate to the "Notifications" tab in the Admin panel to see the automated Confirmation and auto-scheduled Reminder waiting in the queue!
