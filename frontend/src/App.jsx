@@ -14,6 +14,7 @@ import AdminNotifications from './pages/AdminNotifications';
 import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
+import Legal from './pages/Legal';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/book" element={<BookAppointment />} />
           <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="/legal" element={<Legal />} />
         </Route>
         
         <Route path="/admin/login" element={<AdminLogin />} />
