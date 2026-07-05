@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Calendar, ShieldCheck, Activity, Bell,
-  User, Clock, LayoutTemplate, MessageSquare
+  User, Clock, LayoutTemplate, MessageSquare,
+  CalendarCheck, ClipboardCheck
 } from 'lucide-react';
 import PageContainer from '../components/layout/PageContainer';
 
@@ -121,6 +122,70 @@ export default function Home() {
               <p className="text-slate-500 text-sm leading-relaxed">
                 Automated reminders and follow-ups to reduce no-shows.
               </p>
+            </div>
+
+          </div>
+        </PageContainer>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-16 pb-24 relative z-20 bg-slate-50/50">
+        <PageContainer>
+          <div className="text-center mb-14">
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">How It Works</h2>
+            <p className="text-slate-500 text-sm">Simple steps to book your appointment</p>
+          </div>
+
+          <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 lg:gap-6 relative">
+            {/* Connecting Dotted Line for Desktop */}
+            <div className="hidden lg:block absolute top-1/2 left-[10%] right-[10%] h-[2px] border-t-2 border-dashed border-slate-300 -z-0 transform -translate-y-1/2"></div>
+
+            {/* Step 1 */}
+            <div className="w-full lg:w-1/4 bg-white p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 relative z-10 flex items-center gap-3.5">
+              <div className="flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-[13px] font-bold shrink-0">1</div>
+              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
+                <User className="text-blue-600" size={22} />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-slate-900 text-[15px] mb-0.5">Choose Doctor</h3>
+                <p className="text-[12px] text-slate-500 leading-snug">Browse doctors by specialization or search.</p>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="w-full lg:w-1/4 bg-white p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 relative z-10 flex items-center gap-3.5">
+              <div className="flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-[13px] font-bold shrink-0">2</div>
+              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
+                <CalendarCheck className="text-blue-600" size={22} />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-slate-900 text-[15px] mb-0.5">Select Best Slot</h3>
+                <p className="text-[12px] text-slate-500 leading-snug">AI shows recommended slots with lower wait time.</p>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="w-full lg:w-1/4 bg-white p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 relative z-10 flex items-center gap-3.5">
+              <div className="flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-[13px] font-bold shrink-0">3</div>
+              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
+                <ClipboardCheck className="text-blue-600" size={22} />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-slate-900 text-[15px] mb-0.5">Confirm Booking</h3>
+                <p className="text-[12px] text-slate-500 leading-snug">Fill your details and confirm the appointment.</p>
+              </div>
+            </div>
+
+            {/* Step 4 */}
+            <div className="w-full lg:w-1/4 bg-white p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 relative z-10 flex items-center gap-3.5">
+              <div className="flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-[13px] font-bold shrink-0">4</div>
+              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
+                <Bell className="text-blue-600" size={22} />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-slate-900 text-[15px] mb-0.5">Get Reminders</h3>
+                <p className="text-[12px] text-slate-500 leading-snug">Receive timely reminders and follow-ups.</p>
+              </div>
             </div>
 
           </div>
