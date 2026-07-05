@@ -66,7 +66,7 @@ const sendWhatsApp = async (to, message) => {
       const twilioMessage = await client.messages.create({
         body: message,
         from: fromNumber,
-        to: `whatsapp:${to.replace(/\D/g, '')}` // Ensure numeric formatting
+        to: `whatsapp:+${to.replace(/\D/g, '')}` // Ensure numeric formatting with leading plus
       });
       console.log("WhatsApp message sent successfully via Twilio: ", twilioMessage.sid);
       return { success: true, provider: 'twilio', id: twilioMessage.sid };
