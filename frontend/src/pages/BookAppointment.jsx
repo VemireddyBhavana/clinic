@@ -345,7 +345,7 @@ export default function BookAppointment() {
                           <div>
                             <p className="font-bold text-slate-900">{doctor.name}</p>
                             <p className="text-xs text-slate-500">{doctor.specialization}</p>
-                            <p className="text-xs font-bold text-blue-600 mt-1">${doctor.fee}</p>
+                            <p className="text-xs font-bold text-blue-600 mt-1">₹{doctor.fee}</p>
                             {recommendedDoctorId === doctor._id && (
                               <div className="mt-2 inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
                                 Fastest Availability

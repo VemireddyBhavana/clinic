@@ -46,12 +46,12 @@ export default function Hospitals() {
   };
 
   const fadeInUp = {
-    hidden: { opacity: 0, y: 40, scale: 0.95 },
+    hidden: { opacity: 0, y: 80, scale: 0.9 },
     visible: { 
       opacity: 1, 
       y: 0, 
       scale: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15, mass: 1 } 
+      transition: { type: "spring", stiffness: 80, damping: 10, mass: 1 } 
     }
   };
 
@@ -59,7 +59,7 @@ export default function Hospitals() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: 0.1 }
+      transition: { staggerChildren: 0.2, delayChildren: 0.15 }
     }
   };
 

@@ -132,7 +132,7 @@ export default function AdminAddDoctor() {
               />
               <TextInput 
                 id="fee"
-                label="Consultation Fee ($)"
+                label="Consultation Fee (₹)"
                 type="number"
                 placeholder="e.g. 150"
                 min="0"

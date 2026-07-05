@@ -153,7 +153,7 @@ export default function Doctors() {
                   <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-slate-500 font-medium">Consultation Fee</p>
-                      <p className="text-lg font-bold text-slate-900">${doctor.fee}</p>
+                      <p className="text-lg font-bold text-slate-900">₹{doctor.fee}</p>
                     </div>
                     <button 
                       onClick={() => handleBookDoctor(doctor._id)}
