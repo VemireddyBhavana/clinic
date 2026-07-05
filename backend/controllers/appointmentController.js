@@ -50,6 +50,50 @@ const calculateNoShowRisk = (appointmentDate, appointmentTime, priority) => {
   return { risk, reason };
 };
 
+const triggerWaitlistAutopilot = async (cancelledAppt) => {
+  try {
+    // Find future booked appointments for the same doctor
+    const futureAppt = await Appointment.findOne({
+      doctorId: cancelledAppt.doctorId,
+      status: 'booked',
+      _id: { $ne: cancelledAppt._id },
+      appointmentDate: { $gt: cancelledAppt.appointmentDate }
+    }).sort({ appointmentDate: 1, appointmentTime: 1 });
+
+    if (!futureAppt) {
+      console.log("Waitlist Autopilot: No future appointments found to offer slot.");
+      return;
+    }
+
+    const offerMessage = `Hello ${futureAppt.patientName}, a slot has just opened up with Dr. ${cancelledAppt.doctorName} on ${cancelledAppt.appointmentDate} at ${cancelledAppt.appointmentTime}. Would you like to reschedule and see the doctor sooner? Reply YES to confirm!`;
+
+    // Queue the WhatsApp Notification for this waitlist patient
+    await Notification.create({
+      appointmentId: futureAppt._id,
+      patientName: futureAppt.patientName,
+      patientPhone: futureAppt.patientPhone,
+      type: 'reminder',
+      channel: 'whatsapp',
+      message: offerMessage,
+      status: 'pending'
+    });
+
+    // Create a system alert in Notification log to show in Admin
+    await Notification.create({
+      appointmentId: cancelledAppt._id,
+      patientName: cancelledAppt.patientName,
+      type: 'alert',
+      channel: 'system',
+      message: `Waitlist Autopilot: Offered freed slot (${cancelledAppt.appointmentDate} at ${cancelledAppt.appointmentTime}) to ${futureAppt.patientName} (originally scheduled on ${futureAppt.appointmentDate}) via WhatsApp.`,
+      status: 'pending'
+    });
+
+    console.log(`Waitlist Autopilot: Offered slot to ${futureAppt.patientName}`);
+  } catch (error) {
+    console.error("Error in Waitlist Autopilot:", error);
+  }
+};
+
 // @route   POST /api/appointments/book
 exports.bookAppointment = async (req, res) => {
   try {
@@ -260,6 +304,11 @@ exports.updateAppointment = async (req, res) => {
         message: `Patient ${updatedAppointment.patientName} was a ${req.body.status} for appointment with Dr. ${updatedAppointment.doctorName}.`,
         status: 'pending'
       });
+      
+      // If cancelled, trigger the Smart Rescheduling waitlist autopilot
+      if (req.body.status === 'cancelled') {
+        await triggerWaitlistAutopilot(updatedAppointment);
+      }
     }
 
     res.json({ message: 'Appointment updated successfully', appointment: updatedAppointment });

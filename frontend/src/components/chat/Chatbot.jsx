@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, User, Bot, Loader2 } from 'lucide-react';
+import { MessageSquare, X, Send, User, Bot, Loader2, Mic, MicOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
@@ -10,7 +10,36 @@ export default function Chatbot() {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const recognitionRef = useRef(null);
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const rec = new SpeechRecognition();
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.lang = 'en-US';
+
+      rec.onstart = () => setIsRecording(true);
+      rec.onend = () => setIsRecording(false);
+      rec.onresult = (e) => {
+        const transcript = e.results[0][0].transcript;
+        setInputValue(transcript);
+      };
+
+      recognitionRef.current = rec;
+    }
+  }, []);
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      recognitionRef.current?.stop();
+    } else {
+      recognitionRef.current?.start();
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -149,14 +178,24 @@ export default function Chatbot() {
             </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-slate-100 shrink-0 flex gap-2">
+            <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-slate-100 shrink-0 flex gap-2 items-center">
               <input 
                 type="text" 
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Type your message..." 
-                className="flex-1 bg-slate-50 border border-slate-200 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                placeholder={isRecording ? "Listening..." : "Type your message..."} 
+                className={`flex-1 bg-slate-50 border border-slate-200 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all ${isRecording ? 'border-red-400 bg-red-50 text-red-700 animate-pulse' : ''}`}
               />
+              {recognitionRef.current && (
+                <button
+                  type="button"
+                  onClick={toggleRecording}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border transition-all ${isRecording ? 'bg-red-500 text-white border-red-500 shadow-md shadow-red-200 animate-bounce' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100 hover:text-slate-700'}`}
+                  title={isRecording ? "Stop Recording" : "Use Voice Booking"}
+                >
+                  {isRecording ? <MicOff size={16} /> : <Mic size={16} />}
+                </button>
+              )}
               <button 
                 type="submit"
                 disabled={!inputValue.trim()}
