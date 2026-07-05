@@ -173,18 +173,58 @@ export default function BookAppointment() {
 
   if (bookingSuccess) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center py-20">
-        <div className="bg-white p-10 rounded-2xl shadow-xl max-w-md w-full text-center border border-slate-100">
-          <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle size={40} />
-          </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Booking Confirmed!</h2>
-          <p className="text-slate-500 mb-8">
-            Your appointment with <span className="font-bold text-slate-700">{selectedDoctor?.name}</span> is confirmed for <span className="font-bold text-slate-700">{selectedDate}</span> at <span className="font-bold text-slate-700">{selectedTime}</span>.
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center py-20 px-4">
+        <div className="bg-white p-10 rounded-2xl shadow-xl max-w-lg w-full text-center border border-slate-100">
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner"
+          >
+            <CheckCircle size={48} />
+          </motion.div>
+          <h2 className="text-3xl font-bold text-slate-900 mb-2">Booking Confirmed!</h2>
+          <p className="text-slate-600 mb-8 text-lg">
+            Thank you, <span className="font-bold">{patientDetails.patientName}</span>. Your slot is secured.
           </p>
+
+          <div className="bg-slate-50 p-6 rounded-xl border border-slate-100 text-left mb-8 space-y-4">
+            <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">Appointment Summary</h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-slate-500 mb-1 font-medium">Hospital</p>
+                <p className="font-bold text-slate-900">{initialState.hospitalName || "Partner Hospital"}</p>
+              </div>
+              <div>
+                <p className="text-slate-500 mb-1 font-medium">Doctor</p>
+                <p className="font-bold text-slate-900">{selectedDoctor?.name || "Assigned Doctor"}</p>
+              </div>
+              <div>
+                <p className="text-slate-500 mb-1 font-medium">Date</p>
+                <p className="font-bold text-slate-900">{selectedDate}</p>
+              </div>
+              <div>
+                <p className="text-slate-500 mb-1 font-medium">Time</p>
+                <p className="font-bold text-slate-900">{selectedTime}</p>
+              </div>
+            </div>
+          </div>
+
+          {(patientDetails.patientEmail || patientDetails.patientPhone) && (
+            <div className="text-sm text-slate-500 bg-blue-50/50 p-4 rounded-xl border border-blue-100 mb-8 flex flex-col gap-2">
+              <p className="font-bold text-blue-800">What's Next?</p>
+              {patientDetails.patientPhone && (
+                <p>We've sent a <strong className="text-blue-700">WhatsApp</strong> confirmation to {patientDetails.patientPhone}.</p>
+              )}
+              {patientDetails.patientEmail && patientDetails.patientEmail !== 'no-email@provided.com' && (
+                <p>An electronic receipt has been sent via <strong className="text-blue-700">Email</strong> to {patientDetails.patientEmail}.</p>
+              )}
+            </div>
+          )}
+
           <button 
             onClick={() => navigate('/home')}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors shadow-sm text-lg"
           >
             Return to Home
           </button>
