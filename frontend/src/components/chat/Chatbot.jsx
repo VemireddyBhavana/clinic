@@ -30,9 +30,9 @@ export default function Chatbot() {
     }
 
     try {
-      // Use gemini-1.5-flash for fast responses
+      // Use gemini-flash-latest for fast responses
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash",
+        model: "gemini-flash-latest",
         systemInstruction: "You are MediBot, an expert AI symptom checker and clinic assistant for MediSlot AI. Your job is to listen to the user's symptoms, provide a *very brief* and polite analysis, and strongly recommend which specific medical specialist (e.g., Cardiologist, Dermatologist, General Physician) they should book an appointment with. Always remind them to click the 'Book Appointment' button on the navigation bar to schedule a visit. Do not provide dangerous medical diagnoses, but give helpful triage advice. Keep responses under 3 sentences and professional."
       });
 
