@@ -86,6 +86,7 @@ exports.bookAppointment = async (req, res) => {
           <p>Dear <strong>${patientName}</strong>,</p>
           <p>Your appointment has been successfully booked. Here are the details:</p>
           <ul style="background-color: #f8fafc; padding: 15px 15px 15px 35px; border-radius: 8px;">
+            <li><strong>Hospital:</strong> ${hospitalName}</li>
             <li><strong>Doctor:</strong> ${doctor.name} (${doctor.specialization})</li>
             <li><strong>Date:</strong> ${appointmentDate}</li>
             <li><strong>Time:</strong> ${appointmentTime}</li>
@@ -98,7 +99,16 @@ exports.bookAppointment = async (req, res) => {
     
     // Send email async without blocking the response
     if (patientEmail && patientEmail !== 'no-email@provided.com') {
-      sendEmail(patientEmail, emailSubject, emailHtml);
+      sendEmail(patientEmail, emailSubject, emailHtml).then(async (result) => {
+        if (result && result.success) {
+          emailNotification.status = 'sent';
+        } else {
+          emailNotification.status = 'failed';
+          emailNotification.message += ` [ERROR: ${result.error}]`;
+        }
+        emailNotification.sentAt = new Date();
+        await emailNotification.save();
+      }).catch(err => console.error("Email async error:", err));
     }
     
     if (patientPhone) {
