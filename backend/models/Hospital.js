@@ -9,44 +9,66 @@ const hospitalSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
+  phone: {
     type: String,
+    required: true,
   },
-  contactNumber: {
-    type: String,
+  latitude: {
+    type: Number,
+    required: true,
   },
-  email: {
-    type: String,
+  longitude: {
+    type: Number,
+    required: true,
   },
   // GeoJSON for location-based querying
   location: {
     type: {
       type: String,
       enum: ['Point'],
-      required: true,
       default: 'Point'
     },
     coordinates: {
       type: [Number], // [longitude, latitude]
-      required: true
     }
   },
-  amenities: {
+  departments: {
     type: [String],
     default: []
+  },
+  timings: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
   },
   rating: {
     type: Number,
     default: 0
   },
-  reviews: {
-    type: Number,
-    default: 0
+  description: {
+    type: String,
+  },
+  isActive: {
+    type: Boolean,
+    default: true
   },
   createdAt: {
     type: Date,
     default: Date.now
   }
+});
+
+// Pre-save middleware to automatically populate the GeoJSON location field based on latitude and longitude
+hospitalSchema.pre('save', function(next) {
+  if (this.latitude && this.longitude) {
+    this.location = {
+      type: 'Point',
+      coordinates: [this.longitude, this.latitude]
+    };
+  }
+  next();
 });
 
 // Create 2dsphere index for geospatial queries

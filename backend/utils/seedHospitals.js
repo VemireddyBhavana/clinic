@@ -1,75 +1,110 @@
+const mongoose = require('mongoose');
 const Hospital = require('../models/Hospital');
 
 const mockHospitals = [
   {
-    name: "City General Hospital",
-    address: "123 Medical Center Blvd, Downtown",
+    name: "Mount Sinai Hospital",
+    address: "1468 Madison Ave, New York, NY 10029",
+    phone: "+1 (212) 241-6500",
+    latitude: 40.7903,
+    longitude: -73.9529,
+    departments: ["Cardiology", "Neurology", "Orthopedics", "Emergency Medicine", "Pediatrics"],
+    timings: "24/7 Emergency, Outpatient: 8:00 AM - 6:00 PM",
     image: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&q=80&w=800",
-    contactNumber: "+1-555-0100",
-    email: "info@citygeneral.com",
-    location: {
-      type: "Point",
-      coordinates: [-74.0060, 40.7128] // Example: New York longitude, latitude
-    },
-    amenities: ["Emergency Room", "ICU", "Parking", "Pharmacy", "Cafeteria"],
     rating: 4.8,
-    reviews: 1250
+    description: "One of the oldest and largest teaching hospitals in the United States, providing comprehensive healthcare services.",
+    isActive: true
   },
   {
-    name: "Sunrise Memorial Clinic",
-    address: "456 Sunrise Ave, Westside",
+    name: "Lenox Hill Hospital",
+    address: "100 E 77th St, New York, NY 10075",
+    phone: "+1 (212) 434-2000",
+    latitude: 40.7738,
+    longitude: -73.9606,
+    departments: ["Maternity", "Cardiothoracic Surgery", "Urology", "Internal Medicine"],
+    timings: "24/7 Emergency, Outpatient: 7:30 AM - 5:30 PM",
     image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800",
-    contactNumber: "+1-555-0101",
-    email: "contact@sunrisememorial.com",
-    location: {
-      type: "Point",
-      coordinates: [-73.9851, 40.7589]
-    },
-    amenities: ["Outpatient Services", "Lab Testing", "Pharmacy", "Wheelchair Access"],
-    rating: 4.6,
-    reviews: 840
-  },
-  {
-    name: "Lakeside Medical Center",
-    address: "789 Lakeview Dr, Eastside",
-    image: "https://images.unsplash.com/photo-1538108149393-cebb47acdd4e?auto=format&fit=crop&q=80&w=800",
-    contactNumber: "+1-555-0102",
-    email: "hello@lakesidemedical.com",
-    location: {
-      type: "Point",
-      coordinates: [-73.9654, 40.7829]
-    },
-    amenities: ["Emergency Room", "Maternity Ward", "Pediatrics", "Parking"],
-    rating: 4.9,
-    reviews: 2100
-  },
-  {
-    name: "Green Valley Health",
-    address: "321 Valley Road, North Hills",
-    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800",
-    contactNumber: "+1-555-0103",
-    email: "support@greenvalleyhealth.com",
-    location: {
-      type: "Point",
-      coordinates: [-73.9510, 40.8000]
-    },
-    amenities: ["Physical Therapy", "Radiology", "Cafeteria"],
-    rating: 4.5,
-    reviews: 620
-  },
-  {
-    name: "Metro Wellness Institute",
-    address: "654 Metro Plaza, South District",
-    image: "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800",
-    contactNumber: "+1-555-0104",
-    email: "info@metrowellness.com",
-    location: {
-      type: "Point",
-      coordinates: [-74.0150, 40.7050]
-    },
-    amenities: ["Holistic Care", "Nutrition Counseling", "Yoga Studio", "Pharmacy"],
     rating: 4.7,
-    reviews: 930
+    description: "A 450-bed tertiary care hospital in Manhattan's Upper East Side.",
+    isActive: true
+  },
+  {
+    name: "NYU Langone Health",
+    address: "550 1st Ave, New York, NY 10016",
+    phone: "+1 (646) 929-7800",
+    latitude: 40.7420,
+    longitude: -73.9739,
+    departments: ["Oncology", "Rehabilitation", "Neurosurgery", "Dermatology", "Gastroenterology"],
+    timings: "24/7 Emergency, Outpatient: 8:00 AM - 8:00 PM",
+    image: "https://images.unsplash.com/photo-1538108149393-cebb47acdd4e?auto=format&fit=crop&q=80&w=800",
+    rating: 4.9,
+    description: "A premier academic medical center devoted to patient care, education, and research.",
+    isActive: true
+  },
+  {
+    name: "NewYork-Presbyterian Hospital",
+    address: "525 E 68th St, New York, NY 10065",
+    phone: "+1 (212) 746-5454",
+    latitude: 40.7641,
+    longitude: -73.9546,
+    departments: ["Psychiatry", "Pediatrics", "Transplant Surgery", "Endocrinology"],
+    timings: "24/7 Emergency, Outpatient: 9:00 AM - 5:00 PM",
+    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800",
+    rating: 4.9,
+    description: "Ranked among the top hospitals in the nation, offering cutting-edge treatments.",
+    isActive: true
+  },
+  {
+    name: "Bellevue Hospital Center",
+    address: "462 1st Ave, New York, NY 10016",
+    phone: "+1 (212) 562-4141",
+    latitude: 40.7394,
+    longitude: -73.9754,
+    departments: ["Trauma Center", "Psychiatry", "General Surgery", "Infectious Diseases"],
+    timings: "24/7 Emergency, Outpatient: 8:00 AM - 4:00 PM",
+    image: "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800",
+    rating: 4.5,
+    description: "The oldest public hospital in the US, known for its leading trauma and psychiatric centers.",
+    isActive: true
+  },
+  {
+    name: "Brooklyn Hospital Center",
+    address: "121 DeKalb Ave, Brooklyn, NY 11201",
+    phone: "+1 (718) 250-8000",
+    latitude: 40.6908,
+    longitude: -73.9785,
+    departments: ["Obstetrics", "Family Medicine", "Emergency Medicine", "Radiology"],
+    timings: "24/7 Emergency, Outpatient: 8:30 AM - 6:00 PM",
+    image: "https://images.unsplash.com/photo-1502740479091-635887520276?auto=format&fit=crop&q=80&w=800",
+    rating: 4.4,
+    description: "Providing outstanding health services, education, and research to keep Brooklyn healthy.",
+    isActive: true
+  },
+  {
+    name: "Maimonides Medical Center",
+    address: "4802 10th Ave, Brooklyn, NY 11219",
+    phone: "+1 (718) 283-6000",
+    latitude: 40.6385,
+    longitude: -73.9961,
+    departments: ["Pediatrics", "Cardiology", "Stroke Center", "Orthopedics"],
+    timings: "24/7 Emergency, Outpatient: 8:00 AM - 5:00 PM",
+    image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=800",
+    rating: 4.6,
+    description: "The largest hospital in Brooklyn and at the forefront of medical advancement.",
+    isActive: true
+  },
+  {
+    name: "Stony Brook University Hospital",
+    address: "101 Nicolls Rd, Stony Brook, NY 11794",
+    phone: "+1 (631) 444-4000",
+    latitude: 40.9088,
+    longitude: -73.1118,
+    departments: ["Cancer Center", "Heart Institute", "Neurology", "Pediatrics"],
+    timings: "24/7 Emergency, Outpatient: 9:00 AM - 7:00 PM",
+    image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800",
+    rating: 4.7,
+    description: "Long Island's premier academic medical center.",
+    isActive: true
   }
 ];
 
@@ -77,8 +112,15 @@ const seedHospitals = async () => {
   try {
     const count = await Hospital.countDocuments();
     if (count === 0) {
-      console.log('Seeding mock hospitals into database...');
-      await Hospital.insertMany(mockHospitals);
+      console.log('Seeding Phase 2 realistic hospitals into database...');
+      const hospitalsToInsert = mockHospitals.map(h => ({
+        ...h,
+        location: {
+          type: 'Point',
+          coordinates: [h.longitude, h.latitude]
+        }
+      }));
+      await Hospital.insertMany(hospitalsToInsert);
       console.log('Mock hospitals seeded successfully!');
     }
   } catch (error) {
