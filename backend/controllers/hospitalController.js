@@ -35,16 +35,28 @@ exports.getNearbyHospitals = async (req, res) => {
 
     // LIVE DATA INTEGRATION: Fetch from Overpass API (OpenStreetMap)
     try {
-      // 15km radius (15000 meters)
-      const overpassQuery = `[out:json];node(around:15000,${latitude},${longitude})[amenity=hospital];out 15;`;
-      const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
-      
-      const response = await axios.get(overpassUrl, { 
-        timeout: 8000,
-        headers: {
-          'User-Agent': 'MediSlot-AI-App/1.0 (Contact: admin@medislot.ai)'
-        }
+      // First check if we already have local hospitals within distance to avoid rate limits
+      const existingHospitals = await Hospital.countDocuments({
+        location: {
+          $near: {
+            $geometry: { type: "Point", coordinates: [longitude, latitude] },
+            $maxDistance: maxDistanceInMeters
+          }
+        },
+        isActive: true
       });
+
+      if (existingHospitals < 5) { // Only fetch if we have very few hospitals in this area
+        // 15km radius (15000 meters)
+        const overpassQuery = `[out:json];node(around:15000,${latitude},${longitude})[amenity=hospital];out 15;`;
+        const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
+        
+        const response = await axios.get(overpassUrl, { 
+          timeout: 8000,
+          headers: {
+            'User-Agent': 'MediSlot-AI-App/1.0 (Contact: admin@medislot.ai)'
+          }
+        });
       
       if (response.data && response.data.elements && response.data.elements.length > 0) {
         const bulkOps = [];
@@ -89,6 +101,7 @@ exports.getNearbyHospitals = async (req, res) => {
           console.log(`Successfully synced ${bulkOps.length} real hospitals from OSM!`);
         }
       }
+      } // End of existingHospitals check
     } catch (osmError) {
       console.warn("Failed to fetch live OSM data, falling back to local DB:", osmError.message);
     }

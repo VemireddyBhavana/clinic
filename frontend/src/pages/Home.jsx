@@ -24,8 +24,13 @@ export default function Home() {
   };
 
   const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { type: "spring", stiffness: 100, damping: 15, mass: 1 } 
+    }
   };
 
   const staggerContainer = {
@@ -212,7 +217,12 @@ export default function Home() {
             viewport={{ once: true, margin: "-50px" }}
           >
             {/* Card 1 */}
-            <motion.div variants={fadeInUp} className="bg-white p-5 rounded-2xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:-translate-y-1 transition-transform duration-300">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="bg-white p-5 rounded-2xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:border-blue-200 transition-all duration-300 cursor-default"
+            >
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
                 <CalendarCheck className="text-blue-600" size={24} />
               </div>
@@ -223,7 +233,12 @@ export default function Home() {
             </motion.div>
 
             {/* Card 2 */}
-            <motion.div variants={fadeInUp} className="bg-white p-5 rounded-2xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:-translate-y-1 transition-transform duration-300">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="bg-white p-5 rounded-2xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:border-blue-200 transition-all duration-300 cursor-default"
+            >
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
                 <TrendingUp className="text-blue-600" size={24} />
               </div>
@@ -234,7 +249,12 @@ export default function Home() {
             </motion.div>
 
             {/* Card 3 */}
-            <motion.div variants={fadeInUp} className="bg-white p-5 rounded-2xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:-translate-y-1 transition-transform duration-300">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="bg-white p-5 rounded-2xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:border-blue-200 transition-all duration-300 cursor-default"
+            >
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
                 <Users className="text-blue-600" size={24} />
               </div>
@@ -245,7 +265,12 @@ export default function Home() {
             </motion.div>
 
             {/* Card 4 */}
-            <motion.div variants={fadeInUp} className="bg-white p-5 rounded-2xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:-translate-y-1 transition-transform duration-300">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="bg-white p-5 rounded-2xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:border-blue-200 transition-all duration-300 cursor-default"
+            >
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
                 <Bell className="text-blue-600" size={24} />
               </div>
