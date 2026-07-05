@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { HeartPulse, Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function PatientNavbar() {
   const location = useLocation();
@@ -60,16 +61,24 @@ export default function PatientNavbar() {
       </div>
 
       {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-100 shadow-lg py-4 px-4 flex flex-col space-y-4 z-40">
-          <Link to="/home" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/home') ? 'text-blue-600' : 'text-gray-700'}`}>Home</Link>
-          <Link to="/doctors" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/doctors') ? 'text-blue-600' : 'text-gray-700'}`}>Doctors</Link>
-          <button onClick={handleHowItWorksClick} className="text-base font-bold text-gray-700 text-left">How it works</button>
-          <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/about') ? 'text-blue-600' : 'text-gray-700'}`}>About us</Link>
-          <Link to="/services" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/services') ? 'text-blue-600' : 'text-gray-700'}`}>Services</Link>
-          <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/contact') ? 'text-blue-600' : 'text-gray-700'}`}>Contact</Link>
-        </div>
-      )}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-100 shadow-lg py-4 px-4 flex flex-col space-y-4 z-40"
+          >
+            <Link to="/home" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/home') ? 'text-blue-600' : 'text-gray-700'}`}>Home</Link>
+            <Link to="/doctors" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/doctors') ? 'text-blue-600' : 'text-gray-700'}`}>Doctors</Link>
+            <button onClick={handleHowItWorksClick} className="text-base font-bold text-gray-700 text-left">How it works</button>
+            <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/about') ? 'text-blue-600' : 'text-gray-700'}`}>About us</Link>
+            <Link to="/services" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/services') ? 'text-blue-600' : 'text-gray-700'}`}>Services</Link>
+            <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className={`text-base font-bold ${isActive('/contact') ? 'text-blue-600' : 'text-gray-700'}`}>Contact</Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

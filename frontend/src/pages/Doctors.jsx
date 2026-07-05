@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Filter, Star, Clock, MapPin, Calendar as CalendarIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
 import PageContainer from '../components/layout/PageContainer';
 import { getDoctors } from '../api/services';
 
@@ -35,6 +36,21 @@ export default function Doctors() {
 
   const handleBookDoctor = (doctorId) => {
     navigate('/book', { state: { doctorId } });
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
   };
 
   return (
@@ -87,9 +103,14 @@ export default function Doctors() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
             {filteredDoctors.map(doctor => (
-              <div key={doctor._id} className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+              <motion.div variants={itemVariants} key={doctor._id} className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
                 <div className="p-6 pb-0 flex gap-5">
                   <img 
                     src={doctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(doctor.name)}&background=eff6ff&color=2563eb`} 
@@ -142,9 +163,9 @@ export default function Doctors() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {!loading && filteredDoctors.length === 0 && (

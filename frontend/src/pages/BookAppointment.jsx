@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { User, Calendar, Clock, ClipboardList, CheckCircle, ArrowLeft, ArrowRight, UserCheck } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import PageContainer from '../components/layout/PageContainer';
 import { getDoctors, bookAppointment } from '../api/services';
 
@@ -14,6 +15,7 @@ export default function BookAppointment() {
   const [loading, setLoading] = useState(true);
   
   const [step, setStep] = useState(1);
+  const [direction, setDirection] = useState(1);
   
   // Form State
   const [selectedDoctorId, setSelectedDoctorId] = useState(initialState.doctorId || '');
@@ -97,10 +99,12 @@ export default function BookAppointment() {
       return;
     }
     setError('');
+    setDirection(1);
     setStep(step + 1);
   };
 
   const handleBack = () => {
+    setDirection(-1);
     setStep(step - 1);
     setError('');
   };
@@ -132,6 +136,23 @@ export default function BookAppointment() {
       setError('Failed to book appointment. Please try again.');
       setIsSubmitting(false);
     }
+  };
+
+  const stepVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 50 : -50,
+      opacity: 0
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction) => ({
+      zIndex: 0,
+      x: direction < 0 ? 50 : -50,
+      opacity: 0
+    })
   };
 
   if (loading) {
@@ -221,110 +242,141 @@ export default function BookAppointment() {
           </div>
 
           {/* Form Content */}
-          <div className="p-8 md:p-10 flex-1 flex flex-col">
+          <div className="p-8 md:p-10 flex-1 flex flex-col relative overflow-hidden">
             
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg flex items-center gap-2">
+              <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg flex items-center gap-2 relative z-10">
                 <div className="w-2 h-2 rounded-full bg-red-600"></div>
                 {error}
               </div>
             )}
 
-            {/* Step 1: Doctor Selection */}
-            {step === 1 && (
-              <div className="flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">Choose a Specialist</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
-                  {doctors.map(doctor => (
-                    <div 
-                      key={doctor._id}
-                      onClick={() => setSelectedDoctorId(doctor._id)}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex gap-4 ${selectedDoctorId === doctor._id ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-blue-300'}`}
-                    >
-                      <img src={doctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(doctor.name)}&background=eff6ff&color=2563eb`} className="w-14 h-14 rounded-full object-cover" alt={doctor.name} />
-                      <div>
-                        <p className="font-bold text-slate-900">{doctor.name}</p>
-                        <p className="text-xs text-slate-500">{doctor.specialization}</p>
-                        <p className="text-xs font-bold text-blue-600 mt-1">${doctor.fee}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Step 2: Date & Time */}
-            {step === 2 && (
-              <div className="flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">Select Date & Time</h2>
-                
-                <div className="mb-8">
-                  <label className="block text-sm font-bold text-slate-700 mb-2">Preferred Date</label>
-                  <input 
-                    type="date" 
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-700 font-medium"
-                    min={new Date().toISOString().split('T')[0]}
-                  />
-                </div>
-
-                {selectedDate && (
-                  <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-3">Available Time Slots</label>
-                    <div className="grid grid-cols-3 gap-3">
-                      {timeSlots.map(time => (
+            <div className="flex-1 relative">
+              <AnimatePresence custom={direction} mode="wait">
+                {/* Step 1: Doctor Selection */}
+                {step === 1 && (
+                  <motion.div 
+                    key="step1"
+                    custom={direction}
+                    variants={stepVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0 w-full"
+                  >
+                    <h2 className="text-2xl font-bold text-slate-900 mb-6">Choose a Specialist</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
+                      {doctors.map(doctor => (
                         <div 
-                          key={time}
-                          onClick={() => setSelectedTime(time)}
-                          className={`p-3 text-center rounded-xl border-2 cursor-pointer transition-all font-medium text-sm flex items-center justify-center gap-2 ${selectedTime === time ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50'}`}
+                          key={doctor._id}
+                          onClick={() => setSelectedDoctorId(doctor._id)}
+                          className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex gap-4 ${selectedDoctorId === doctor._id ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-blue-300'}`}
                         >
-                          <Clock size={14} className={selectedTime === time ? 'text-white' : 'text-slate-400'} /> {time}
+                          <img src={doctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(doctor.name)}&background=eff6ff&color=2563eb`} className="w-14 h-14 rounded-full object-cover" alt={doctor.name} />
+                          <div>
+                            <p className="font-bold text-slate-900">{doctor.name}</p>
+                            <p className="text-xs text-slate-500">{doctor.specialization}</p>
+                            <p className="text-xs font-bold text-blue-600 mt-1">${doctor.fee}</p>
+                          </div>
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 )}
-              </div>
-            )}
 
-            {/* Step 3: Patient Details */}
-            {step === 3 && (
-              <div className="flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">Patient Details</h2>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Full Name *</label>
-                    <div className="relative">
-                      <UserCheck className="absolute left-4 top-3.5 text-slate-400" size={18} />
-                      <input type="text" name="patientName" value={patientDetails.patientName} onChange={handleInputChange} className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm" placeholder="John Doe" required />
+                {/* Step 2: Date & Time */}
+                {step === 2 && (
+                  <motion.div 
+                    key="step2"
+                    custom={direction}
+                    variants={stepVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0 w-full"
+                  >
+                    <h2 className="text-2xl font-bold text-slate-900 mb-6">Select Date & Time</h2>
+                    
+                    <div className="mb-8">
+                      <label className="block text-sm font-bold text-slate-700 mb-2">Preferred Date</label>
+                      <input 
+                        type="date" 
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-700 font-medium"
+                        min={new Date().toISOString().split('T')[0]}
+                      />
                     </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Phone Number *</label>
-                      <input type="text" name="patientPhone" value={patientDetails.patientPhone} onChange={handleInputChange} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm" placeholder="+1 234 567 8900" required />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Age</label>
-                      <input type="number" name="patientAge" value={patientDetails.patientAge} onChange={handleInputChange} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm" placeholder="35" />
-                    </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
-                    <input type="email" name="patientEmail" value={patientDetails.patientEmail} onChange={handleInputChange} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm" placeholder="john@example.com" />
-                  </div>
+                    {selectedDate && (
+                      <div>
+                        <label className="block text-sm font-bold text-slate-700 mb-3">Available Time Slots</label>
+                        <div className="grid grid-cols-3 gap-3">
+                          {timeSlots.map(time => (
+                            <div 
+                              key={time}
+                              onClick={() => setSelectedTime(time)}
+                              className={`p-3 text-center rounded-xl border-2 cursor-pointer transition-all font-medium text-sm flex items-center justify-center gap-2 ${selectedTime === time ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50'}`}
+                            >
+                              <Clock size={14} className={selectedTime === time ? 'text-white' : 'text-slate-400'} /> {time}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Reason for Visit</label>
-                    <textarea name="reasonForVisit" value={patientDetails.reasonForVisit} onChange={handleInputChange} rows="3" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm resize-none" placeholder="Briefly describe your symptoms or reason for visit..."></textarea>
-                  </div>
-                </div>
-              </div>
-            )}
+                {/* Step 3: Patient Details */}
+                {step === 3 && (
+                  <motion.div 
+                    key="step3"
+                    custom={direction}
+                    variants={stepVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0 w-full"
+                  >
+                    <h2 className="text-2xl font-bold text-slate-900 mb-6">Patient Details</h2>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Full Name *</label>
+                        <div className="relative">
+                          <UserCheck className="absolute left-4 top-3.5 text-slate-400" size={18} />
+                          <input type="text" name="patientName" value={patientDetails.patientName} onChange={handleInputChange} className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm" placeholder="John Doe" required />
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-slate-700 mb-1.5">Phone Number *</label>
+                          <input type="text" name="patientPhone" value={patientDetails.patientPhone} onChange={handleInputChange} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm" placeholder="+1 234 567 8900" required />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-slate-700 mb-1.5">Age</label>
+                          <input type="number" name="patientAge" value={patientDetails.patientAge} onChange={handleInputChange} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm" placeholder="35" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
+                        <input type="email" name="patientEmail" value={patientDetails.patientEmail} onChange={handleInputChange} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm" placeholder="john@example.com" />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Reason for Visit</label>
+                        <textarea name="reasonForVisit" value={patientDetails.reasonForVisit} onChange={handleInputChange} rows="3" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm resize-none" placeholder="Briefly describe your symptoms or reason for visit..."></textarea>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Navigation Buttons */}
             <div className="mt-8 pt-6 border-t border-slate-100 flex justify-between items-center">
