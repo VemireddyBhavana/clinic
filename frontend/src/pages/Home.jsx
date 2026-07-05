@@ -8,26 +8,12 @@ import {
   TrendingUp, Users, Star, ArrowRight, Headset
 } from 'lucide-react';
 import PageContainer from '../components/layout/PageContainer';
+import LocationPromptModal from '../components/location/LocationPromptModal';
 
 export default function Home() {
   const navigate = useNavigate();
   const [specialization, setSpecialization] = useState('');
   const [preferredDate, setPreferredDate] = useState('');
-  
-  // Ask for location on mount
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          sessionStorage.setItem('userLat', position.coords.latitude);
-          sessionStorage.setItem('userLng', position.coords.longitude);
-        },
-        (error) => {
-          console.warn("Location access denied or failed", error);
-        }
-      );
-    }
-  }, []);
 
   const handleBookSlot = () => {
     navigate('/hospitals', { state: { specialization, preferredDate } });
@@ -54,6 +40,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white font-sans overflow-x-hidden">
+      <LocationPromptModal />
       
       {/* Hero Section */}
       <section className="relative pt-12 pb-24 lg:pt-20 lg:pb-32 overflow-visible bg-white">
