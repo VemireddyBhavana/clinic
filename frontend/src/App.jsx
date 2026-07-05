@@ -18,12 +18,15 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import CookiePolicy from './pages/CookiePolicy';
 import PatientRights from './pages/PatientRights';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/legal" element={<Navigate to="/privacy-policy" replace />} />
         
         <Route element={<MainLayout />}>
           <Route path="/home" element={<Home />} />
