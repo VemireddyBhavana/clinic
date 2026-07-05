@@ -29,7 +29,7 @@ export default function HospitalDetails() {
   }, [id]);
 
   const handleBookHere = () => {
-    navigate('/book', { state: { hospitalId: hospital._id, hospitalName: hospital.name } });
+    navigate('/book', { state: { hospitalId: hospital.id || hospital._id, hospitalName: hospital.name } });
   };
 
   if (loading) {
@@ -98,13 +98,13 @@ export default function HospitalDetails() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
               <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <Activity className="text-blue-600" /> Facilities & Amenities
+                <Activity className="text-blue-600" /> Departments & Specialties
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {hospital.amenities.map((amenity, idx) => (
+                {(hospital.departments || []).map((dept, idx) => (
                   <div key={idx} className="flex items-center gap-2 text-slate-700 text-sm font-medium bg-slate-50 p-3 rounded-xl border border-slate-100">
                     <CheckCircle size={16} className="text-green-500 shrink-0" />
-                    {amenity}
+                    {dept}
                   </div>
                 ))}
               </div>
@@ -112,10 +112,8 @@ export default function HospitalDetails() {
             
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
               <h2 className="text-xl font-bold text-slate-900 mb-4">About this facility</h2>
-              <p className="text-slate-600 leading-relaxed">
-                {hospital.name} is dedicated to providing high-quality healthcare services to the community. 
-                Equipped with modern facilities and experienced professionals, we ensure that every patient receives 
-                the best possible care. Book an appointment today to consult with our specialized doctors.
+              <p className="text-slate-600 leading-relaxed whitespace-pre-line">
+                {hospital.description || `${hospital.name} is dedicated to providing high-quality healthcare services to the community. Equipped with modern facilities and experienced professionals, we ensure that every patient receives the best possible care.`}
               </p>
             </div>
           </div>
@@ -132,11 +130,11 @@ export default function HospitalDetails() {
                 </div>
                 <div className="flex items-start gap-3 text-slate-600">
                   <Phone className="text-blue-600 shrink-0 mt-0.5" size={20} />
-                  <span className="text-sm font-medium">{hospital.contactNumber || "+1-800-MEDISLOT"}</span>
+                  <span className="text-sm font-medium">{hospital.phone || "+1-800-MEDISLOT"}</span>
                 </div>
                 <div className="flex items-start gap-3 text-slate-600">
-                  <Mail className="text-blue-600 shrink-0 mt-0.5" size={20} />
-                  <span className="text-sm font-medium">{hospital.email || "contact@hospital.com"}</span>
+                  <Calendar className="text-blue-600 shrink-0 mt-0.5" size={20} />
+                  <span className="text-sm font-medium">{hospital.timings || "Open 24/7"}</span>
                 </div>
               </div>
 
