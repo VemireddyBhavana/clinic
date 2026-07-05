@@ -14,7 +14,10 @@ import AdminNotifications from './pages/AdminNotifications';
 import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
-import Legal from './pages/Legal';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import CookiePolicy from './pages/CookiePolicy';
+import PatientRights from './pages/PatientRights';
 
 function App() {
   return (
@@ -30,7 +33,10 @@ function App() {
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/book" element={<BookAppointment />} />
           <Route path="/confirmation" element={<Confirmation />} />
-          <Route path="/legal" element={<Legal />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/cookie-policy" element={<CookiePolicy />} />
+          <Route path="/patient-rights" element={<PatientRights />} />
         </Route>
         
         <Route path="/admin/login" element={<AdminLogin />} />
