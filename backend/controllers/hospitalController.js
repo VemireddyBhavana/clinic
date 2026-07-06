@@ -38,9 +38,8 @@ exports.getNearbyHospitals = async (req, res) => {
       // First check if we already have local hospitals within distance to avoid rate limits
       const existingHospitals = await Hospital.countDocuments({
         location: {
-          $near: {
-            $geometry: { type: "Point", coordinates: [longitude, latitude] },
-            $maxDistance: maxDistanceInMeters
+          $geoWithin: {
+            $centerSphere: [[longitude, latitude], maxDistanceInMeters / 6378100] // meters converted to radians
           }
         },
         isActive: true
