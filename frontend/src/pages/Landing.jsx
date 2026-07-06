@@ -391,12 +391,12 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* Main Content inside a stunning dark glassmorphic box */}
-      <main className="flex-1 max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center justify-center gap-16 py-12 z-10 w-full">
-        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 p-8 lg:p-12 rounded-3xl bg-slate-950/75 backdrop-blur-xl border border-slate-900/50 shadow-2xl">
-          {/* Left Column: Hero Text & Get Started */}
+      {/* Main Content inside a stunning dark glassmorphic box aligned to the left */}
+      <main className="flex-1 max-w-7xl mx-auto px-6 flex items-center justify-start py-8 z-10 w-full">
+        <div className="w-full lg:w-[48%] lg:max-w-[550px] p-6 lg:p-8 rounded-3xl bg-slate-950/65 backdrop-blur-xl border border-slate-900/50 shadow-2xl flex flex-col gap-6">
+          {/* Hero Content */}
           <motion.div 
-            className="flex-1 text-left max-w-xl space-y-6"
+            className="text-left space-y-4"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -406,20 +406,20 @@ export default function Landing() {
               AI-Powered Smart Scheduling
             </div>
             
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent leading-none">
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent leading-none">
               Smarter Appointments.<br />
               <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent">Better Healthcare.</span>
             </h1>
             
-            <p className="text-base sm:text-lg text-slate-400 leading-relaxed">
-              MediSlot AI bridges the gap between patient slots booking and clinic administration. Discover nearby hospitals using live location mapping, preview directions with integrated Street View, and optimize medical resources in real-time.
+            <p className="text-sm text-slate-400 leading-relaxed">
+              MediSlot AI bridges the gap between patient slots booking and clinic administration. Discover nearby hospitals using live location mapping and preview directions in 3D.
             </p>
 
-            <div className="pt-4">
+            <div className="pt-2">
               <button 
                 id="get-started-btn"
                 onClick={() => navigate('/admin/login')}
-                className="py-4 px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(59,130,246,0.25)] hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] transition-all duration-300 text-sm hover:-translate-y-0.5"
+                className="py-3 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(59,130,246,0.25)] hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] transition-all duration-300 text-sm hover:-translate-y-0.5"
               >
                 GET STARTED
                 <ArrowRight size={16} />
@@ -427,30 +427,32 @@ export default function Landing() {
             </div>
           </motion.div>
 
-          {/* Right Column: Site Details & Key Features Grid */}
+          {/* Key Features Grid inside the same card */}
           <motion.div 
-            className="flex-1 w-full max-w-xl"
+            className="w-full border-t border-slate-900/60 pt-6 animate-in fade-in"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-6">Why Choose MediSlot AI?</h2>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Why Choose MediSlot AI?</h2>
             
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {features.map((feat, index) => {
                 const IconComp = feat.icon;
                 return (
                   <motion.div 
                     key={index}
                     variants={itemVariants}
-                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                    className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm hover:border-slate-700/60 transition-colors"
+                    whileHover={{ y: -2, transition: { duration: 0.2 } }}
+                    className="bg-slate-900/30 border border-slate-800/50 rounded-xl p-4 backdrop-blur-sm hover:border-slate-700/40 transition-colors flex flex-col gap-2"
                   >
-                    <div className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-4 ${feat.color}`}>
-                      <IconComp size={20} />
+                    <div className={`w-8 h-8 rounded-lg border flex items-center justify-center ${feat.color}`}>
+                      <IconComp size={16} />
                     </div>
-                    <h3 className="font-bold text-white text-base mb-2">{feat.title}</h3>
-                    <p className="text-slate-400 text-xs leading-relaxed">{feat.description}</p>
+                    <div>
+                      <h3 className="font-bold text-white text-xs mb-1">{feat.title}</h3>
+                      <p className="text-slate-400 text-[10px] leading-relaxed">{feat.description}</p>
+                    </div>
                   </motion.div>
                 );
               })}
