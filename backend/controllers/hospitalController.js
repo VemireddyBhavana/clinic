@@ -8,7 +8,7 @@ const axios = require('axios');
 // @access  Public
 exports.getNearbyHospitals = async (req, res) => {
   try {
-    const { lat, lng, distance = 50000 } = req.query; // Default 50km
+    const { lat, lng, distance = 100000 } = req.query; // Default 100km
 
     if (!lat || !lng) {
       // If no location provided, just return all hospitals
@@ -47,9 +47,9 @@ exports.getNearbyHospitals = async (req, res) => {
         isActive: true
       });
 
-      if (existingHospitals < 5) { // Only fetch if we have very few hospitals in this area
-        // 15km radius (15000 meters)
-        const overpassQuery = `[out:json];node(around:15000,${latitude},${longitude})[amenity=hospital];out 15;`;
+      if (existingHospitals < 10) { // Fetch if we have fewer than 10 hospitals in this area
+        // Fetch within maxDistance (default 100km) and limit to 100 results
+        const overpassQuery = `[out:json];node(around:${maxDistanceInMeters},${latitude},${longitude})[amenity=hospital];out 100;`;
         const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
         
         const response = await axios.get(overpassUrl, { 
