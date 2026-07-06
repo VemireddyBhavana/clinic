@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import MainLayout from './layouts/MainLayout';
 import AdminLayout from './layouts/AdminLayout';
@@ -25,15 +25,24 @@ import Hospitals from './pages/Hospitals';
 import HospitalDetails from './pages/HospitalDetails';
 import ScrollToTop from './components/ScrollToTop';
 
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem('adminToken');
+  if (!token) {
+    return <Navigate to="/admin/login" replace />;
+  }
+  return children ? children : <Outlet />;
+}
+
 function AnimatedRoutes() {
   const location = useLocation();
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/" element={<Navigate to="/admin/login" replace />} />
         <Route path="/legal" element={<Navigate to="/privacy-policy" replace />} />
         
-        <Route element={<MainLayout />}>
+        {/* Protected Patient Routes */}
+        <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
@@ -49,12 +58,14 @@ function AnimatedRoutes() {
           <Route path="/patient-rights" element={<PatientRights />} />
         </Route>
         
+        {/* Public Auth Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/register" element={<AdminRegister />} />
         <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
         <Route path="/admin/reset-password" element={<AdminResetPassword />} />
         
-        <Route path="/admin" element={<AdminLayout />}>
+        {/* Protected Admin Routes */}
+        <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="appointments" element={<AdminAppointments />} />
