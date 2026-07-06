@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import HospitalMap from '../components/location/HospitalMap';
 import { MapPin, Navigation, Star, Phone, Activity, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageContainer from '../components/layout/PageContainer';
@@ -8,23 +9,41 @@ import { getNearbyHospitals } from '../api/services';
 export default function Hospitals() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [hospitals, setHospitals] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [locationError, setLocationError] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [hospitals, setHospitals] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // If we have coordinates stored in sessionStorage from Home page, use them
-    const storedLat = sessionStorage.getItem('userLat');
-    const storedLng = sessionStorage.getItem('userLng');
+  const storedLat = sessionStorage.getItem("userLat");
+  const storedLng = sessionStorage.getItem("userLng");
 
-    if (storedLat && storedLng) {
-      fetchHospitals(storedLat, storedLng);
-    } else {
-      // Fallback to fetch all hospitals if no location
-      fetchHospitals();
-      setLocationError("Location not provided. Showing all available hospitals.");
-    }
-  }, []);
+  if (storedLat && storedLng) {
+    const lat = Number(storedLat);
+    const lng = Number(storedLng);
+
+    setUserLocation({ lat, lng });
+    fetchNearbyHospitals(lat, lng);
+  }
+}, []);
+
+  const fetchNearbyHospitals = async (lat, lng) => {
+  try {
+    setLoading(true);
+
+    const response = await fetch(
+      `http://localhost:5000/api/hospitals/nearby?lat=${lat}&lng=${lng}`
+    );
+
+    const data = await response.json();
+
+    setHospitals(data.hospitals || data || []);
+  } catch (error) {
+    console.error("Error fetching nearby hospitals:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const fetchHospitals = async (lat, lng) => {
     try {
@@ -83,6 +102,11 @@ export default function Hospitals() {
 
       <PageContainer>
         <div className="-mt-12 bg-white rounded-2xl shadow-lg border border-slate-100 p-8 min-h-[500px]">
+            {userLocation && hospitals.length > 0 && (
+              <div className="mb-8">
+                <HospitalMap userLocation={userLocation} hospitals={hospitals} />
+              </div>
+            )}
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
