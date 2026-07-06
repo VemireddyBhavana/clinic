@@ -41,3 +41,4 @@ dist-ssr
 *.sw?
 .env
 **/.env
+mongodb_data/

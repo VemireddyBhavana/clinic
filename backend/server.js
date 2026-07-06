@@ -4,7 +4,6 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
@@ -35,9 +34,20 @@ app.get('*splat', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  
-  // Seed hospitals if they don't exist
-  seedHospitals();
-});
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+      
+      // Seed hospitals if they don't exist
+      seedHospitals();
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
