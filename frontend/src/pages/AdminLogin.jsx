@@ -33,7 +33,7 @@ export default function AdminLogin() {
       });
       localStorage.setItem('adminToken', res.token);
       localStorage.setItem('adminInfo', JSON.stringify(res.admin));
-      navigate('/admin/dashboard');
+      navigate('/home');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     } finally {

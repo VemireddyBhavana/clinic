@@ -7,7 +7,6 @@ export default function AdminSidebar({ closeSidebar }) {
   const location = useLocation();
   
   const navItems = [
-    { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Appointments', path: '/admin/appointments', icon: Calendar },
     { name: 'Add Doctor', path: '/admin/add-doctor', icon: Users },
     { name: 'Notifications', path: '/admin/notifications', icon: Bell },
@@ -16,7 +15,7 @@ export default function AdminSidebar({ closeSidebar }) {
   return (
     <aside className="w-64 bg-slate-900 text-white flex flex-col h-screen sticky top-0">
       <div className="h-16 flex items-center px-6 border-b border-slate-800">
-        <Link to="/admin/dashboard" onClick={closeSidebar} className="text-xl font-bold flex items-center gap-2">
+        <Link to="/home" onClick={closeSidebar} className="text-xl font-bold flex items-center gap-2">
           <span className="bg-blue-600 text-white px-2 py-1 rounded-md text-sm">M</span>
           Admin Panel
         </Link>
