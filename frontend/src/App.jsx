@@ -24,6 +24,7 @@ import PatientRights from './pages/PatientRights';
 import Hospitals from './pages/Hospitals';
 import HospitalDetails from './pages/HospitalDetails';
 import ScrollToTop from './components/ScrollToTop';
+import Landing from './pages/Landing';
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('adminToken');
@@ -38,7 +39,7 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/legal" element={<Navigate to="/privacy-policy" replace />} />
         
         {/* Protected Patient Routes */}
