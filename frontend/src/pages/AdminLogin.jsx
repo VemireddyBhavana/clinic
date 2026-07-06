@@ -57,7 +57,7 @@ export default function AdminLogin() {
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover -z-10"
       >
-        <source src="https://www.image2url.com/r2/default/videos/1783342082091-95942b5d-d70a-443c-bd3c-edb9940e44a7.mp4" type="video/mp4" />
+        <source src="https://res.cloudinary.com/de8opipom/video/upload/v1783343289/WhatsApp_Video_2026-07-06_at_6.16.41_PM_yjm2ng.mp4" type="video/mp4" />
       </video>
 
       {/* Dark overlay for contrast */}
