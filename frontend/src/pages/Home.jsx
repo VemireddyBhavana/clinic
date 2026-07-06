@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Calendar, ShieldCheck, Activity, Bell,
-  User, Clock, LayoutTemplate, MessageSquare,
+  User, Clock, 
   CalendarCheck, ClipboardCheck, Lock,
   TrendingUp, Users, Star, ArrowRight, Headset
 } from 'lucide-react';
@@ -24,12 +24,11 @@ export default function Home() {
   };
 
   const fadeInUp = {
-    hidden: { opacity: 0, y: 80, scale: 0.9 },
+    hidden: { opacity: 0, y: 40 },
     visible: { 
       opacity: 1, 
-      y: 0, 
-      scale: 1,
-      transition: { type: "spring", stiffness: 80, damping: 10, mass: 1 } 
+      y: 0,
+      transition: { type: "spring", stiffness: 80, damping: 15 } 
     }
   };
 
@@ -37,9 +36,7 @@ export default function Home() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.15
-      }
+      transition: { staggerChildren: 0.12 }
     }
   };
 
@@ -47,117 +44,103 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 font-sans overflow-x-hidden transition-colors duration-300">
       <LocationPromptModal />
       
-      {/* Hero Section */}
-      <section className="relative pt-12 pb-24 lg:pt-20 lg:pb-32 overflow-visible bg-white dark:bg-slate-950 transition-colors duration-300">
+      {/* ── Hero Section ── */}
+      <section className="relative pt-10 pb-16 sm:pt-14 sm:pb-20 lg:pt-20 lg:pb-28 bg-white dark:bg-slate-950 transition-colors duration-300">
         <PageContainer>
-          <div className="grid grid-cols-12 gap-8 items-center">
+          <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-6 items-center">
             
-            {/* Left Content */}
+            {/* Left: Text Content */}
             <motion.div 
-              className="col-span-12 lg:col-span-4 z-10 pr-0 lg:pr-4"
+              className="w-full lg:col-span-5 text-center lg:text-left"
               initial="hidden"
-              whileInView="visible" viewport={{ once: true, amount: 0.1 }}
+              animate="visible"
               variants={fadeInUp}
             >
-              <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-full text-xs font-bold mb-6 border border-blue-100 dark:border-blue-900/50">
-                <Activity size={14} />
+              <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-full text-xs font-bold mb-5 border border-blue-100 dark:border-blue-900/50">
+                <Activity size={13} />
                 AI-Powered Smart Scheduling
               </div>
-              <h1 className="text-[2.5rem] sm:text-5xl lg:text-[3rem] font-bold text-slate-900 dark:text-white leading-[1.1] mb-5 tracking-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-bold text-slate-900 dark:text-white leading-[1.15] mb-4 tracking-tight">
                 Smarter Appointments.<br />
                 <span className="text-blue-600 dark:text-blue-500">Better Healthcare.</span>
               </h1>
-              <p className="text-base sm:text-lg text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 mb-7 leading-relaxed max-w-xl mx-auto lg:mx-0">
                 MediSlot AI optimizes clinic scheduling, reduces no-shows, balances doctor workload, and helps you get the right care at the right time.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
-                <Link to="/hospitals">
-                  <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-lg hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 shadow-sm text-sm cursor-pointer">
+              <div className="flex flex-col sm:flex-row gap-3 mb-10 justify-center lg:justify-start">
+                <Link to="/hospitals" className="w-full sm:w-auto">
+                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-7 rounded-lg hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 shadow-sm text-sm">
                     Book Appointment
                   </button>
                 </Link>
-                <Link to="/doctors">
-                  <button className="w-full sm:w-auto bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-3.5 px-8 rounded-lg border border-slate-200 dark:border-slate-800 transition-colors shadow-sm text-sm cursor-pointer">
+                <Link to="/doctors" className="w-full sm:w-auto">
+                  <button className="w-full bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-3 px-7 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors shadow-sm text-sm">
                     View Doctors
                   </button>
                 </Link>
               </div>
 
               {/* Stats Row */}
-              <div className="flex flex-wrap gap-6 sm:gap-10">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/40 flex items-center justify-center">
-                    <User className="text-blue-600 dark:text-blue-400" size={20} />
+              <div className="flex flex-wrap justify-center lg:justify-start gap-6 sm:gap-10">
+                {[
+                  { icon: User, value: '250+', label: 'Doctors' },
+                  { icon: CalendarCheck, value: '15K+', label: 'Appointments' },
+                  { icon: ShieldCheck, value: '98%', label: 'Satisfaction' },
+                ].map(({ icon: Icon, value, label }) => (
+                  <div key={label} className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-950/40 flex items-center justify-center shrink-0">
+                      <Icon className="text-blue-600 dark:text-blue-400" size={18} />
+                    </div>
+                    <div>
+                      <div className="font-bold text-slate-900 dark:text-white text-base leading-none mb-0.5">{value}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">{label}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-bold text-slate-900 dark:text-white text-lg leading-none mb-1">250+</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Doctors</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/40 flex items-center justify-center">
-                    <CalendarCheck className="text-blue-600 dark:text-blue-400" size={20} />
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-900 dark:text-white text-lg leading-none mb-1">15K+</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Appointments</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/40 flex items-center justify-center">
-                    <ShieldCheck className="text-blue-600 dark:text-blue-400" size={20} />
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-900 dark:text-white text-lg leading-none mb-1">98%</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Satisfaction</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </motion.div>
             
-            {/* Middle Content - Doctor Image */}
+            {/* Middle: Doctor Image — hidden on small mobile, shown tablet+ */}
             <motion.div 
-              className="col-span-12 md:col-span-6 lg:col-span-4 flex justify-center relative mt-12 lg:mt-0"
-              initial={{ opacity: 0, y: 30 }}
+              className="hidden sm:flex lg:col-span-3 justify-center"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
             >
-              {/* Doctor Image Group */}
-              <div className="relative w-full max-w-[340px] rounded-[32px] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-100 shrink-0">
-                <div className="absolute bottom-4 right-0 left-4 h-[80%] bg-blue-50/50 rounded-[40px] -z-10"></div>
+              <div className="relative w-full max-w-[260px] sm:max-w-[300px] rounded-[28px] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-md bg-white dark:bg-slate-900 shrink-0">
+                <div className="absolute bottom-4 right-0 left-4 h-[80%] bg-blue-50/50 dark:bg-blue-950/20 rounded-[32px] -z-10"></div>
                 <img 
                   src="https://res.cloudinary.com/de8opipom/image/upload/v1783233370/WhatsApp_Image_2026-07-05_at_12.03.42_PM_yh82us.jpg" 
                   alt="Doctor" 
-                  className="relative z-10 w-full h-auto object-contain mix-blend-multiply"
+                  className="relative z-10 w-full h-auto object-contain mix-blend-multiply dark:mix-blend-normal"
                 />
               </div>
             </motion.div>
 
-            {/* Right Content - Booking Form */}
+            {/* Right: Booking Form */}
             <motion.div 
-              className="col-span-12 md:col-span-6 lg:col-span-4 flex justify-center lg:justify-end relative mt-12 lg:mt-0"
-              initial={{ opacity: 0, x: 30 }}
+              className="w-full lg:col-span-4"
+              initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              {/* Embedded Booking Form - Positioned strictly beside */}
-              <div className="w-full max-w-[380px] shrink-0 z-30 bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.06)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.3)] border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+              <div className="w-full max-w-[420px] mx-auto lg:ml-auto lg:mr-0 bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.07)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] border border-slate-100 dark:border-slate-800 transition-colors duration-300">
                 <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">Book Your Appointment</h3>
                 <p className="text-[12px] text-slate-500 dark:text-slate-400 mb-4">Get AI-recommended slots based on availability & wait time.</p>
                 
-                <div className="grid grid-cols-2 gap-3.5 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                   <div>
                     <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
-                    <input type="text" placeholder="Enter full name" className="w-full text-xs px-3 py-1.5 border border-slate-200 dark:border-slate-850 dark:bg-slate-950 dark:text-slate-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-400 dark:placeholder-slate-500" />
+                    <input type="text" placeholder="Enter full name" className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-400 dark:placeholder-slate-500" />
                   </div>
                   <div>
                     <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Mobile Number</label>
-                    <input type="text" placeholder="Enter mobile number" className="w-full text-xs px-3 py-1.5 border border-slate-200 dark:border-slate-850 dark:bg-slate-950 dark:text-slate-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-400 dark:placeholder-slate-500" />
+                    <input type="text" placeholder="Enter mobile number" className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-400 dark:placeholder-slate-500" />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Select Specialization</label>
+                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Specialization</label>
                     <select 
-                      className="w-full text-xs px-3 py-1.5 border border-slate-200 dark:border-slate-850 dark:bg-slate-950 dark:text-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white cursor-pointer"
+                      className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white cursor-pointer"
                       value={specialization}
                       onChange={(e) => setSpecialization(e.target.value)}
                     >
@@ -176,34 +159,31 @@ export default function Home() {
                       type="date" 
                       value={preferredDate}
                       onChange={(e) => setPreferredDate(e.target.value)}
-                      className="w-full text-xs px-3 py-1.5 border border-slate-200 dark:border-slate-850 dark:bg-slate-950 dark:text-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer" 
+                      className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer" 
                     />
                   </div>
                 </div>
                 
                 <button 
                   onClick={handleBookSlot}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 text-xs mb-4 shadow-sm cursor-pointer"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 text-xs mb-4 shadow-sm cursor-pointer"
                 >
                   Find Best Slots
                 </button>
 
-                {/* Form Trust Indicators */}
-                <div className="flex justify-between items-start border-t border-slate-100 dark:border-slate-800 pt-3.5">
-                  <div className="flex items-start gap-1.5">
-                    <Clock size={15} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-                    <div>
-                      <div className="text-[10px] font-bold text-slate-900 dark:text-slate-200 leading-tight mb-0.5">Lower Wait Time</div>
-                      <div className="text-[9px] text-slate-500 dark:text-slate-400">AI finds best slot</div>
+                <div className="flex justify-between items-start border-t border-slate-100 dark:border-slate-800 pt-3">
+                  {[
+                    { icon: Clock, title: 'Lower Wait Time', sub: 'AI finds best slot' },
+                    { icon: ShieldCheck, title: 'No-Show Reduction', sub: 'Smart reminders' },
+                  ].map(({ icon: Icon, title, sub }) => (
+                    <div key={title} className="flex items-start gap-1.5">
+                      <Icon size={14} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-[10px] font-bold text-slate-900 dark:text-slate-200 leading-tight mb-0.5">{title}</div>
+                        <div className="text-[9px] text-slate-500 dark:text-slate-400">{sub}</div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <ShieldCheck size={15} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-                    <div>
-                      <div className="text-[10px] font-bold text-slate-900 dark:text-slate-200 leading-tight mb-0.5">No-Show Reduction</div>
-                      <div className="text-[9px] text-slate-500 dark:text-slate-400">Smart reminders</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -211,122 +191,35 @@ export default function Home() {
         </PageContainer>
       </section>
 
-      {/* Features Section */}
-      <section className="py-12 bg-white dark:bg-slate-950 relative z-20 -mt-10 lg:-mt-16 transition-colors duration-300">
+      {/* ── Features Cards ── */}
+      <section className="py-10 sm:py-14 bg-white dark:bg-slate-950 transition-colors duration-300">
         <PageContainer>
           <motion.div 
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true, margin: "-40px" }}
           >
-            {/* Card 1 */}
-            <motion.div 
-              variants={fadeInUp} 
-              whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_15px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-800 flex items-center gap-4 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300 cursor-default"
-            >
-              <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
-                <CalendarCheck className="text-blue-600 dark:text-blue-400" size={24} />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 dark:text-white text-[13px] leading-tight mb-1">Smart Slot Recommendation</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-tight">AI suggests the best available slots for you.</p>
-              </div>
-            </motion.div>
-
-            {/* Card 2 */}
-            <motion.div 
-              variants={fadeInUp} 
-              whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_15px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-800 flex items-center gap-4 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300 cursor-default"
-            >
-              <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
-                <TrendingUp className="text-blue-600 dark:text-blue-400" size={24} />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 dark:text-white text-[13px] leading-tight mb-1">No-Show Risk Prediction</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-tight">We predict no-show risk and prepare better.</p>
-              </div>
-            </motion.div>
-
-            {/* Card 3 */}
-            <motion.div 
-              variants={fadeInUp} 
-              whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_15px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-800 flex items-center gap-4 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300 cursor-default"
-            >
-              <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
-                <Users className="text-blue-600 dark:text-blue-400" size={24} />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 dark:text-white text-[13px] leading-tight mb-1">Workload Balancer</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-tight">Distributes appointments evenly across doctors.</p>
-              </div>
-            </motion.div>
-
-            {/* Card 4 */}
-            <motion.div 
-              variants={fadeInUp} 
-              whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_15px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-800 flex items-center gap-4 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300 cursor-default"
-            >
-              <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
-                <Bell className="text-blue-600 dark:text-blue-400" size={24} />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 dark:text-white text-[13px] leading-tight mb-1">Automated Reminders</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-tight">Timely SMS & email reminders for appointments.</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        </PageContainer>
-      </section>
-
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-16 pb-24 relative z-20 bg-slate-50/50 dark:bg-slate-900/30 transition-colors duration-300">
-        <PageContainer>
-          <motion.div 
-            className="text-center mb-14"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">How It Works</h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">Simple steps to book your appointment</p>
-          </motion.div>
-
-          <motion.div 
-            className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 lg:gap-6 relative"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-          >
-            {/* Connecting Dotted Line for Desktop */}
-            <div className="hidden lg:block absolute top-1/2 left-[10%] right-[10%] h-[2px] border-t-2 border-dashed border-slate-300 dark:border-slate-800 -z-0 transform -translate-y-1/2"></div>
-
-            {/* Steps */}
             {[
-              { num: 1, icon: User, title: "Choose Doctor", desc: "Browse doctors by specialization or search." },
-              { num: 2, icon: CalendarCheck, title: "Select Best Slot", desc: "AI shows recommended slots with lower wait time." },
-              { num: 3, icon: ClipboardCheck, title: "Confirm Booking", desc: "Fill your details and confirm the appointment." },
-              { num: 4, icon: Bell, title: "Get Reminders", desc: "Receive timely reminders and follow-ups." },
-            ].map((step, idx) => (
-              <motion.div key={idx} variants={fadeInUp} className="w-full lg:w-1/4 bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-800 relative z-10 flex items-center gap-3.5 transition-colors duration-300">
-                <div className="flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-[13px] font-bold shrink-0">{step.num}</div>
-                <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
-                  <step.icon className="text-blue-600 dark:text-blue-400" size={22} />
+              { icon: CalendarCheck, title: 'Smart Slot Recommendation', desc: 'AI suggests the best available slots for you.' },
+              { icon: TrendingUp, title: 'No-Show Risk Prediction', desc: 'We predict no-show risk and prepare better.' },
+              { icon: Users, title: 'Workload Balancer', desc: 'Distributes appointments evenly across doctors.' },
+              { icon: Bell, title: 'Automated Reminders', desc: 'Timely SMS & email reminders for appointments.' },
+            ].map(({ icon: Icon, title, desc }) => (
+              <motion.div 
+                key={title}
+                variants={fadeInUp} 
+                whileHover={{ y: -6, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm dark:shadow-slate-950/20 border border-slate-100 dark:border-slate-800 flex items-center gap-4 hover:shadow-md hover:border-blue-100 dark:hover:border-blue-800 transition-all duration-300"
+              >
+                <div className="w-11 h-11 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
+                  <Icon className="text-blue-600 dark:text-blue-400" size={22} />
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-slate-900 dark:text-white text-[15px] mb-0.5">{step.title}</h3>
-                  <p className="text-[12px] text-slate-500 dark:text-slate-400 leading-snug">{step.desc}</p>
+                <div>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-[13px] leading-tight mb-1">{title}</h3>
+                  <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-snug">{desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -334,57 +227,112 @@ export default function Home() {
         </PageContainer>
       </section>
 
-      {/* Our Top Doctors Section */}
-      <section className="py-16 pb-24 bg-white dark:bg-slate-950 relative z-20 transition-colors duration-300">
+      {/* ── How It Works ── */}
+      <section id="how-it-works" className="py-12 sm:py-16 bg-slate-50/70 dark:bg-slate-900/30 transition-colors duration-300">
         <PageContainer>
           <motion.div 
-            className="flex justify-between items-end mb-10"
+            className="text-center mb-10 sm:mb-14"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">How It Works</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Simple steps to book your appointment</p>
+          </motion.div>
+
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 relative"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+          >
+            {/* Connecting line — desktop only */}
+            <div className="hidden lg:block absolute top-1/2 left-[12%] right-[12%] h-[2px] border-t-2 border-dashed border-slate-200 dark:border-slate-700 -z-0 transform -translate-y-1/2" />
+
+            {[
+              { num: 1, icon: User, title: 'Choose Doctor', desc: 'Browse doctors by specialization or search.' },
+              { num: 2, icon: CalendarCheck, title: 'Select Best Slot', desc: 'AI shows recommended slots with lower wait time.' },
+              { num: 3, icon: ClipboardCheck, title: 'Confirm Booking', desc: 'Fill your details and confirm the appointment.' },
+              { num: 4, icon: Bell, title: 'Get Reminders', desc: 'Receive timely reminders and follow-ups.' },
+            ].map((step) => (
+              <motion.div 
+                key={step.num} 
+                variants={fadeInUp} 
+                className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm dark:shadow-slate-950/20 border border-slate-100 dark:border-slate-800 relative z-10 flex items-center gap-3 transition-colors duration-300"
+              >
+                <div className="flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-xs font-bold shrink-0">{step.num}</div>
+                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
+                  <step.icon className="text-blue-600 dark:text-blue-400" size={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-0.5 truncate">{step.title}</h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">{step.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </PageContainer>
+      </section>
+
+      {/* ── Our Top Doctors ── */}
+      <section className="py-12 sm:py-16 bg-white dark:bg-slate-950 transition-colors duration-300">
+        <PageContainer>
+          <motion.div 
+            className="flex flex-wrap justify-between items-end gap-3 mb-8 sm:mb-10"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
           >
             <div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Our Top Doctors</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-1">Our Top Doctors</h2>
               <p className="text-slate-500 dark:text-slate-400 text-sm">Experienced specialists across multiple departments</p>
             </div>
-            <Link to="/doctors" className="hidden sm:flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-bold text-sm hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
-              View All Doctors <ArrowRight size={16} />
+            <Link to="/doctors" className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-bold text-sm hover:text-blue-700 transition-colors">
+              View All <ArrowRight size={15} />
             </Link>
           </motion.div>
 
           <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true, margin: "-40px" }}
           >
             {[
-              { name: "Dr. Sarah Johnson", spec: "Cardiologist", exp: "10+ Years", rating: "4.9", reviews: "120", avail: "Available Today", color: "green", img: "Sarah+Johnson" },
-              { name: "Dr. Amit Verma", spec: "Neurologist", exp: "12+ Years", rating: "4.3", reviews: "98", avail: "Next Slot: 11:00 AM", color: "orange", img: "Amit+Verma" },
-              { name: "Dr. Priya Sharma", spec: "Dermatologist", exp: "8+ Years", rating: "4.7", reviews: "85", avail: "Available Today", color: "green", img: "Priya+Sharma" },
-              { name: "Dr. Rajesh Patel", spec: "Orthopedic", exp: "15+ Years", rating: "4.9", reviews: "110", avail: "Next Slot: 10:30 AM", color: "orange", img: "Rajesh+Patel" },
-              { name: "Dr. Neha Gupta", spec: "Pediatrician", exp: "9+ Years", rating: "4.8", reviews: "95", avail: "Available Today", color: "green", img: "Neha+Gupta", hiddenLg: true }
+              { name: 'Dr. Sarah Johnson', spec: 'Cardiologist', exp: '10+ Years', rating: '4.9', reviews: '120', avail: 'Available Today', color: 'green', img: 'Sarah+Johnson' },
+              { name: 'Dr. Amit Verma', spec: 'Neurologist', exp: '12+ Years', rating: '4.3', reviews: '98', avail: 'Next: 11:00 AM', color: 'orange', img: 'Amit+Verma' },
+              { name: 'Dr. Priya Sharma', spec: 'Dermatologist', exp: '8+ Years', rating: '4.7', reviews: '85', avail: 'Available Today', color: 'green', img: 'Priya+Sharma' },
+              { name: 'Dr. Rajesh Patel', spec: 'Orthopedic', exp: '15+ Years', rating: '4.9', reviews: '110', avail: 'Next: 10:30 AM', color: 'orange', img: 'Rajesh+Patel' },
             ].map((doc, idx) => (
-              <motion.div key={idx} variants={fadeInUp} className={`bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-800 hover:border-blue-100 dark:hover:border-blue-800 hover:shadow-lg transition-all duration-300 ${doc.hiddenLg ? 'hidden lg:block' : ''}`}>
-                <div className="flex gap-4 mb-4 items-center">
-                  <img src={`https://ui-avatars.com/api/?name=${doc.img}&background=eff6ff&color=2563eb`} alt={doc.name} className="w-16 h-16 rounded-full object-cover border-2 border-slate-50 dark:border-slate-800" />
-                  <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-tight mb-1">{doc.name}</h3>
-                    <p className="text-slate-500 dark:text-slate-400 text-[11px] mb-1.5">{doc.spec}</p>
+              <motion.div 
+                key={idx} 
+                variants={fadeInUp} 
+                whileHover={{ y: -4 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+                className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-4 sm:p-5 shadow-sm hover:shadow-md hover:border-blue-100 dark:hover:border-blue-800 transition-all duration-300"
+              >
+                <div className="flex gap-3 mb-3 items-center">
+                  <img src={`https://ui-avatars.com/api/?name=${doc.img}&background=eff6ff&color=2563eb`} alt={doc.name} className="w-14 h-14 rounded-xl object-cover border border-slate-100 dark:border-slate-700 shrink-0" />
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-tight mb-0.5 truncate">{doc.name}</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-[11px] mb-1">{doc.spec}</p>
                     <p className="text-slate-400 dark:text-slate-500 text-[10px] font-medium">{doc.exp} Exp.</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 mb-4">
+                <div className="flex items-center gap-0.5 mb-3">
                   {[1,2,3,4,5].map(i => (
-                     <Star key={i} className={i <= Math.floor(parseFloat(doc.rating)) ? "text-yellow-400 fill-yellow-400" : "text-slate-200 fill-slate-200 dark:text-slate-700 dark:fill-slate-700"} size={14} />
+                    <Star key={i} className={i <= Math.floor(parseFloat(doc.rating)) ? 'text-yellow-400 fill-yellow-400' : 'text-slate-200 fill-slate-200 dark:text-slate-700 dark:fill-slate-700'} size={13} />
                   ))}
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300 ml-1">{doc.rating}</span>
                   <span className="text-[10px] text-slate-400 dark:text-slate-500">({doc.reviews})</span>
                 </div>
-                <div className={`text-center mb-4 text-[11px] font-bold py-1.5 rounded-lg flex items-center justify-center gap-1.5 ${doc.color === 'green' ? 'text-green-600 bg-green-50 dark:bg-green-950/30' : 'text-orange-600 bg-orange-50 dark:bg-orange-950/30'}`}>
-                  {doc.color === 'green' ? <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div> : <Clock size={12} />} {doc.avail}
+                <div className={`text-center mb-3 text-[11px] font-bold py-1.5 rounded-lg flex items-center justify-center gap-1.5 ${doc.color === 'green' ? 'text-green-600 bg-green-50 dark:bg-green-950/30 dark:text-green-400' : 'text-orange-600 bg-orange-50 dark:bg-orange-950/30 dark:text-orange-400'}`}>
+                  {doc.color === 'green' ? <div className="w-1.5 h-1.5 bg-green-500 rounded-full" /> : <Clock size={11} />}
+                  {doc.avail}
                 </div>
                 <button 
                   onClick={() => handleBookDoctor(doc.name)}
@@ -395,47 +343,27 @@ export default function Home() {
               </motion.div>
             ))}
           </motion.div>
-          
-          <div className="mt-8 text-center sm:hidden">
-            <Link to="/doctors" className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-bold text-sm hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
-              View All Doctors <ArrowRight size={16} />
-            </Link>
-          </div>
         </PageContainer>
       </section>
 
-      {/* Footer Banner */}
-      <section className="bg-blue-600 py-10 mt-auto w-full border-t border-blue-700">
+      {/* ── Trust Banner ── */}
+      <section className="bg-blue-600 py-8 sm:py-10 mt-auto w-full border-t border-blue-700">
         <PageContainer>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="flex items-start gap-4">
-              <Clock className="text-blue-200 shrink-0 mt-1" size={28} />
-              <div>
-                <h4 className="text-white font-bold text-sm mb-1">Easy & Fast Booking</h4>
-                <p className="text-blue-100 text-xs leading-relaxed">Book in less than 2 minutes</p>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
+            {[
+              { icon: Clock, title: 'Easy & Fast Booking', desc: 'Book in less than 2 minutes' },
+              { icon: ShieldCheck, title: 'Secure & Confidential', desc: 'Your data is safe with us' },
+              { icon: Headset, title: '24/7 Support', desc: 'We are always here to help' },
+              { icon: Users, title: 'Trusted by Thousands', desc: '15K+ happy patients' },
+            ].map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="flex items-start gap-3">
+                <Icon className="text-blue-200 shrink-0 mt-0.5" size={22} />
+                <div>
+                  <h4 className="text-white font-bold text-xs sm:text-sm mb-0.5">{title}</h4>
+                  <p className="text-blue-100 text-[11px] sm:text-xs leading-relaxed">{desc}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <ShieldCheck className="text-blue-200 shrink-0 mt-1" size={28} />
-              <div>
-                <h4 className="text-white font-bold text-sm mb-1">Secure & Confidential</h4>
-                <p className="text-blue-100 text-xs leading-relaxed">Your data is safe with us</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <Headset className="text-blue-200 shrink-0 mt-1" size={28} />
-              <div>
-                <h4 className="text-white font-bold text-sm mb-1">24/7 Support</h4>
-                <p className="text-blue-100 text-xs leading-relaxed">We are always here to help</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <Users className="text-blue-200 shrink-0 mt-1" size={28} />
-              <div>
-                <h4 className="text-white font-bold text-sm mb-1">Trusted by Thousands</h4>
-                <p className="text-blue-100 text-xs leading-relaxed">15K+ happy patients</p>
-              </div>
-            </div>
+            ))}
           </div>
         </PageContainer>
       </section>

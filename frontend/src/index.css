@@ -10,10 +10,24 @@
   --color-surface: #ffffff;
 }
 
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   @apply bg-[var(--color-background)] text-gray-800 antialiased;
   transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Dark mode body ── */
+.dark body,
+body.dark {
+  background-color: #020617;
+  color: #f1f5f9;
 }
 
 /* Custom Toggle Switch for theme change */

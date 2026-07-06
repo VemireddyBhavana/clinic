@@ -84,42 +84,42 @@ export default function Hospitals() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-20">
-      <div className="bg-blue-600 pt-16 pb-24 text-white text-center">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-16 transition-colors duration-300">
+      <div className="bg-blue-600 dark:bg-blue-700 pt-12 pb-20 sm:pt-16 sm:pb-24 text-white text-center">
         <PageContainer>
-          <div className="inline-flex items-center gap-2 bg-blue-500 text-white px-3 py-1.5 rounded-full text-xs font-bold mb-6 border border-blue-400">
+          <div className="inline-flex items-center gap-2 bg-blue-500 text-white px-3 py-1.5 rounded-full text-xs font-bold mb-5 border border-blue-400">
             <Activity size={14} />
             Network of Care
           </div>
-          <h1 className="text-4xl font-bold mb-4">Select a Hospital</h1>
-          <p className="text-blue-100 max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">Select a Hospital</h1>
+          <p className="text-blue-100 text-sm sm:text-base max-w-xl mx-auto">
             {locationError 
-              ? "Showing all partnered hospitals across our network."
-              : "Here are the top-rated hospitals near your current location."}
+              ? 'Showing all partnered hospitals across our network.'
+              : 'Here are the top-rated hospitals near your current location.'}
           </p>
         </PageContainer>
       </div>
 
       <PageContainer>
-        <div className="-mt-12 bg-white rounded-2xl shadow-lg border border-slate-100 p-8 min-h-[500px]">
+        <div className="-mt-10 sm:-mt-12 bg-white dark:bg-slate-900 rounded-2xl shadow-lg dark:shadow-slate-950/40 border border-slate-100 dark:border-slate-800 p-4 sm:p-8 min-h-[400px]">
             {userLocation && hospitals.length > 0 && (
-              <div className="mb-8">
+              <div className="mb-6 sm:mb-8">
                 <HospitalMap userLocation={userLocation} hospitals={hospitals} />
               </div>
             )}
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
             </div>
           ) : (
             <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6"
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
             >
               {hospitals.length === 0 ? (
-                <div className="col-span-full text-center py-12 text-slate-500">
+                <div className="col-span-full text-center py-12 text-slate-500 dark:text-slate-400">
                   <p>No hospitals found nearby.</p>
                 </div>
               ) : (
@@ -127,10 +127,10 @@ export default function Hospitals() {
                   <motion.div 
                     key={hospital.id || hospital._id} 
                     variants={fadeInUp}
-                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileHover={{ y: -6, scale: 1.01 }}
                     whileTap={{ scale: 0.98 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-300 transition-all duration-300 flex flex-col"
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-xl dark:hover:shadow-slate-950/40 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 flex flex-col"
                   >
                     <div className="relative overflow-hidden group">
                       <img 
@@ -148,15 +148,15 @@ export default function Hospitals() {
                     
                     <div className="p-5 flex-1 flex flex-col">
                       <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-bold text-slate-900 text-lg leading-tight">{hospital.name}</h3>
-                        <div className="flex items-center bg-blue-50 px-2 py-1 rounded text-blue-700 text-xs font-bold shrink-0">
-                          <Star size={12} className="mr-1 fill-blue-700" />
-                          {hospital.rating || "4.0"}
+                        <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg leading-tight">{hospital.name}</h3>
+                        <div className="flex items-center bg-blue-50 dark:bg-blue-950/40 px-2 py-1 rounded text-blue-700 dark:text-blue-400 text-xs font-bold shrink-0 ml-2">
+                          <Star size={12} className="mr-1 fill-blue-700 dark:fill-blue-400" />
+                          {hospital.rating || '4.0'}
                         </div>
                       </div>
                       
                       <div className="space-y-2 mb-4">
-                        <div className="flex items-start gap-2 text-slate-500 text-xs">
+                        <div className="flex items-start gap-2 text-slate-500 dark:text-slate-400 text-xs">
                           <MapPin size={14} className="shrink-0 mt-0.5 text-blue-500" />
                           <a 
                             href={`https://www.google.com/maps/search/?api=1&query=${hospital.latitude},${hospital.longitude}`} 
@@ -167,37 +167,37 @@ export default function Hospitals() {
                             {hospital.address}
                           </a>
                         </div>
-                        <div className="flex items-start gap-2 text-slate-500 text-xs">
+                        <div className="flex items-start gap-2 text-slate-500 dark:text-slate-400 text-xs">
                           <Phone size={14} className="shrink-0 mt-0.5 text-blue-500" />
                           <a 
-                            href={`tel:${hospital.phone || "+18000000000"}`} 
+                            href={`tel:${hospital.phone || '+18000000000'}`} 
                             className="hover:text-blue-600 hover:underline transition-colors"
                           >
-                            {hospital.phone || "+1 (800) MEDISLOT"}
+                            {hospital.phone || '+1 (800) MEDISLOT'}
                           </a>
                         </div>
-                        <div className="flex items-start gap-2 text-slate-500 text-xs">
+                        <div className="flex items-start gap-2 text-slate-500 dark:text-slate-400 text-xs">
                           <Clock size={14} className="shrink-0 mt-0.5 text-blue-500" />
-                          <span className="line-clamp-1">{hospital.timings || "24/7 Emergency"}</span>
+                          <span className="line-clamp-1">{hospital.timings || '24/7 Emergency'}</span>
                         </div>
                       </div>
                       
                       <div className="flex flex-wrap gap-1.5 mb-5 mt-auto">
                         {(hospital.departments || []).slice(0, 3).map((dept, i) => (
-                          <span key={i} className="text-[10px] font-bold uppercase tracking-wide text-slate-600 bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                          <span key={i} className="text-[10px] font-bold uppercase tracking-wide text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded border border-slate-200 dark:border-slate-600">
                             {dept}
                           </span>
                         ))}
                         {(hospital.departments || []).length > 3 && (
-                          <span className="text-[10px] font-bold uppercase tracking-wide text-slate-600 bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                          <span className="text-[10px] font-bold uppercase tracking-wide text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded border border-slate-200 dark:border-slate-600">
                             +{(hospital.departments || []).length - 3} More
                           </span>
                         )}
                       </div>
 
-                      <div className="flex gap-2 mt-auto pt-4 border-t border-slate-100">
+                      <div className="flex gap-2 mt-auto pt-4 border-t border-slate-100 dark:border-slate-700">
                         <Link to={`/hospital/${hospital.id || hospital._id}`} state={location.state} className="flex-1">
-                          <button className="w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-2.5 rounded-lg transition-colors text-sm border border-slate-200 shadow-sm">
+                          <button className="w-full bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-white font-bold py-2.5 rounded-lg transition-colors text-sm border border-slate-200 dark:border-slate-600 shadow-sm">
                             View Details
                           </button>
                         </Link>
@@ -205,7 +205,7 @@ export default function Hospitals() {
                           onClick={() => navigate('/book', { state: { hospitalId: hospital.id || hospital._id, hospitalName: hospital.name, ...(location.state || {}) } })}
                           className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 text-sm shadow-sm"
                         >
-                          Book Appointment
+                          Book Now
                         </button>
                       </div>
                     </div>

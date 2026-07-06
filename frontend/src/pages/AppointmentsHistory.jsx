@@ -60,7 +60,7 @@ export default function AppointmentsHistory() {
   });
 
   return (
-    <div className="bg-slate-50 min-h-screen py-8">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen py-6 sm:py-8 transition-colors duration-300">
       <PageContainer>
         <div className="space-y-6">
           <div className="flex items-center gap-3">
@@ -77,7 +77,7 @@ export default function AppointmentsHistory() {
           </div>
 
           {/* Search & Filter bar */}
-          <CardWrapper className="bg-white p-4">
+          <CardWrapper className="bg-white dark:bg-slate-900 p-4 border dark:border-slate-800">
             <div className="flex flex-col lg:flex-row gap-4 items-center">
               <div className="flex-1 w-full relative">
                 <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -125,56 +125,45 @@ export default function AppointmentsHistory() {
               onAction={() => navigate('/hospitals')}
             />
           ) : (
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
               {filteredAppointments.map((apt) => (
                 <CardWrapper 
                   key={apt._id} 
-                  className="bg-white p-6 border border-slate-200/80 hover:shadow-md transition-shadow flex flex-col justify-between"
+                  className="bg-white dark:bg-slate-900 dark:border-slate-800 p-4 sm:p-6 border border-slate-200/80 hover:shadow-md transition-shadow flex flex-col justify-between"
                 >
                   <div className="space-y-4">
                     {/* Header: Hospital & Status */}
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <h3 className="font-bold text-slate-900 text-lg leading-tight">
-                          {apt.hospitalName || "MediSlot Affiliated Clinic"}
+                        <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg leading-tight">
+                          {apt.hospitalName || 'MediSlot Affiliated Clinic'}
                         </h3>
-                        <p className="text-xs text-slate-400 mt-1">Booking ID: {apt._id}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 truncate max-w-[180px]">Booking ID: {apt._id}</p>
                       </div>
                       <AppointmentStatusBadge status={apt.status} />
                     </div>
 
                     {/* Roster & Doctor details */}
                     <div className="grid gap-3 pt-2 border-t border-slate-100">
-                      <div className="flex items-center gap-3 text-slate-600 text-sm">
-                        <User size={16} className="text-slate-400" />
-                        <span>
-                          <strong>Doctor:</strong> {apt.doctorName} ({apt.specialization})
-                        </span>
+                      <div className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-400">
+                        <User size={15} className="text-slate-400 dark:text-slate-500 mt-0.5 shrink-0" />
+                        <span><strong className="text-slate-700 dark:text-slate-300">Doctor:</strong> {apt.doctorName} ({apt.specialization})</span>
                       </div>
-                      <div className="flex items-center gap-3 text-slate-600 text-sm">
-                        <Calendar size={16} className="text-slate-400" />
-                        <span>
-                          <strong>Date:</strong> {new Date(apt.appointmentDate).toLocaleDateString(undefined, {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </span>
+                      <div className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-400">
+                        <Calendar size={15} className="text-slate-400 dark:text-slate-500 mt-0.5 shrink-0" />
+                        <span><strong className="text-slate-700 dark:text-slate-300">Date:</strong> {new Date(apt.appointmentDate).toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</span>
                       </div>
-                      <div className="flex items-center gap-3 text-slate-600 text-sm">
-                        <Clock size={16} className="text-slate-400" />
-                        <span>
-                          <strong>Time Slot:</strong> {apt.timeSlot}
-                        </span>
+                      <div className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+                        <Clock size={15} className="text-slate-400 dark:text-slate-500 shrink-0" />
+                        <span><strong className="text-slate-700 dark:text-slate-300">Time Slot:</strong> {apt.timeSlot}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Booking Metadata & Cancel Button */}
-                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
-                    <span className="text-xs text-slate-400">
-                      Booked for: <strong>{apt.patientName}</strong>
+                  <div className="mt-5 sm:mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                    <span className="text-xs text-slate-400 dark:text-slate-500">
+                      Booked for: <strong className="text-slate-600 dark:text-slate-300">{apt.patientName}</strong>
                     </span>
 
                     {apt.status === 'booked' && (

@@ -178,70 +178,70 @@ export default function BookAppointment() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex justify-center items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
       </div>
     );
   }
 
   if (bookingSuccess) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center py-20 px-4">
-        <div className="bg-white p-10 rounded-2xl shadow-xl max-w-lg w-full text-center border border-slate-100">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center py-16 px-4">
+        <div className="bg-white dark:bg-slate-900 p-6 sm:p-10 rounded-2xl shadow-xl dark:shadow-slate-950/40 max-w-lg w-full text-center border border-slate-100 dark:border-slate-800">
           <motion.div 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner"
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            className="w-20 h-20 sm:w-24 sm:h-24 bg-green-100 dark:bg-green-950/40 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner"
           >
-            <CheckCircle size={48} />
+            <CheckCircle size={44} />
           </motion.div>
-          <h2 className="text-3xl font-bold text-slate-900 mb-2">Booking Confirmed!</h2>
-          <p className="text-slate-600 mb-8 text-lg">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">Booking Confirmed!</h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-8 text-base sm:text-lg">
             Thank you, <span className="font-bold">{patientDetails.patientName}</span>. Your slot is secured.
           </p>
 
-          <div className="bg-slate-50 p-6 rounded-xl border border-slate-100 text-left mb-8 space-y-4">
-            <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">Appointment Summary</h3>
+          <div className="bg-slate-50 dark:bg-slate-800 p-5 sm:p-6 rounded-xl border border-slate-100 dark:border-slate-700 text-left mb-8 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-2 mb-4">Appointment Summary</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-slate-500 mb-1 font-medium">Hospital</p>
-                <p className="font-bold text-slate-900">{initialState.hospitalName || "Partner Hospital"}</p>
+                <p className="text-slate-500 dark:text-slate-400 mb-1 font-medium">Hospital</p>
+                <p className="font-bold text-slate-900 dark:text-white">{initialState.hospitalName || 'Partner Hospital'}</p>
               </div>
               <div>
-                <p className="text-slate-500 mb-1 font-medium">Doctor</p>
-                <p className="font-bold text-slate-900">{selectedDoctor?.name || "Assigned Doctor"}</p>
+                <p className="text-slate-500 dark:text-slate-400 mb-1 font-medium">Doctor</p>
+                <p className="font-bold text-slate-900 dark:text-white">{selectedDoctor?.name || 'Assigned Doctor'}</p>
               </div>
               <div>
-                <p className="text-slate-500 mb-1 font-medium">Date</p>
-                <p className="font-bold text-slate-900">{selectedDate}</p>
+                <p className="text-slate-500 dark:text-slate-400 mb-1 font-medium">Date</p>
+                <p className="font-bold text-slate-900 dark:text-white">{selectedDate}</p>
               </div>
               <div>
-                <p className="text-slate-500 mb-1 font-medium">Time</p>
-                <p className="font-bold text-slate-900">{selectedTime}</p>
+                <p className="text-slate-500 dark:text-slate-400 mb-1 font-medium">Time</p>
+                <p className="font-bold text-slate-900 dark:text-white">{selectedTime}</p>
               </div>
               <div>
-                <p className="text-slate-500 mb-1 font-medium">Priority</p>
-                <p className={`font-bold capitalize ${patientDetails.priority === 'urgent' ? 'text-red-600' : 'text-slate-900'}`}>{patientDetails.priority || 'Routine'}</p>
+                <p className="text-slate-500 dark:text-slate-400 mb-1 font-medium">Priority</p>
+                <p className={`font-bold capitalize ${patientDetails.priority === 'urgent' ? 'text-red-600 dark:text-red-400' : 'text-slate-900 dark:text-white'}`}>{patientDetails.priority || 'Routine'}</p>
               </div>
             </div>
           </div>
 
           {(patientDetails.patientEmail || patientDetails.patientPhone) && (
-            <div className="text-sm text-slate-500 bg-blue-50/50 p-4 rounded-xl border border-blue-100 mb-8 flex flex-col gap-2">
-              <p className="font-bold text-blue-800">What's Next?</p>
+            <div className="text-sm text-slate-500 dark:text-slate-400 bg-blue-50/50 dark:bg-blue-950/20 p-4 rounded-xl border border-blue-100 dark:border-blue-900/50 mb-8 flex flex-col gap-2 text-left">
+              <p className="font-bold text-blue-800 dark:text-blue-300">What's Next?</p>
               {patientDetails.patientPhone && (
-                <p>We've sent a <strong className="text-blue-700">WhatsApp</strong> confirmation to {patientDetails.patientPhone}.</p>
+                <p>We've sent a <strong className="text-blue-700 dark:text-blue-400">WhatsApp</strong> confirmation to {patientDetails.patientPhone}.</p>
               )}
               {patientDetails.patientEmail && patientDetails.patientEmail !== 'no-email@provided.com' && (
-                <p>An electronic receipt has been sent via <strong className="text-blue-700">Email</strong> to {patientDetails.patientEmail}.</p>
+                <p>An electronic receipt has been sent via <strong className="text-blue-700 dark:text-blue-400">Email</strong> to {patientDetails.patientEmail}.</p>
               )}
             </div>
           )}
 
           <button 
             onClick={() => navigate('/home')}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 shadow-sm text-lg"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 shadow-sm"
           >
             Return to Home
           </button>
@@ -251,21 +251,21 @@ export default function BookAppointment() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-20">
-      <div className="bg-blue-600 pt-16 pb-24 text-white text-center">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-16 transition-colors duration-300">
+      <div className="bg-blue-600 dark:bg-blue-700 pt-12 pb-20 sm:pt-16 sm:pb-24 text-white text-center">
         <PageContainer>
-          <div className="inline-flex items-center gap-2 bg-blue-500 text-white px-3 py-1.5 rounded-full text-xs font-bold mb-6 border border-blue-400">
-            {initialState.hospitalName || "Partner Hospital"}
+          <div className="inline-flex items-center gap-2 bg-blue-500 text-white px-3 py-1.5 rounded-full text-xs font-bold mb-5 border border-blue-400 max-w-xs truncate">
+            {initialState.hospitalName || 'Partner Hospital'}
           </div>
-          <h1 className="text-4xl font-bold mb-4">Book Your Appointment</h1>
-          <p className="text-blue-100 max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">Book Your Appointment</h1>
+          <p className="text-blue-100 text-sm sm:text-base max-w-xl mx-auto">
             Complete the steps below to secure your consultation slot.
           </p>
         </PageContainer>
       </div>
 
       <PageContainer>
-        <div className="-mt-12 bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden max-w-4xl mx-auto flex flex-col md:flex-row min-h-[500px]">
+        <div className="-mt-10 sm:-mt-12 bg-white dark:bg-slate-900 rounded-2xl shadow-lg dark:shadow-slate-950/40 border border-slate-100 dark:border-slate-800 overflow-hidden max-w-4xl mx-auto flex flex-col md:flex-row min-h-[400px]">
           
           {/* Progress Sidebar */}
           <div className="bg-slate-900 text-white p-6 md:p-8 md:w-1/3 flex flex-col justify-between">
