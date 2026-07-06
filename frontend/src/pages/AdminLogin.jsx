@@ -57,85 +57,11 @@ export default function AdminLogin() {
         {/* Illustration Area */}
         <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full max-w-md mx-auto py-8">
           <div className="relative w-full flex items-center justify-center mb-8">
-            <svg viewBox="0 0 400 300" className="w-full h-auto max-w-[360px]" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* Defs for gradients and shadow */}
-              <defs>
-                <linearGradient id="shieldGrad" x1="120" y1="40" x2="280" y2="180" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#4dabf7" />
-                  <stop offset="100%" stopColor="#228be6" />
-                </linearGradient>
-                <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
-                  <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#1c7ed6" floodOpacity="0.15" />
-                </filter>
-              </defs>
-
-              {/* Background soft circles */}
-              <circle cx="150" cy="130" r="70" fill="#e7f5ff" opacity="0.8" />
-              <circle cx="250" cy="110" r="90" fill="#e7f5ff" opacity="0.6" />
-              <circle cx="200" cy="160" r="50" fill="#d0ebff" opacity="0.5" />
-
-              {/* The Shield */}
-              <g filter="url(#dropShadow)">
-                <path d="M 230 60 C 270 60, 290 50, 300 40 C 310 90, 290 150, 230 190 C 170 150, 150 90, 160 40 C 170 50, 190 60, 230 60 Z" fill="url(#shieldGrad)" />
-                {/* White Lock on Shield */}
-                <rect x="215" y="95" width="30" height="25" rx="4" fill="white" />
-                <path d="M 221 95 V 87 C 221 80, 239 80, 239 87 V 95" stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-                {/* Keyhole */}
-                <circle cx="230" cy="105" r="3.5" fill="#228be6" />
-                <polygon points="228,105 232,105 233,115 227,115" fill="#228be6" />
-              </g>
-
-              {/* Desk Line */}
-              <line x1="50" y1="210" x2="350" y2="210" stroke="#d0ebff" strokeWidth="4" strokeLinecap="round" />
-
-              {/* Potted Plant on Desk */}
-              <polygon points="310,210 325,210 321,192 314,192" fill="#74c0fc" />
-              <ellipse cx="317.5" cy="192" rx="3.5" ry="1.5" fill="#5c7cfa" />
-              <path d="M 317.5 192 Q 310 170, 305 175 Q 312 185, 317.5 192 Z" fill="#2b8a3e" />
-              <path d="M 317.5 192 Q 325 170, 330 175 Q 323 185, 317.5 192 Z" fill="#2b8a3e" />
-              <path d="M 317.5 192 Q 317.5 160, 312 165 Q 317.5 180, 317.5 192 Z" fill="#40c057" />
-
-              {/* Doctor Character */}
-              {/* Chair Back */}
-              <rect x="90" y="140" width="35" height="50" rx="6" fill="#74c0fc" />
-              <line x1="107" y1="190" x2="107" y2="210" stroke="#495057" strokeWidth="4" />
-
-              {/* Doctor Body */}
-              {/* Blue Shirt/Tie */}
-              <path d="M 125 155 L 155 155 L 150 180 L 130 180 Z" fill="#1864ab" />
-              <polygon points="137,155 143,155 145,175 135,175" fill="#1c7ed6" />
-              <polygon points="138,155 142,155 140,170" fill="#e6fcff" />
-              
-              {/* White Coat */}
-              <path d="M 115 150 C 115 135, 165 135, 165 150 L 175 210 L 105 210 Z" fill="white" />
-              {/* Lapels */}
-              <path d="M 125 150 L 135 175 L 125 190" stroke="#dee2e6" strokeWidth="2" fill="none" />
-              <path d="M 155 150 L 145 175 L 155 190" stroke="#dee2e6" strokeWidth="2" fill="none" />
-              
-              {/* Stethoscope */}
-              <path d="M 128 142 C 128 160, 152 160, 152 142" stroke="#adb5bd" strokeWidth="3" fill="none" strokeLinecap="round" />
-              <path d="M 148 156 L 148 172 Q 148 178, 140 178" stroke="#adb5bd" strokeWidth="2.5" fill="none" />
-              <circle cx="138" cy="178" r="3.5" fill="#868e96" />
-
-              {/* Head */}
-              <circle cx="140" cy="115" r="16" fill="#ffd8a8" />
-              <path d="M 122 112 C 122 95, 158 95, 158 112 C 158 102, 122 102, 122 112 Z" fill="#212529" />
-              <circle cx="123" cy="115" r="3.5" fill="#ffd8a8" />
-              <circle cx="157" cy="115" r="3.5" fill="#ffd8a8" />
-              <circle cx="134" cy="114" r="1.5" fill="#212529" />
-              <circle cx="146" cy="114" r="1.5" fill="#212529" />
-              <path d="M 135 122 Q 140 126, 145 122" stroke="#e03131" strokeWidth="2" strokeLinecap="round" fill="none" />
-
-              {/* Laptop on Desk */}
-              <polygon points="160,210 205,210 200,200 165,200" fill="#1c7ed6" />
-              <polygon points="167,208 198,208 196,202 169,202" fill="#102a43" />
-              <polygon points="195,200 220,165 210,160 185,195" fill="#2b2d42" />
-              <polygon points="197,198 217,167 211,163 190,195" fill="#4dabf7" />
-
-              {/* Doctor's Arms/Hands */}
-              <path d="M 115 165 Q 140 175, 175 204" stroke="white" strokeWidth="9" strokeLinecap="round" fill="none" />
-              <circle cx="175" cy="204" r="4.5" fill="#ffd8a8" />
-            </svg>
+            <img 
+              src="/admin-login-illustration.png" 
+              alt="Admin Access" 
+              className="w-full h-auto max-w-[340px] object-contain" 
+            />
           </div>
           
           {/* Text Below Illustration */}
