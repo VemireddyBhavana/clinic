@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { HeartPulse } from 'lucide-react';
 import adminDoctorImg from '../assets/admin_doctor.png';
+import AnimatedLogo from '../components/ui/AnimatedLogo';
 import { adminAPI } from '../services/api';
 
 export default function AdminRegister() {
@@ -39,10 +40,7 @@ export default function AdminRegister() {
         
         {/* Logo */}
         <div className="flex items-center gap-2 mb-auto z-10">
-          <div className="text-blue-600 bg-blue-100 p-1.5 rounded-md">
-            <HeartPulse size={24} strokeWidth={2.5} />
-          </div>
-          <span className="text-xl font-bold text-blue-700">MediSlot AI</span>
+          <AnimatedLogo height={64} />
         </div>
         
         {/* Illustration Area */}

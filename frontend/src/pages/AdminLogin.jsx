@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HeartPulse, Mail, Lock } from 'lucide-react';
+import AnimatedLogo from '../components/ui/AnimatedLogo';
 import { adminAPI } from '../services/api';
 
 export default function AdminLogin() {
@@ -118,20 +119,8 @@ export default function AdminLogin() {
           }}
         >
           {/* Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '18px' }}>
-            <div style={{
-              color: '#fff',
-              background: 'rgba(255,255,255,0.2)',
-              padding: '8px',
-              borderRadius: '12px',
-              border: '1px solid rgba(255,255,255,0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <HeartPulse size={22} strokeWidth={2.5} color="#fff" />
-            </div>
-            <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>MediSlot AI</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px' }}>
+            <AnimatedLogo height={64} />
           </div>
 
           {/* Title */}

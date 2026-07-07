@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { HeartPulse, MapPin, Phone, Mail } from 'lucide-react';
+import AnimatedLogo from '../ui/AnimatedLogo';
 
 export default function Footer() {
   return (
@@ -10,11 +11,8 @@ export default function Footer() {
           
           {/* Brand & About */}
           <div className="lg:col-span-1">
-            <Link to="/home" className="flex items-center gap-2 mb-6">
-              <div className="text-blue-600 bg-white p-1.5 rounded-lg">
-                <HeartPulse size={24} strokeWidth={2.5} />
-              </div>
-              <span className="text-xl font-bold text-white">MediSlot AI</span>
+            <Link to="/home" className="flex items-center mb-6">
+              <AnimatedLogo height={64} />
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed mb-6">
               Revolutionizing healthcare scheduling with AI. Find the right doctor, reduce wait times, and experience seamless care.

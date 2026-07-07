@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { HeartPulse, Menu, X, Bell } from 'lucide-react';
+import AnimatedLogo from '../ui/AnimatedLogo';
 import { motion, AnimatePresence } from 'framer-motion';
 import { notificationAPI } from '../../services/api';
 import gsap from 'gsap';
@@ -309,11 +310,8 @@ export default function PatientNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Logo */}
-        <Link to="/home" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-          <div className="text-blue-600 bg-blue-50 dark:bg-blue-900/30 p-1.5 rounded-lg">
-            <HeartPulse size={20} strokeWidth={2.5} />
-          </div>
-          <span className="text-lg font-bold text-blue-700 dark:text-blue-400">MediSlot AI</span>
+        <Link to="/home" className="flex items-center" onClick={() => setIsMobileMenuOpen(false)}>
+          <AnimatedLogo height={52} />
         </Link>
         
         {/* Desktop Nav Links */}

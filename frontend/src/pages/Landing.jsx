@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HeartPulse, ArrowRight, Activity, ShieldCheck, Zap, Navigation, BellRing } from 'lucide-react';
+import AnimatedLogo from '../components/ui/AnimatedLogo';
 import { motion } from 'framer-motion';
 import './LandingFlowers.css';
 
@@ -371,12 +372,7 @@ export default function Landing() {
       {/* Header */}
       <header className="w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between z-10">
         <div className="flex items-center gap-2">
-          <div className="text-blue-500 bg-blue-500/10 p-2 rounded-xl border border-blue-500/20 backdrop-blur-md">
-            <HeartPulse size={24} strokeWidth={2.5} />
-          </div>
-          <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-            MediSlot AI
-          </span>
+          <AnimatedLogo height={64} />
         </div>
         <div className="flex items-center gap-4 text-xs font-semibold text-slate-400">
           <div className="flex items-center gap-1.5 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-800 backdrop-blur-md">
