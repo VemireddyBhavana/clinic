@@ -4,6 +4,7 @@ import { HeartPulse, Menu, X, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { notificationAPI } from '../../services/api';
 import gsap from 'gsap';
+import './PatientNavbar.css';
 
 export default function PatientNavbar() {
   const location = useLocation();
