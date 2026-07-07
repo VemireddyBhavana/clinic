@@ -25,12 +25,23 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/hospitals', hospitalRoutes);
 
 const path = require('path');
-// Serve frontend static assets
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+const fs = require('fs');
 
-// Serve index.html for frontend client routing
-app.get('*splat', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+const frontendDistPath = path.join(__dirname, '../frontend/dist');
+const indexPath = path.join(frontendDistPath, 'index.html');
+
+// Serve frontend static assets if they exist
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+}
+
+// Serve index.html or fallback api welcome message
+app.get('*', (req, res) => {
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.json({ status: 'ok', message: 'MediSlot AI API is running' });
+  }
 });
 
 const PORT = process.env.PORT || 5000;
