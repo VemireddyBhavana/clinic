@@ -569,7 +569,7 @@ const mockHospitals = [
     longitude: 78.5020,
     departments: ["Emergency Medicine", "Pediatrics", "Cardiology", "General Surgery", "Orthopedics"],
     timings: "24/7 Emergency, Outpatient: 8:00 AM - 2:00 PM",
-    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800",
+    image: "https://media.telanganatoday.com/wp-content/uploads/2025/04/Gandhi-Hospital.jpg",
     rating: 4.4,
     description: "Major state government tertiary medical research and clinical infrastructure.",
     isActive: true
