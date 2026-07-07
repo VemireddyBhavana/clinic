@@ -257,7 +257,7 @@ const mockHospitals = [
     longitude: 78.4500,
     departments: ["Cardiology", "Gastroenterology", "Joint Replacement", "Neurology"],
     timings: "24/7 Emergency, Outpatient: 9:00 AM - 6:00 PM",
-    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800",
+    image: "https://medifyhome.com/wp-content/uploads/2023/12/Untitled-design-8.png",
     rating: 4.5,
     description: "Focusing on highly precise medical technologies and top specialist care.",
     isActive: true
