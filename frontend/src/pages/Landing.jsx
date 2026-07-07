@@ -54,16 +54,9 @@ export default function Landing() {
   ];
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, x: -50, scale: 0.96 }}
-      transition={{ type: "tween", ease: "anticipate", duration: 0.4 }}
-      className="min-h-screen text-white font-sans overflow-x-hidden overflow-y-auto relative flex flex-col justify-between landing-root"
-    >
-      {/* Flower CSS Background Animation */}
-      <div className="night"></div>
-      
+    <div className="min-h-screen relative landing-page-outer" style={{ background: '#000' }}>
+      {/* Flower CSS Background Animation — outside motion.div so position:fixed works correctly */}
+      <div className="night" style={{ position: 'fixed', zIndex: 0 }}></div>
       <div className="flowers-wrapper">
         <div className="flowers">
           {/* Flower 1 */}
@@ -364,7 +357,17 @@ export default function Landing() {
           </div>
         </div>
       </div>
-      
+
+      {/* Main content inside its own motion.div for fade-in, on top of fixed flowers */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, x: -50, scale: 0.96 }}
+        transition={{ type: "tween", ease: "anticipate", duration: 0.4 }}
+        className="min-h-screen text-white font-sans overflow-x-hidden relative flex flex-col justify-between landing-root"
+        style={{ zIndex: 2 }}
+      >
+
       {/* Header */}
       <header className="w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between z-10">
         <div className="flex items-center gap-2">
@@ -464,5 +467,6 @@ export default function Landing() {
         </div>
       </footer>
     </motion.div>
+    </div>
   );
 }

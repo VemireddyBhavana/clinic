@@ -33,8 +33,11 @@ body.dark {
 }
 
 /* ── Mobile animation performance ── */
-/* GPU-accelerate framer-motion elements for smooth mobile animations */
-[style*="transform"], [style*="opacity"] {
+/* GPU-accelerate framer-motion elements for smooth mobile animations
+   IMPORTANT: Exclude .landing-root and its children to avoid overriding
+   CSS keyframe animation transforms on the flower elements */
+[style*="transform"]:not(.landing-root):not(.landing-root *),
+[style*="opacity"]:not(.landing-root):not(.landing-root *) {
   will-change: transform, opacity;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);

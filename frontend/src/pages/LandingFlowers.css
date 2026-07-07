@@ -3,14 +3,12 @@
 }
 
 .landing-root {
-  perspective: 1000px;
-  background-color: var(--dark-color);
   position: relative;
-  overflow: hidden;
+  /* background is set on the outer .landing-page-outer wrapper in JSX */
 }
 
 .night {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   right: 0;
@@ -19,11 +17,12 @@
   background-image: radial-gradient(ellipse at top, transparent 0%, var(--dark-color)), radial-gradient(ellipse at bottom, var(--dark-color), rgba(145, 233, 255, 0.2)), repeating-linear-gradient(220deg, black 0px, black 19px, transparent 19px, transparent 22px), repeating-linear-gradient(189deg, black 0px, black 19px, transparent 19px, transparent 22px), repeating-linear-gradient(148deg, black 0px, black 19px, transparent 19px, transparent 22px), linear-gradient(90deg, #00fffa, #f0f0f0);
   z-index: 0;
   pointer-events: none;
-  opacity: 0.6; /* So it integrates nicely with the dark background */
+  opacity: 0.6;
 }
 
+/* ── Desktop: flowers always fill the right half of the viewport ── */
 .flowers-wrapper {
-  position: absolute;
+  position: fixed;       /* stays in viewport as user scrolls */
   top: 0;
   bottom: 0;
   right: 0;
@@ -36,55 +35,59 @@
   z-index: 1;
 }
 
-/* ── Mobile (< 768px): flowers as a full-width background strip at the bottom ── */
-@media (max-width: 767px) {
+/* ── Mobile (< 640px): flowers pinned to bottom as a full-width strip ── */
+@media (max-width: 639px) {
   .flowers-wrapper {
+    position: fixed;
     left: 0;
     right: 0;
     width: 100%;
+    height: 55vh;
     top: auto;
-    height: 60%;
     bottom: 0;
-    opacity: 0.7;
-    z-index: 2;
+    opacity: 0.45;
+    z-index: 0;   /* behind the card (card has z-10) */
     align-items: flex-end;
   }
   .flowers {
-    transform: scale(0.5);
+    transform: scale(0.45);
     transform-origin: bottom center;
   }
 }
 
-/* ── Tablet (768px - 1023px): flowers on right half, more visible ── */
-@media (min-width: 768px) and (max-width: 1023px) {
+/* ── Tablet (640px – 1023px): flowers on right half, scaled down ── */
+@media (min-width: 640px) and (max-width: 1023px) {
   .flowers-wrapper {
+    position: fixed;
     right: 0;
     left: auto;
-    width: 48%;
-    opacity: 0.75;
+    width: 46%;
+    opacity: 0.8;
     z-index: 1;
+    top: 0;
+    bottom: 0;
+    height: auto;
   }
   .flowers {
-    transform: scale(0.7);
+    transform: scale(0.65);
     transform-origin: bottom center;
   }
 }
 
-/* Force animations even with prefers-reduced-motion on mobile/tablet */
-@media (max-width: 1023px) {
-  .flower, .flower *, .flowers, .flowers *,
-  .flower__leafs, .flower__leaf, .flower__light,
-  .flower__line, .flower__line__leaf,
-  .grow-ans, .grow-ans * {
-    animation-play-state: running !important;
-    animation-duration: revert !important;
-    animation-iteration-count: revert !important;
-  }
+/* Force animations running on all devices regardless of prefers-reduced-motion */
+.flower, .flower *,
+.flowers, .flowers *,
+.flower__leafs, .flower__leaf, .flower__light,
+.flower__line, .flower__line__leaf,
+.grow-ans, .grow-ans *,
+.growing-grass, .growing-grass *,
+.long-g, .long-g * {
+  animation-play-state: running !important;
 }
 
 .flowers {
   position: relative;
-  transform: scale(0.85);
+  transform: scale(0.88);
   transform-origin: bottom center;
   width: 100%;
   height: 100%;
