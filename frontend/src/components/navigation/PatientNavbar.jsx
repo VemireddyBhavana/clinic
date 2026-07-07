@@ -36,7 +36,15 @@ export default function PatientNavbar() {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (item) => {
+    if (item.isHash) {
+      return location.pathname === '/home' && location.hash === '#how-it-works';
+    }
+    if (item.path === '/home') {
+      return location.pathname === '/home' && location.hash !== '#how-it-works';
+    }
+    return location.pathname === item.path;
+  };
 
   useEffect(() => {
     fetchNotifications();
@@ -65,24 +73,25 @@ export default function PatientNavbar() {
     }
   };
 
-  const handleHowItWorksClick = () => {
-    setIsMobileMenuOpen(false);
-    const el = document.getElementById('how-it-works'); 
-    if (el) el.scrollIntoView({ behavior: 'smooth' }); 
-    else window.location.href = '/home#how-it-works';
-  };
-
   const navItems = [
     { label: 'Home', path: '/home' },
     { label: 'Doctors', path: '/doctors' },
-    { label: 'How it works', path: '#how-it-works', isButton: true },
+    { label: 'How it works', path: '/home#how-it-works', isHash: true },
     { label: 'About us', path: '/about' },
     { label: 'Services', path: '/services' },
     { label: 'Contact', path: '/contact' },
     { label: 'Appointments', path: '/appointments' },
   ];
 
-  const activeIndex = navItems.findIndex(item => !item.isButton && location.pathname === item.path);
+  const activeIndex = navItems.findIndex(item => {
+    if (item.isHash) {
+      return location.pathname === '/home' && location.hash === '#how-it-works';
+    }
+    if (item.path === '/home') {
+      return location.pathname === '/home' && location.hash !== '#how-it-works';
+    }
+    return location.pathname === item.path;
+  });
 
   useEffect(() => {
     const activeIndicator = activeElementRef.current;
@@ -310,19 +319,7 @@ export default function PatientNavbar() {
         {/* Desktop Nav Links */}
         <nav ref={navRef} className="hidden md:flex items-center space-x-4 lg:space-x-6 relative pb-1 -mb-1">
           {navItems.map((item, index) => {
-            if (item.isButton) {
-              return (
-                <button
-                  key={item.label}
-                  ref={el => { linkRefs.current[index] = el; }}
-                  onClick={handleHowItWorksClick}
-                  className="text-xs font-bold transition-colors text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white cursor-pointer"
-                >
-                  {item.label}
-                </button>
-              );
-            }
-            const active = isActive(item.path);
+            const active = isActive(item);
             return (
               <Link
                 key={item.label}
@@ -474,18 +471,16 @@ export default function PatientNavbar() {
             className="md:hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 overflow-hidden"
           >
             <div className="flex flex-col p-4 space-y-4">
-              {navItems.map(item =>
-                item.isButton ? (
-                  <button key={item.label} onClick={handleHowItWorksClick} className="text-sm font-bold text-gray-700 dark:text-slate-300 text-left">
-                    {item.label}
-                  </button>
-                ) : (
-                  <Link key={item.label} to={item.path} onClick={() => setIsMobileMenuOpen(false)}
-                    className={`text-sm font-bold ${isActive(item.path) ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-slate-300'}`}>
-                    {item.label}
-                  </Link>
-                )
-              )}
+              {navItems.map(item => (
+                <Link 
+                  key={item.label} 
+                  to={item.path} 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`text-sm font-bold ${isActive(item) ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-slate-300'}`}
+                >
+                  {item.label}
+                </Link>
+              ))}
               <div className="pt-4 border-t border-gray-100 dark:border-slate-800 flex justify-between items-center">
                 <span className="text-sm font-bold text-gray-700 dark:text-slate-300">Theme</span>
                 <label className="switch scale-[0.8] cursor-pointer shrink-0">
