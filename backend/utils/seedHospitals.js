@@ -205,7 +205,7 @@ const mockHospitals = [
     longitude: 78.4412,
     departments: ["Cardiothoracic Surgery", "Cardiology", "Neurology", "Joint Replacement"],
     timings: "24/7 Emergency, Outpatient: 8:00 AM - 6:00 PM",
-    image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800",
+    image: "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFRVrrqmkdl3lViHlRE2--pwUpwmDqkK4T4LBNrq35TVlHtFn_CsM3CVhgmtw4YlBcWX00Q3NP1H8XjM2AVgTi5SNG_QFMubGRRW2yxOflHqMkYPNwqNTYISFxdu0g2WpkcDRyD=s1360-w1360-h1020-rw",
     rating: 4.7,
     description: "Highly rated center for cardiovascular surgeries and super-specialty interventions.",
     isActive: true
@@ -218,7 +218,7 @@ const mockHospitals = [
     longitude: 78.3539,
     departments: ["Cardiology", "Oncology", "Joint Replacement", "Emergency Medicine"],
     timings: "24/7 Emergency, Outpatient: 9:00 AM - 7:00 PM",
-    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800",
+    image: "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFRVrrqmkdl3lViHlRE2--pwUpwmDqkK4T4LBNrq35TVlHtFn_CsM3CVhgmtw4YlBcWX00Q3NP1H8XjM2AVgTi5SNG_QFMubGRRW2yxOflHqMkYPNwqNTYISFxdu0g2WpkcDRyD=s1360-w1360-h1020-rw",
     rating: 4.8,
     description: "State-of-the-art diagnostic and clinical systems serving the Financial District community.",
     isActive: true
@@ -716,7 +716,7 @@ const seedHospitals = async () => {
       const photoId = unsplashIds[index % unsplashIds.length];
       return {
         ...h,
-        image: `https://images.unsplash.com/${photoId}?auto=format&fit=crop&q=80&w=800`,
+        image: h.image && !h.image.includes("unsplash.com") ? h.image : `https://images.unsplash.com/${photoId}?auto=format&fit=crop&q=80&w=800`,
         location: {
           type: 'Point',
           coordinates: [h.longitude, h.latitude]
