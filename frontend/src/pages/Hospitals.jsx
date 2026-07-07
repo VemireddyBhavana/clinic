@@ -137,12 +137,7 @@ export default function Hospitals() {
                         alt={hospital.name} 
                         className="w-full h-48 object-cover"
                       />
-                      {hospital.distance != null && (
-                        <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 text-xs font-bold text-slate-700">
-                          <Navigation size={12} className="text-blue-600" />
-                          {(hospital.distance / 1000).toFixed(1)} km away
-                        </div>
-                      )}
+
                     </div>
                     
                     <div className="p-5 flex-1 flex flex-col">
