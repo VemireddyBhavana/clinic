@@ -49,7 +49,7 @@ const mockHospitals = [
     longitude: 78.3662765,
     departments: ["Gastroenterology", "Hepatology", "Liver Transplant", "Internal Medicine", "Oncology"],
     timings: "24/7 Emergency, Outpatient: 8:00 AM - 6:00 PM",
-    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800",
+    image: "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFhKb1R_QCdog1xjIv23Uw9hx5FeEq_dOIfF9keVDUyj_LWZkwNjP8Ivcv5s0RrPqZdLD59pkTCmO2jpSaHA1bq3iJBlGDrADVDhbqcfocWJmC8bVuHfb2gzKTr4Z1Oec9lS2ev=w243-h203-n-k-no-nu",
     rating: 4.9,
     description: "World-renowned institute specializing in gastroenterology, organ transplant, and advanced care.",
     isActive: true
