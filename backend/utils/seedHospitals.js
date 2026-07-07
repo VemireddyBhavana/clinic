@@ -654,18 +654,75 @@ const mockHospitals = [
   }
 ];
 
+const unsplashIds = [
+  "photo-1586773860418-d37222d8fce3",
+  "photo-1519494026892-80bbd2d6fd0d",
+  "photo-1538108149393-cebb47acdd4e",
+  "photo-1516549655169-df83a0774514",
+  "photo-1551076805-e1869033e561",
+  "photo-1502740479091-635887520276",
+  "photo-1581056771107-24ca5f033842",
+  "photo-1629909613654-28e377c37b09",
+  "photo-1576091160550-2173dba999ef",
+  "photo-1579684389782-64d84b5e901a",
+  "photo-1631248055158-edec7a3c072b",
+  "photo-1631815589968-fdb09a223b1e",
+  "photo-1666214280557-f1b5022eb634",
+  "photo-1584515979956-d9f6e5d09982",
+  "photo-1504813184591-015556c5c65f",
+  "photo-1603398938378-e54eab446dde",
+  "photo-1596499717302-cd96386997b2",
+  "photo-1517245386807-bb43f82c33c4",
+  "photo-1612349317150-e413f6a5b16d",
+  "photo-1612531386530-97286d97c2d2",
+  "photo-1606318175645-8e425336f08f",
+  "photo-1598256989800-fe5f95da9787",
+  "photo-1599700403969-fbc1b3748c33",
+  "photo-1583947215259-38e31be8751f",
+  "photo-1584308666744-24d5c474f2ae",
+  "photo-1612277795421-9bc7e65b7772",
+  "photo-1616391182219-e080b4d1043a",
+  "photo-1551601651-2a8555f1a136",
+  "photo-1613370441023-018443830225",
+  "photo-1582750433449-64935f2b8f18",
+  "photo-1579156492187-c37222d8fce3",
+  "photo-1588196749597-9ff075ee6b5b",
+  "photo-1582560475-018443830225",
+  "photo-1585435557343-3b092031a831",
+  "photo-1607619056574-7b8f304b3b8a",
+  "photo-1527613426441-4da17471b66d",
+  "photo-1504439468489-c892fa0566d2",
+  "photo-1578301978018-3005759f48f7",
+  "photo-1578301978693-85fa9c0320b9",
+  "photo-1584432810601-6a7f27d2362b",
+  "photo-1584432811438-e9f0e13768b5",
+  "photo-1584432811556-97286d97c2d2",
+  "photo-1584432811804-d37222d8fce3",
+  "photo-1584432811984-fe5f95da9787",
+  "photo-1584432812003-cebb47acdd4e",
+  "photo-1584432812101-551076805-e186",
+  "photo-1584432812301-e1869033e561",
+  "photo-1584432812556-150274047909",
+  "photo-1584432812804-162990961365",
+  "photo-1584432812903-151949402689"
+];
+
 const seedHospitals = async () => {
   try {
     console.log('Seeding Phase 3: Overwriting with 50 Hyderabad hospitals...');
     await Hospital.deleteMany({});
     
-    const hospitalsToInsert = mockHospitals.map(h => ({
-      ...h,
-      location: {
-        type: 'Point',
-        coordinates: [h.longitude, h.latitude]
-      }
-    }));
+    const hospitalsToInsert = mockHospitals.map((h, index) => {
+      const photoId = unsplashIds[index % unsplashIds.length];
+      return {
+        ...h,
+        image: `https://images.unsplash.com/${photoId}?auto=format&fit=crop&q=80&w=800`,
+        location: {
+          type: 'Point',
+          coordinates: [h.longitude, h.latitude]
+        }
+      };
+    });
     await Hospital.insertMany(hospitalsToInsert);
     console.log('Mock Hyderabad hospitals seeded successfully!');
   } catch (error) {
