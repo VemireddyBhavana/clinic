@@ -53,8 +53,7 @@ exports.forgotPassword = async (req, res) => {
     // For this MVP, we just send a link with the email as a parameter.
     
     // Determine frontend URL
-    // In local dev, usually http://localhost:5173
-    const frontendUrl = 'http://localhost:5173';
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';
     
     const resetLink = `${frontendUrl}/admin/reset-password?email=${encodeURIComponent(email)}`;
     
