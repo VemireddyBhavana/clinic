@@ -556,7 +556,7 @@ const mockHospitals = [
     longitude: 78.4740,
     departments: ["Emergency Medicine", "General Surgery", "Internal Medicine", "Anatomy"],
     timings: "24/7 Emergency, Outpatient: 8:00 AM - 2:00 PM",
-    image: "https://images.unsplash.com/photo-1538108149393-cebb47acdd4e?auto=format&fit=crop&q=80&w=800",
+    image: "https://images.jdmagicbox.com/v2/comp/hyderabad/g8/040pxx40.xx40.000152877854.y4g8/catalogue/osmania-general-hospital-afzal-gunj-hyderabad-hospitals-bj4uqal6uj.jpg",
     rating: 4.3,
     description: "One of the oldest and largest government run medical institutions in Telangana.",
     isActive: true
