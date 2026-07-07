@@ -530,7 +530,7 @@ const mockHospitals = [
     longitude: 78.4674,
     departments: ["Orthopedics", "Traumatology", "Arthroscopy", "Physiotherapy"],
     timings: "24/7 Emergency, Outpatient: 9:00 AM - 5:00 PM",
-    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800",
+    image: "https://omnihospitals.in/assets/locations/udai_omni.png",
     rating: 4.5,
     description: "A highly trusted center for orthopedic treatments, bone health, and rehabilitation.",
     isActive: true
