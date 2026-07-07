@@ -23,7 +23,7 @@ const mockHospitals = [
     longitude: 78.4971248,
     departments: ["Neurology", "Cardiothoracic Surgery", "Nephrology", "Pulmonology"],
     timings: "24/7 Emergency, Outpatient: 9:00 AM - 6:00 PM",
-    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800",
+    image: "https://www.yashodahospitals.com/wp-content/uploads/2024/07/yashoda_malakpet-1.jpg",
     rating: 4.7,
     description: "Highly trusted healthcare institution offering patient-first diagnostics and surgical services.",
     isActive: true
@@ -400,7 +400,7 @@ const mockHospitals = [
     longitude: 78.45534,
     departments: ["Cardiology", "Critical Care", "Oncology", "Orthopedics", "Gynecology"],
     timings: "24/7 Emergency, Outpatient: 8:00 AM - 6:00 PM",
-    image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=800",
+    image: "https://www.yashodahospitals.com/wp-content/uploads/2024/07/yashoda_malakpet-1.jpg",
     rating: 4.8,
     description: "Ultra modern medical infrastructure in central Hyderabad providing complete healthcare services.",
     isActive: true
@@ -413,7 +413,7 @@ const mockHospitals = [
     longitude: 78.49838,
     departments: ["Emergency Medicine", "General Medicine", "Urology", "Cardiology"],
     timings: "24/7 Emergency, Outpatient: 8:30 AM - 5:30 PM",
-    image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800",
+    image: "https://www.yashodahospitals.com/wp-content/uploads/2024/07/yashoda_malakpet-1.jpg",
     rating: 4.6,
     description: "A super-specialty branch serving multi-organ support therapies and general clinical medicine.",
     isActive: true
