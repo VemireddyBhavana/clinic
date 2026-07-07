@@ -153,7 +153,7 @@ const mockHospitals = [
     longitude: 78.3826,
     departments: ["Traumatology", "Critical Care", "Neurology", "Cardiology", "Nephrology"],
     timings: "24/7 Emergency, Outpatient: 8:00 AM - 8:00 PM",
-    image: "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEIcs71ZIregvOrGTVAQ-SX34VFj_bCgwgeliVvKLm-2r4Oq_mitmusJMZv_RQeCZ1S1zh-2N3ld8Dps4yKWZwnstngrXefNPYoWACfjwuwcE1X9ldGmiRjZeTl2ce3NEY8CMAD=s1360-w1360-h1020-rw",
+    image: "https://images.jdmagicbox.com/v2/comp/hyderabad/v8/040pxx40.xx40.150922112530.d2v8/catalogue/medicover-hospitals-madhapur-hyderabad-multispeciality-hospitals-v1het46k0s-250.jpg",
     rating: 4.6,
     description: "Modern, high-tech clinical facilities providing comprehensive medical checkups and treatments.",
     isActive: true
@@ -439,7 +439,7 @@ const mockHospitals = [
     longitude: 78.32400,
     departments: ["Neurology", "Internal Medicine", "ENT", "Pediatrics"],
     timings: "24/7 Emergency, Outpatient: 8:00 AM - 6:00 PM",
-    image: "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEIcs71ZIregvOrGTVAQ-SX34VFj_bCgwgeliVvKLm-2r4Oq_mitmusJMZv_RQeCZ1S1zh-2N3ld8Dps4yKWZwnstngrXefNPYoWACfjwuwcE1X9ldGmiRjZeTl2ce3NEY8CMAD=s1360-w1360-h1020-rw",
+    image: "https://images.jdmagicbox.com/v2/comp/hyderabad/v8/040pxx40.xx40.150922112530.d2v8/catalogue/medicover-hospitals-madhapur-hyderabad-multispeciality-hospitals-v1het46k0s-250.jpg",
     rating: 4.4,
     description: "Top diagnostics and health packages available for families in Chandanagar.",
     isActive: true
@@ -517,7 +517,7 @@ const mockHospitals = [
     longitude: 78.3846,
     departments: ["Cardiology", "Orthopedics", "Critical Care", "Neurology"],
     timings: "24/7 Emergency, Outpatient: 8:00 AM - 8:00 PM",
-    image: "https://cdn.credihealth.com/production/system/images/assets/20626/original/Maxcure-Hospital_-Secretariat-Road.jpg",
+    image: "https://images.jdmagicbox.com/v2/comp/hyderabad/v8/040pxx40.xx40.150922112530.d2v8/catalogue/medicover-hospitals-madhapur-hyderabad-multispeciality-hospitals-v1het46k0s-250.jpg",
     rating: 4.6,
     description: "Modern clinical diagnostic systems and high-value inpatient medical facilities.",
     isActive: true
