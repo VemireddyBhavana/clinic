@@ -608,7 +608,7 @@ const mockHospitals = [
     longitude: 78.4275,
     departments: ["Ophthalmology", "Optometry", "Cornea Services", "Cataract Surgery"],
     timings: "Outpatient: 7:00 AM - 6:00 PM",
-    image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=800",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShcaJyOFp6LcK85x6advSlrgqB2KN5Ux4il_dH9eFQCwFQJMNqiY-FMtpA&s=10",
     rating: 4.9,
     description: "World class ophthalmology diagnostics, surgery, eye banking, and research center.",
     isActive: true
