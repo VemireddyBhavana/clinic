@@ -393,16 +393,16 @@ const mockHospitals = [
     isActive: true
   },
   {
-    name: "TX Hospitals Uppal",
-    address: "# 2-6-71, Bharath Nagar Colony, Near Masjid Uppal, Hyderabad",
-    phone: "040 4310 8108",
-    latitude: 17.4019,
-    longitude: 78.5601,
-    departments: ["Emergency Care", "Cardiology", "Neurology", "General Surgery"],
-    timings: "24/7 Emergency, Outpatient: 9:00 AM - 7:00 PM",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvhkY4EUj9D1ybGDYbji0Kg_hA90-JAGSM12u8PnZq5lubLUNlATtZzbg&s=10",
-    rating: 4.4,
-    description: "Equipped with high-tech operation suites and comprehensive modern diagnostics in Uppal.",
+    name: "Srikara Hospitals",
+    address: "#222, Phase 2, Mythri Nagar, Madeenaguda, Miyapur, Hyderabad",
+    phone: "040 4747 0000",
+    latitude: 17.4984,
+    longitude: 78.3496,
+    departments: ["Orthopedics", "Joint Replacement", "Spine Surgery", "Emergency Medicine"],
+    timings: "24/7 Emergency, Outpatient: 9:00 AM - 6:00 PM",
+    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800",
+    rating: 4.5,
+    description: "Renowned multispecialty clinic offering orthopedic surgery and key inpatient treatments.",
     isActive: true
   },
   {
