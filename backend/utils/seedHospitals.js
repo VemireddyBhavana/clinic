@@ -179,7 +179,7 @@ const mockHospitals = [
     longitude: 78.4412,
     departments: ["Neurology", "Neurosurgery", "Stroke Care", "Critical Care"],
     timings: "24/7 Emergency, Outpatient: 9:00 AM - 6:00 PM",
-    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-nPVQB9iQtJ44QgHaTUY7OKa3ZhJTBhQRl4zpSS4smYGtF5zD-Y819Qxn&s=10",
     rating: 4.7,
     description: "Specialized center of excellence for neurosciences, stroke rehabilitation, and spine treatments.",
     isActive: true
