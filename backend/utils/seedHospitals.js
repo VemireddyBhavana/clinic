@@ -361,7 +361,7 @@ const mockHospitals = [
     longitude: 78.405,
     departments: ["Maternity", "Neonatology", "Gynecology", "Fetal Medicine"],
     timings: "24/7 Maternity, Outpatient: 9:00 AM - 5:00 PM",
-    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800",
+    image: "https://www.apollocradle.com/backend/web/hospitals-gallery/b-brookefield-1-1-300x240.webp",
     rating: 4.6,
     description: "Premium boutique hospital offering top class maternity and birth suites.",
     isActive: true
