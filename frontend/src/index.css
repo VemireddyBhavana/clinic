@@ -449,6 +449,7 @@ nav .active-element {
 
 .dark nav .active-element {
   color: #60a5fa;
+  background-color: #00fffc;
 }
 
 nav .active-element > svg,
