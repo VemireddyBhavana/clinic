@@ -309,7 +309,7 @@ const mockHospitals = [
     longitude: 78.48667,
     departments: ["Cardiology", "Neurology", "Urology", "Internal Medicine", "Oncology"],
     timings: "24/7 Emergency, Outpatient: 8:00 AM - 3:00 PM",
-    image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSobF0YteX16UEX-i2cnOnodpOzhVdMsr9LC24ltv48NtkAKrgKL2m8XEX1&s=10",
     rating: 4.6,
     description: "A premier public state university and university hospital supporting all specialties.",
     isActive: true
