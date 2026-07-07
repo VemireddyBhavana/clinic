@@ -88,7 +88,7 @@ const mockHospitals = [
     longitude: 78.4468,
     departments: ["Pediatrics", "Cardiology", "Orthopedics", "Obstetrics & Gynecology"],
     timings: "24/7 Emergency, Outpatient: 9:00 AM - 7:00 PM",
-    image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=800",
+    image: "https://skedoccoresa.blob.core.windows.net/skedoc-images/hospitalimages/65b5d048-73c6-4697-9594-4c5d54690ef7.jpeg",
     rating: 4.5,
     description: "A leading neighborhood multi-specialty care hospital in Ameerpet.",
     isActive: true
