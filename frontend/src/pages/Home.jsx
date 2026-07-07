@@ -8,7 +8,6 @@ import {
   TrendingUp, Users, Star, ArrowRight, Headset
 } from 'lucide-react';
 import PageContainer from '../components/layout/PageContainer';
-import LocationPromptModal from '../components/location/LocationPromptModal';
 
 // ── Animation Variants ────────────────────────────────────────────────────────
 // Reduced y-distance so animations feel smooth on all screen sizes
@@ -56,7 +55,6 @@ export default function Home() {
   return (
     <MotionConfig reducedMotion="user">
     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 font-sans transition-colors duration-300">
-      <LocationPromptModal />
       
       {/* ── Hero ── */}
       <section className="relative pt-10 pb-16 sm:pt-14 sm:pb-20 lg:pt-20 lg:pb-28 bg-white dark:bg-slate-950 transition-colors duration-300">
