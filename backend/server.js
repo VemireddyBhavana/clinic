@@ -14,7 +14,25 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const hospitalRoutes = require('./routes/hospitalRoutes');
 const seedHospitals = require('./utils/seedHospitals');
 
-app.use(cors());
+// Allow requests from Vercel frontend + localhost dev
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [])
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (Render health checks, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.some(o => origin.startsWith(o)) || origin.includes('vercel.app') || origin.includes('onrender.com')) {
+      return callback(null, true);
+    }
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // API Routes
