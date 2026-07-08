@@ -13,6 +13,7 @@ const appointmentRoutes = require('./routes/appointmentRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const hospitalRoutes = require('./routes/hospitalRoutes');
 const seedHospitals = require('./utils/seedHospitals');
+const seedAdmin = require('./utils/seedAdmin');
 
 // Allow requests from Vercel frontend + localhost dev
 const allowedOrigins = [
@@ -70,8 +71,9 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       
-      // Seed hospitals if they don't exist
+      // Seed hospitals and admin if they don't exist
       seedHospitals();
+      seedAdmin();
     });
   } catch (error) {
     console.error('Failed to start server:', error);
