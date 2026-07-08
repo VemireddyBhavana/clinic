@@ -1,6 +1,9 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from "@react-google-maps/api";
 import { useNavigate } from "react-router-dom";
+
+// Leaflet is loaded lazily — only when Google Maps fails
+const LeafletMap = lazy(() => import("./LeafletMap"));
 
 const containerStyle = {
   width: "100%",
@@ -8,18 +11,10 @@ const containerStyle = {
   borderRadius: "16px",
 };
 
-export default function HospitalMap({ userLocation, hospitals }) {
+// ─── Google Maps inner component ─────────────────────────────────────────────
+function GoogleMapView({ userLocation, hospitals }) {
   const navigate = useNavigate();
-  const { isLoaded, loadError } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
-  });
-
   const [selectedHospital, setSelectedHospital] = React.useState(null);
-
-  // If the API key is missing, invalid, or Maps failed to load — silently skip the map.
-  // The hospital cards list below will still render normally.
-  if (loadError || !isLoaded || !userLocation) return null;
 
   return (
     <GoogleMap
@@ -29,15 +24,11 @@ export default function HospitalMap({ userLocation, hospitals }) {
       options={{ mapId: "DEMO_MAP_ID" }}
     >
       {/* User location marker */}
-      <Marker
-        position={userLocation}
-        label="You"
-      />
+      <Marker position={userLocation} label="You" />
 
       {/* Hospital markers */}
       {hospitals.map((hospital) => {
         if (!hospital.latitude || !hospital.longitude) return null;
-
         return (
           <Marker
             key={hospital.id || hospital._id}
@@ -66,7 +57,7 @@ export default function HospitalMap({ userLocation, hospitals }) {
             <p style={{ margin: "0 0 8px 0", fontSize: "12px", color: "#475569" }}>
               {selectedHospital.address}
             </p>
-            
+
             {selectedHospital.phone && (
               <p style={{ margin: "0 0 4px 0", fontSize: "11px", color: "#64748b" }}>
                 <strong>Phone:</strong> {selectedHospital.phone}
@@ -77,7 +68,7 @@ export default function HospitalMap({ userLocation, hospitals }) {
                 <strong>Hours:</strong> {selectedHospital.timings}
               </p>
             )}
-            
+
             <div style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "12px" }}>
               <span style={{ fontSize: "11px", fontWeight: "bold", color: "#1d4ed8", backgroundColor: "#eff6ff", padding: "2px 6px", borderRadius: "4px" }}>
                 ★ {selectedHospital.rating || "4.0"}
@@ -103,7 +94,7 @@ export default function HospitalMap({ userLocation, hospitals }) {
                   fontSize: "11px",
                   border: "none",
                   cursor: "pointer",
-                  textAlign: "center"
+                  textAlign: "center",
                 }}
               >
                 📍 Street View
@@ -120,7 +111,7 @@ export default function HospitalMap({ userLocation, hospitals }) {
                   fontSize: "11px",
                   border: "none",
                   cursor: "pointer",
-                  textAlign: "center"
+                  textAlign: "center",
                 }}
               >
                 View Details
@@ -132,4 +123,40 @@ export default function HospitalMap({ userLocation, hospitals }) {
     </GoogleMap>
   );
 }
-
+
+// ─── Main export: tries Google Maps, falls back to Leaflet ────────────────────
+export default function HospitalMap({ userLocation, hospitals }) {
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+  });
+
+  if (!userLocation) return null;
+
+  // ✅ Google Maps loaded successfully
+  if (isLoaded && !loadError) {
+    return (
+      <GoogleMapView userLocation={userLocation} hospitals={hospitals} />
+    );
+  }
+
+  // ❌ Google Maps failed (bad key, billing, network, etc.) → use Leaflet for free
+  if (loadError) {
+    return (
+      <Suspense fallback={
+        <div style={{ ...containerStyle, display: "flex", alignItems: "center", justifyContent: "center", background: "#f1f5f9" }}>
+          <span style={{ color: "#64748b", fontSize: "14px" }}>Loading map…</span>
+        </div>
+      }>
+        <LeafletMap userLocation={userLocation} hospitals={hospitals} />
+      </Suspense>
+    );
+  }
+
+  // Still loading Google Maps — show a placeholder
+  return (
+    <div style={{ ...containerStyle, display: "flex", alignItems: "center", justifyContent: "center", background: "#f1f5f9", borderRadius: "16px" }}>
+      <span style={{ color: "#64748b", fontSize: "14px" }}>Loading map…</span>
+    </div>
+  );
+}
