@@ -683,9 +683,14 @@ const unsplashIds = [
 
 const seedHospitals = async () => {
   try {
-    console.log('Seeding Phase 3: Overwriting with 50 Hyderabad hospitals...');
-    await Hospital.deleteMany({});
-    
+    const count = await Hospital.countDocuments();
+    if (count > 0) {
+      console.log(`Hospitals already seeded (${count} records found). Skipping.`);
+      return;
+    }
+
+    console.log('Seeding hospitals: No hospitals found, inserting Hyderabad hospital data...');
+
     const hospitalsToInsert = mockHospitals.map((h, index) => {
       const photoId = unsplashIds[index % unsplashIds.length];
       return {
@@ -698,7 +703,7 @@ const seedHospitals = async () => {
       };
     });
     await Hospital.insertMany(hospitalsToInsert);
-    console.log('Mock Hyderabad hospitals seeded successfully!');
+    console.log(`${hospitalsToInsert.length} Hyderabad hospitals seeded successfully!`);
   } catch (error) {
     console.error('Error seeding hospitals:', error);
   }

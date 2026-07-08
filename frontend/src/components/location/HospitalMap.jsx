@@ -10,14 +10,16 @@ const containerStyle = {
 
 export default function HospitalMap({ userLocation, hospitals }) {
   const navigate = useNavigate();
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
   });
 
   const [selectedHospital, setSelectedHospital] = React.useState(null);
 
-  if (!isLoaded || !userLocation) return null;
+  // If the API key is missing, invalid, or Maps failed to load — silently skip the map.
+  // The hospital cards list below will still render normally.
+  if (loadError || !isLoaded || !userLocation) return null;
 
   return (
     <GoogleMap
@@ -130,3 +132,4 @@ export default function HospitalMap({ userLocation, hospitals }) {
     </GoogleMap>
   );
 }
+

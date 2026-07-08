@@ -8,11 +8,11 @@ const axios = require('axios');
 // @access  Public
 exports.getNearbyHospitals = async (req, res) => {
   try {
-    const { lat, lng, distance = 100000 } = req.query; // Default 100km
+    const { lat, lng, distance = 500000 } = req.query; // Default 500km radius
 
     if (!lat || !lng) {
       // If no location provided, just return all hospitals
-      const hospitals = await Hospital.find({ isActive: true });
+      const hospitals = await Hospital.find({ isActive: true }).sort({ rating: -1 });
       return res.json({
         hospitals: hospitals.map(h => ({
           id: h._id,
@@ -35,45 +35,95 @@ exports.getNearbyHospitals = async (req, res) => {
     const longitude = parseFloat(lng);
     const maxDistanceInMeters = parseInt(distance);
 
-    // Find hospitals within the distance using $geoNear aggregation
-    // This allows us to calculate and return the exact distance in meters
-    const hospitals = await Hospital.aggregate([
-      {
-        $geoNear: {
-          near: {
-            type: "Point",
-            coordinates: [longitude, latitude]
-          },
-          distanceField: "calculatedDistance",
-          maxDistance: maxDistanceInMeters,
-          spherical: true,
-          query: { isActive: true }
+    try {
+      // Find hospitals within the distance using $geoNear aggregation
+      // This allows us to calculate and return the exact distance in meters
+      const hospitals = await Hospital.aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: "Point",
+              coordinates: [longitude, latitude]
+            },
+            distanceField: "calculatedDistance",
+            maxDistance: maxDistanceInMeters,
+            spherical: true,
+            query: { isActive: true }
+          }
+        },
+        {
+          $project: {
+            id: "$_id",
+            name: 1,
+            address: 1,
+            phone: 1,
+            departments: 1,
+            timings: 1,
+            rating: 1,
+            image: 1,
+            latitude: 1,
+            longitude: 1,
+            distance: "$calculatedDistance" // distance in meters
+          }
+        },
+        {
+          $sort: { distance: 1 } // Sort closest first
         }
-      },
-      {
-        $project: {
-          id: "$_id",
-          name: 1,
-          address: 1,
-          phone: 1,
-          departments: 1,
-          timings: 1,
-          rating: 1,
-          image: 1,
-          latitude: 1,
-          longitude: 1,
-          distance: "$calculatedDistance" // distance in meters
-        }
-      },
-      {
-        $sort: { distance: 1 } // Sort closest first
-      }
-    ]);
+      ]);
 
-    res.json({ hospitals });
+      // If geo query returned results, send them
+      if (hospitals.length > 0) {
+        return res.json({ hospitals });
+      }
+
+      // If no results within range, fall back to all hospitals sorted by rating
+      console.log('No hospitals in geo range, falling back to all hospitals');
+      throw new Error('No hospitals found in geo range');
+
+    } catch (geoError) {
+      console.warn('Geo query failed or returned no results, falling back to all hospitals:', geoError.message);
+      // Fallback: return all active hospitals sorted by rating
+      const allHospitals = await Hospital.find({ isActive: true }).sort({ rating: -1 });
+      return res.json({
+        hospitals: allHospitals.map(h => ({
+          id: h._id,
+          name: h.name,
+          address: h.address,
+          phone: h.phone,
+          departments: h.departments,
+          timings: h.timings,
+          rating: h.rating,
+          image: h.image,
+          latitude: h.latitude,
+          longitude: h.longitude,
+          distance: null
+        }))
+      });
+    }
+
   } catch (error) {
     console.error('Error fetching nearby hospitals:', error);
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    // Last resort fallback
+    try {
+      const allHospitals = await Hospital.find({ isActive: true }).sort({ rating: -1 });
+      return res.json({
+        hospitals: allHospitals.map(h => ({
+          id: h._id,
+          name: h.name,
+          address: h.address,
+          phone: h.phone,
+          departments: h.departments,
+          timings: h.timings,
+          rating: h.rating,
+          image: h.image,
+          latitude: h.latitude,
+          longitude: h.longitude,
+          distance: null
+        }))
+      });
+    } catch (fallbackError) {
+      res.status(500).json({ message: 'Server Error', error: error.message });
+    }
   }
 };
 

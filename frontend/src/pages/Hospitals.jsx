@@ -1,10 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import HospitalMap from '../components/location/HospitalMap';
 import { MapPin, Navigation, Star, Phone, Activity, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageContainer from '../components/layout/PageContainer';
 import { getNearbyHospitals } from '../api/services';
+
+// Error boundary to prevent Google Maps crashes from hiding the hospital list
+class MapErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error) {
+    console.warn('Google Maps failed to load, hiding map:', error.message);
+  }
+  render() {
+    if (this.state.hasError) return null; // Map fails silently — hospital cards still show
+    return this.props.children;
+  }
+}
 
 export default function Hospitals() {
   const navigate = useNavigate();
@@ -13,6 +31,7 @@ export default function Hospitals() {
   const [userLocation, setUserLocation] = useState(null);
   const [hospitals, setHospitals] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
     const storedLat = sessionStorage.getItem("userLat");
@@ -51,15 +70,21 @@ export default function Hospitals() {
   const fetchNearbyHospitals = async (lat, lng) => {
     try {
       setLoading(true);
+      setFetchError(null);
       let url = '/api/hospitals/nearby';
       if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
         url += `?lat=${lat}&lng=${lng}`;
       }
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
       const data = await response.json();
-      setHospitals(data.hospitals || data || []);
+      const list = data.hospitals || data || [];
+      setHospitals(Array.isArray(list) ? list : []);
     } catch (error) {
       console.error("Error fetching nearby hospitals:", error);
+      setFetchError(error.message);
     } finally {
       setLoading(false);
     }
@@ -103,7 +128,9 @@ export default function Hospitals() {
         <div className="-mt-10 sm:-mt-12 bg-white dark:bg-slate-900 rounded-2xl shadow-lg dark:shadow-slate-950/40 border border-slate-100 dark:border-slate-800 p-4 sm:p-8 min-h-[400px]">
             {userLocation && hospitals.length > 0 && (
               <div className="mb-6 sm:mb-8">
-                <HospitalMap userLocation={userLocation} hospitals={hospitals} />
+                <MapErrorBoundary>
+                  <HospitalMap userLocation={userLocation} hospitals={hospitals} />
+                </MapErrorBoundary>
               </div>
             )}
           {loading ? (
@@ -117,9 +144,29 @@ export default function Hospitals() {
               initial="hidden"
               animate="visible"
             >
-              {hospitals.length === 0 ? (
-                <div className="col-span-full text-center py-12 text-slate-500 dark:text-slate-400">
-                  <p>No hospitals found nearby.</p>
+              {fetchError ? (
+                <div className="col-span-full text-center py-16 text-slate-500 dark:text-slate-400">
+                  <div className="text-4xl mb-4">⚠️</div>
+                  <p className="font-semibold text-slate-700 dark:text-slate-300 mb-2">Could not load hospitals</p>
+                  <p className="text-sm mb-4">{fetchError}</p>
+                  <button
+                    onClick={() => fetchNearbyHospitals(userLocation?.lat, userLocation?.lng)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg text-sm transition-colors"
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : hospitals.length === 0 ? (
+                <div className="col-span-full text-center py-16 text-slate-500 dark:text-slate-400">
+                  <div className="text-4xl mb-4">🏥</div>
+                  <p className="font-semibold text-slate-700 dark:text-slate-300 mb-2">No hospitals found</p>
+                  <p className="text-sm mb-4">We couldn't find any hospitals in your area. Try expanding the search.</p>
+                  <button
+                    onClick={() => fetchNearbyHospitals()}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg text-sm transition-colors"
+                  >
+                    Show All Hospitals
+                  </button>
                 </div>
               ) : (
                 hospitals.map(hospital => (
