@@ -34,3 +34,9 @@ services:
         sync: false
       - key: SMTP_FROM
         sync: false
+      - key: RESEND_API_KEY
+        sync: false        # Optional: Set this to bypass Render Free Tier SMTP block (using resend.com HTTP API)
+      - key: SMTP_FROM_EMAIL
+        sync: false        # Optional: e.g., onboarding@resend.dev or your verified Resend domain email
+      - key: SMTP_FROM_NAME
+        sync: false        # Optional: e.g., MediSlot AI

@@ -1,10 +1,40 @@
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
+const axios = require('axios');
 
 // Ethereal Email Setup for testing
 // In production, you would use standard SMTP credentials
 const sendEmail = async (to, subject, html) => {
   try {
+    // 1. Try Resend API first (recommended for Render Free Tier where SMTP is blocked)
+    if (process.env.RESEND_API_KEY) {
+      console.log("Sending email via Resend API...");
+      const fromEmail = process.env.SMTP_FROM_EMAIL || "onboarding@resend.dev";
+      const fromName = process.env.SMTP_FROM_NAME || "MediSlot AI";
+      
+      const response = await axios.post(
+        'https://api.resend.com/emails',
+        {
+          from: `${fromName} <${fromEmail}>`,
+          to: to,
+          subject: subject,
+          html: html
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      console.log("====================================");
+      console.log("EMAIL SENT SUCCESSFULLY VIA RESEND!");
+      console.log("Message ID:", response.data.id);
+      console.log("====================================");
+      return { success: true, provider: 'resend', id: response.data.id };
+    }
+
     let transporter;
     
     // Use real SMTP if configured
