@@ -37,8 +37,15 @@ export const getNearbyHospitals = async (lat, lng) => {
     const response = await api.get(`/hospitals/nearby${query}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching nearby hospitals:', error);
-    throw error;
+    console.warn('Error fetching nearby hospitals, retrying without location:', error.message);
+    // Fallback: fetch all hospitals without location filter
+    try {
+      const response = await api.get('/hospitals/nearby');
+      return response.data;
+    } catch (fallbackError) {
+      console.error('Fallback also failed:', fallbackError.message);
+      throw fallbackError;
+    }
   }
 };
 

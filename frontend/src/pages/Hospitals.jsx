@@ -71,20 +71,12 @@ export default function Hospitals() {
     try {
       setLoading(true);
       setFetchError(null);
-      let url = '/api/hospitals/nearby';
-      if (lat !== undefined && lng !== undefined && lat !== null && lng !== null) {
-        url += `?lat=${lat}&lng=${lng}`;
-      }
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-      const data = await response.json();
+      const data = await getNearbyHospitals(lat, lng);
       const list = data.hospitals || data || [];
       setHospitals(Array.isArray(list) ? list : []);
     } catch (error) {
       console.error("Error fetching nearby hospitals:", error);
-      setFetchError(error.message);
+      setFetchError("Could not load hospitals. Please try again.");
     } finally {
       setLoading(false);
     }
