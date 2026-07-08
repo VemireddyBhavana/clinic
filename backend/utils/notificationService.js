@@ -17,6 +17,7 @@ const sendEmail = async (to, subject, html) => {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
+        family: 4, // Force IPv4 to prevent IPv6 ENETUNREACH issues
       });
     } else {
       // Fallback to Ethereal mock email for hackathon/development
@@ -29,6 +30,7 @@ const sendEmail = async (to, subject, html) => {
           user: testAccount.user,
           pass: testAccount.pass,
         },
+        family: 4, // Force IPv4 to prevent IPv6 ENETUNREACH issues
       });
     }
 
