@@ -459,7 +459,7 @@ export default function Landing() {
             <div className="pt-2">
               <button 
                 id="get-started-btn"
-                onClick={() => navigate('/admin/login')}
+                onClick={() => navigate('/login')}
                 className="py-3 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(59,130,246,0.25)] hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] transition-all duration-300 text-sm hover:-translate-y-0.5"
               >
                 GET STARTED
