@@ -110,9 +110,9 @@ export default function SmartScheduling() {
                   <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">Specialization</label>
                   <select 
                     className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-white rounded-lg focus:outline-none focus:border-blue-500"
-                    value={selectedSpecialization}
+                    value={selectedSpecialty}
                     onChange={(e) => {
-                      setSelectedSpecialization(e.target.value);
+                      setSelectedSpecialty(e.target.value);
                       setDemoActive(true);
                     }}
                   >
@@ -176,7 +176,7 @@ export default function SmartScheduling() {
                 </div>
 
                 <button 
-                  onClick={() => navigate('/book', { state: { specialization: selectedSpecialization.toLowerCase() } })}
+                  onClick={() => navigate('/book', { state: { specialization: selectedSpecialty.toLowerCase() } })}
                   className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer hover:-translate-y-0.5"
                 >
                   Book Recommended Slot <ChevronRight size={14} />
