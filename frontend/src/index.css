@@ -330,116 +330,16 @@ input:checked + .slider .clouds {
   100% { transform: translateX(-32px); }
 }
 
-/* Dark Mode Color System Overrides */
-.dark body,
-.dark .bg-slate-50:not([class*="dark:bg-"]),
-.dark .bg-gray-50:not([class*="dark:bg-"]),
-.dark main {
-  background-color: #0f172a !important; /* Slate 900 */
-  color: #f8fafc !important;
+/* ── Smooth dark mode transition for main body ── */
+html, body {
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-.dark .bg-white:not(.keep-light):not([class*="dark:bg-"]),
-.dark header:not([class*="dark:bg-"]),
-.dark footer:not([class*="dark:bg-"]),
-.dark aside:not([class*="dark:bg-"]),
-.dark .bg-slate-100:not([class*="dark:bg-"]),
-.dark .bg-gray-100:not([class*="dark:bg-"]),
-.dark .bg-slate-200:not([class*="dark:bg-"]),
-.dark .bg-gray-200:not([class*="dark:bg-"]) {
-  background-color: #1e293b !important; /* Slate 800 */
-}
-
-/* Headings and Primary Dark Text */
-.dark .text-slate-900:not([class*="dark:text-"]),
-.dark .text-gray-900:not([class*="dark:text-"]),
-.dark .text-slate-800:not([class*="dark:text-"]),
-.dark .text-gray-800:not([class*="dark:text-"]),
-.dark h1,
-.dark h2,
-.dark h3,
-.dark h4,
-.dark h5,
-.dark h6 {
-  color: #f8fafc !important; /* Slate 50 */
-}
-
-/* Secondary Dark Text & Form Labels */
-.dark .text-slate-700:not([class*="dark:text-"]),
-.dark .text-gray-700:not([class*="dark:text-"]),
-.dark .text-slate-600:not([class*="dark:text-"]),
-.dark .text-gray-600:not([class*="dark:text-"]),
-.dark label {
-  color: #cbd5e1 !important; /* Slate 300 */
-}
-
-/* Muted Text & Paragraphs */
-.dark .text-slate-500:not([class*="dark:text-"]),
-.dark .text-gray-500:not([class*="dark:text-"]),
-.dark .text-slate-400:not([class*="dark:text-"]),
-.dark .text-gray-400:not([class*="dark:text-"]),
-.dark p {
-  color: #94a3b8 !important; /* Slate 400 */
-}
-
-/* Borders & Dividers */
-.dark .border-gray-100:not([class*="dark:border-"]),
-.dark .border-slate-200:not([class*="dark:border-"]),
-.dark .border-slate-800\/80:not([class*="dark:border-"]),
-.dark .border-slate-100:not([class*="dark:border-"]),
-.dark .border-gray-200:not([class*="dark:border-"]),
-.dark .divide-gray-50 > *:not([class*="dark:border-"]),
-.dark .border:not([class*="dark:border-"]) {
-  border-color: #334155 !important; /* Slate 700 */
-}
-
-/* Alert Boxes & Accents */
-.dark .bg-blue-50:not([class*="dark:bg-"]),
-.dark .bg-blue-50\/50:not([class*="dark:bg-"]),
-.dark .bg-blue-100\/80:not([class*="dark:bg-"]),
-.dark .bg-blue-50\/10:not([class*="dark:bg-"]) {
-  background-color: rgba(37, 99, 235, 0.15) !important;
-  color: #60a5fa !important;
-}
-
-.dark input,
+/* ── Input override: ensure native Tailwind dark: classes work ── */
+.dark input:not(.switch input),
 .dark select,
 .dark textarea {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-  border-color: #334155 !important;
-}
-
-/* ── Login/Auth page: completely exempt from dark mode input overrides ── */
-[data-login-page] input,
-[data-login-page] select,
-[data-login-page] textarea,
-.dark [data-login-page] input,
-.dark [data-login-page] select,
-.dark [data-login-page] textarea {
-  background: transparent !important;
-  background-color: transparent !important;
-  color: #ffffff !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  -webkit-box-shadow: none !important;
-}
-
-/* Override Chrome autofill dark highlight inside login page */
-[data-login-page] input:-webkit-autofill,
-[data-login-page] input:-webkit-autofill:hover,
-[data-login-page] input:-webkit-autofill:focus,
-[data-login-page] input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 9999px transparent inset !important;
-  box-shadow: 0 0 0 9999px transparent inset !important;
-  -webkit-text-fill-color: #ffffff !important;
-  caret-color: #fff;
-  transition: background-color 999999s ease 0s !important;
-}
-
-.dark .bg-slate-900\/40,
-.dark .bg-slate-900\/80 {
-  background-color: rgba(30, 41, 59, 0.6) !important;
+  color-scheme: dark;
 }
 
 
