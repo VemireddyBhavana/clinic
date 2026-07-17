@@ -104,29 +104,41 @@ export default function About() {
           </div>
           
           <div className="grid sm:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center">
+            <motion.div 
+              whileHover={{ y: -8, scale: 1.02, boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08)' }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center transition-colors duration-300 hover:border-blue-200 cursor-default"
+            >
               <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-600">
                 <HeartPulse size={28} />
               </div>
               <h3 className="font-bold text-slate-900 text-lg mb-3">Empathy</h3>
               <p className="text-slate-500 text-sm leading-relaxed">We understand the anxiety of seeking medical care, and design our systems to be as reassuring and simple as possible.</p>
-            </div>
+            </motion.div>
             
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center">
+            <motion.div 
+              whileHover={{ y: -8, scale: 1.02, boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08)' }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center transition-colors duration-300 hover:border-blue-200 cursor-default"
+            >
               <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-600">
                 <ShieldCheck size={28} />
               </div>
               <h3 className="font-bold text-slate-900 text-lg mb-3">Trust & Security</h3>
               <p className="text-slate-500 text-sm leading-relaxed">Medical data is highly sensitive. We maintain the highest standards of privacy and security to protect your information.</p>
-            </div>
+            </motion.div>
             
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center">
+            <motion.div 
+              whileHover={{ y: -8, scale: 1.02, boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08)' }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center transition-colors duration-300 hover:border-blue-200 cursor-default"
+            >
               <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-600">
                 <Users size={28} />
               </div>
               <h3 className="font-bold text-slate-900 text-lg mb-3">Accessibility</h3>
               <p className="text-slate-500 text-sm leading-relaxed">Healthcare should be accessible to everyone. Our platform is designed to be inclusive and easy to use for all demographics.</p>
-            </div>
+            </motion.div>
           </div>
         </PageContainer>
       </motion.section>
