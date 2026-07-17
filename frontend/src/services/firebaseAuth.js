@@ -30,12 +30,13 @@ if (firebaseConfig.apiKey && firebaseConfig.apiKey !== 'your_api_key_here') {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
     isMock = false;
-    console.log("Firebase Auth initialized successfully.");
+    console.info("[MediSlot AI] Firebase Auth initialized successfully.");
   } catch (error) {
     console.error("Firebase init failed, falling back to Mock Auth:", error);
   }
 } else {
-  console.warn("VITE_FIREBASE_API_KEY not found in environment. Mock Authentication is active.");
+  // Firebase credentials not set — running in demo/hackathon mock mode (fully functional)
+  console.info("[MediSlot AI] Running in Mock Auth mode. Login with any @medislot.ai account + password 'medislot'.");
 }
 
 // Local mock database to simulate real login behavior

@@ -101,9 +101,27 @@ export default function Login() {
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white text-center mb-2 tracking-tight">
           Welcome to MediSlot AI
         </h2>
-        <p className="text-xs text-slate-400 text-center mb-6">
-          Authentication Mode: <span className="text-blue-400 font-bold">{authMode}</span>
-        </p>
+        {/* Demo Mode Banner — shown when Firebase is not configured */}
+        {authMode === 'MOCK' && (
+          <div className="bg-blue-500/10 border border-blue-400/20 rounded-2xl p-3.5 mb-5 text-center">
+            <p className="text-blue-300 text-[11px] font-bold uppercase tracking-wider mb-1.5">🔐 Demo Mode Active</p>
+            <div className="grid grid-cols-3 gap-1.5 text-[10px]">
+              <div className="bg-white/5 rounded-lg py-1.5 px-2">
+                <p className="text-slate-400 font-medium">Patient</p>
+                <p className="text-white font-bold">patient@medislot.ai</p>
+              </div>
+              <div className="bg-white/5 rounded-lg py-1.5 px-2">
+                <p className="text-slate-400 font-medium">Doctor</p>
+                <p className="text-white font-bold">doctor@medislot.ai</p>
+              </div>
+              <div className="bg-white/5 rounded-lg py-1.5 px-2">
+                <p className="text-slate-400 font-medium">Admin</p>
+                <p className="text-white font-bold">admin@medislot.ai</p>
+              </div>
+            </div>
+            <p className="text-slate-500 text-[10px] mt-1.5">Password for all accounts: <span className="text-blue-400 font-bold">medislot</span></p>
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-3.5 rounded-xl text-xs font-semibold mb-4 text-center">
