@@ -2,6 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, User, Bot, Loader2, Mic, MicOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { useLanguage } from '../../context/LanguageContext';
+
+const chatLanguages = [
+  { code: 'en', name: 'English' },
+  { code: 'te', name: 'తెలుగు' },
+  { code: 'hi', name: 'हिन्दी' },
+  { code: 'mr', name: 'मराठी' },
+  { code: 'gu', name: 'ગુજરાતી' }
+];
 
 function RobotAvatar({ size = 48, className = "" }) {
   return (
@@ -107,6 +116,7 @@ function RobotAvatar({ size = 48, className = "" }) {
 }
 
 export default function Chatbot() {
+  const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { id: 1, text: "Hi! I'm MediBot. How can I help you today?", sender: 'bot' }
@@ -243,6 +253,29 @@ export default function Chatbot() {
               >
                 <X size={18} />
               </button>
+            </div>
+
+            {/* Horizontal Language Tabs */}
+            <div 
+              className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 py-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap shrink-0"
+              style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+            >
+              {chatLanguages.map((lang) => {
+                const isActive = language === lang.code;
+                return (
+                  <button
+                    key={lang.code}
+                    onClick={() => setLanguage(lang.code)}
+                    className={`text-xs font-bold px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer select-none
+                      ${isActive 
+                        ? 'bg-emerald-700 text-white shadow-sm dark:bg-emerald-600' 
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
+                      }`}
+                  >
+                    {lang.name}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Messages Area */}
