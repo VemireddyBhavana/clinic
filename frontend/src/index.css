@@ -466,4 +466,14 @@ font[style*="background-color"] {
 .skiptranslate,
 .goog-te-spinner-pos {
   display: none !important;
+}
+
+/* Prevent Google Translate font tags from overriding layout weights and styles */
+font {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  vertical-align: baseline !important;
 }

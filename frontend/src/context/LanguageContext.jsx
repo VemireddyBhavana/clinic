@@ -1,4 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Languages } from 'lucide-react';
 
 const LanguageContext = createContext();
 
@@ -245,10 +247,32 @@ const translations = {
   }
 };
 
+const titles = {
+  en: 'MediSlot AI - Smart Clinical Scheduling',
+  te: 'మెడిస్లాట్ AI - స్మార్ట్ వైద్య నియామకాలు',
+  hi: 'मेडिस्लॉट एआई - स्मार्ट क्लिनिकल अपॉइंटमेंट',
+  mr: 'मेडिस्लॉट एआई - स्मार्ट क्लिनिकल अपॉइंटमेंट्स',
+  gu: 'મેડીસ્લોટ AI - સ્માર્ટ ક્લિનિકલ એપોઇન્ટમેન્ટ'
+};
+
+const translatingMessages = {
+  en: 'Translating page...',
+  te: 'పేజీని అనువదిస్తోంది...',
+  hi: 'पृष्ठ का अनुवाद किया जा रहा है...',
+  mr: 'पृष्ठाचे भाषांतर करत आहे...',
+  gu: 'પૃષ્ઠનું ભાષાંતર થઈ રહ્યું છે...'
+};
+
 export function LanguageProvider({ children }) {
   const [language, setLanguageState] = useState(() => {
     return localStorage.getItem('language') || 'en';
   });
+  const [isTranslating, setIsTranslating] = useState(false);
+
+  // Sync browser tab title
+  useEffect(() => {
+    document.title = titles[language] || titles.en;
+  }, [language]);
 
   // Sync state with Google Translate combo box on load and language changes
   useEffect(() => {
@@ -271,6 +295,10 @@ export function LanguageProvider({ children }) {
   }, [language]);
 
   const setLanguage = (lang) => {
+    if (lang !== language) {
+      setIsTranslating(true);
+      setTimeout(() => setIsTranslating(false), 900);
+    }
     setLanguageState(lang);
     localStorage.setItem('language', lang);
 
@@ -288,6 +316,32 @@ export function LanguageProvider({ children }) {
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}
+      <AnimatePresence>
+        {isTranslating && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[99999] flex flex-col items-center justify-center backdrop-blur-md bg-slate-950/50 text-white"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', damping: 15 }}
+              className="bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 rounded-3xl p-8 flex flex-col items-center gap-4 shadow-2xl backdrop-blur-2xl max-w-xs text-center text-slate-800 dark:text-white"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-blue-500/10 dark:bg-cyan-500/10 flex items-center justify-center">
+                <Languages size={24} className="text-blue-600 dark:text-cyan-400 animate-bounce" />
+              </div>
+              <p className="text-xs font-bold tracking-wide">
+                {translatingMessages[language] || translatingMessages.en}
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </LanguageContext.Provider>
   );
 }
