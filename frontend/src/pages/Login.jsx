@@ -83,15 +83,29 @@ export default function Login() {
     }
   };
 
+  const isDark = theme === 'dark';
+
   return (
-    <div className="min-h-screen relative flex items-center justify-center font-sans overflow-hidden" style={{ background: '#0f172a' }}>
-      {/* Background Video */}
-      <video
-        autoPlay loop muted playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-30 z-0"
-      >
-        <source src="https://res.cloudinary.com/de8opipom/video/upload/v1783343289/WhatsApp_Video_2026-07-06_at_6.16.41_PM_yjm2ng.mp4" type="video/mp4" />
-      </video>
+    <div
+      className="min-h-screen relative flex items-center justify-center font-sans overflow-hidden transition-colors duration-500"
+      style={{ background: isDark ? '#0f172a' : '#eff6ff' }}
+    >
+      {/* Background Video — only visible in dark mode */}
+      {isDark && (
+        <video
+          autoPlay loop muted playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-25 z-0"
+        >
+          <source src="https://res.cloudinary.com/de8opipom/video/upload/v1783343289/WhatsApp_Video_2026-07-06_at_6.16.41_PM_yjm2ng.mp4" type="video/mp4" />
+        </video>
+      )}
+
+      {/* Light mode gradient background */}
+      {!isDark && (
+        <div className="absolute inset-0 z-0" style={{
+          background: 'radial-gradient(ellipse at top left, #bfdbfe 0%, #eff6ff 40%, #e0f2fe 100%)'
+        }} />
+      )}
 
       {/* Floating Theme Toggle */}
       <div className="fixed top-6 right-6 z-50">
@@ -133,8 +147,12 @@ export default function Login() {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: 'easeOut' }}
-        className="relative z-10 w-full max-w-sm mx-4 rounded-3xl border border-white/10 backdrop-blur-2xl shadow-2xl overflow-hidden"
-        style={{ background: theme === 'light' ? 'rgba(15,23,42,0.85)' : 'rgba(2,6,23,0.80)' }}
+        className="relative z-10 w-full max-w-sm mx-4 rounded-3xl shadow-2xl overflow-hidden transition-all duration-500"
+        style={{
+          background: isDark ? 'rgba(2,6,23,0.82)' : 'rgba(255,255,255,0.92)',
+          border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(59,130,246,0.15)',
+          backdropFilter: 'blur(24px)',
+        }}
       >
         <div className="p-8 sm:p-10">
           {/* Logo */}
@@ -153,16 +171,16 @@ export default function Login() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25 }}
               >
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white text-center mb-2 tracking-tight">
+                <h1 style={{ color: isDark ? '#ffffff' : '#0f172a' }} className="text-2xl sm:text-3xl font-extrabold text-center mb-2 tracking-tight transition-colors duration-300">
                   Welcome to MediSlot AI
                 </h1>
-                <p className="text-slate-400 text-xs text-center mb-8 leading-relaxed">
+                <p style={{ color: isDark ? '#94a3b8' : '#475569' }} className="text-xs text-center mb-8 leading-relaxed transition-colors duration-300">
                   AI-powered smart scheduling for patients, doctors &amp; hospitals.
                 </p>
 
                 {/* Error */}
                 {error && (
-                  <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-3 rounded-xl text-xs font-semibold mb-5 text-center">
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-500 p-3 rounded-xl text-xs font-semibold mb-5 text-center">
                     {error}
                   </div>
                 )}
@@ -172,7 +190,12 @@ export default function Login() {
                   <button
                     onClick={handleGoogle}
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-3 py-3.5 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-2xl text-sm transition-all shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+                    className="w-full flex items-center justify-center gap-3 py-3.5 font-bold rounded-2xl text-sm transition-all shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+                    style={{
+                      background: isDark ? '#ffffff' : '#ffffff',
+                      color: '#1e293b',
+                      border: isDark ? 'none' : '1px solid #e2e8f0'
+                    }}
                   >
                     <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69c-.29 1.5-1.14 2.77-2.4 3.63v3.02h3.87c2.26-2.09 3.58-5.17 3.58-8.5z"/>
@@ -186,16 +209,21 @@ export default function Login() {
                   {/* Continue with Phone */}
                   <button
                     onClick={() => { setError(null); setScreen('phone'); }}
-                    className="w-full flex items-center justify-center gap-3 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-bold rounded-2xl text-sm transition-all active:scale-[0.98] cursor-pointer"
+                    className="w-full flex items-center justify-center gap-3 py-3.5 font-bold rounded-2xl text-sm transition-all active:scale-[0.98] cursor-pointer"
+                    style={{
+                      background: isDark ? 'rgba(255,255,255,0.05)' : '#eff6ff',
+                      color: isDark ? '#ffffff' : '#1d4ed8',
+                      border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #bfdbfe'
+                    }}
                   >
-                    <Phone size={18} className="shrink-0 text-blue-400" />
+                    <Phone size={18} className="shrink-0 text-blue-500" />
                     Continue with Phone Number
                   </button>
                 </div>
 
-                <p className="text-center text-[11px] text-slate-500">
+                <p className="text-center text-[11px] mt-6" style={{ color: isDark ? '#64748b' : '#94a3b8' }}>
                   Don't have an account?{' '}
-                  <Link to="/register" className="text-blue-400 hover:text-blue-300 font-bold">
+                  <Link to="/register" className="text-blue-500 hover:text-blue-400 font-bold">
                     Register
                   </Link>
                 </p>
@@ -213,30 +241,35 @@ export default function Login() {
               >
                 <button
                   onClick={() => { setScreen('idle'); setError(null); }}
-                  className="flex items-center gap-1 text-slate-400 hover:text-white text-xs mb-6 transition-colors cursor-pointer"
+                  className="flex items-center gap-1 text-xs mb-6 transition-colors cursor-pointer"
+                  style={{ color: isDark ? '#94a3b8' : '#64748b' }}
                 >
                   <ChevronLeft size={14} /> Back
                 </button>
-                <h2 className="text-xl font-extrabold text-white mb-1">Enter your phone</h2>
-                <p className="text-slate-400 text-xs mb-6">We'll send a one-time verification code.</p>
+                <h2 className="text-xl font-extrabold mb-1 transition-colors" style={{ color: isDark ? '#fff' : '#0f172a' }}>Enter your phone</h2>
+                <p className="text-xs mb-6" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>We'll send a one-time verification code.</p>
 
                 {error && (
-                  <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-3 rounded-xl text-xs font-semibold mb-4 text-center">
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-500 p-3 rounded-xl text-xs font-semibold mb-4 text-center">
                     {error}
                   </div>
                 )}
 
                 <form onSubmit={handleSendOtp} className="space-y-4">
-                  <div className="relative border-b-2 border-white/20 focus-within:border-blue-500 transition-colors py-2">
+                  <div
+                    className="relative py-2 transition-colors"
+                    style={{ borderBottom: `2px solid ${isDark ? 'rgba(255,255,255,0.2)' : '#bfdbfe'}` }}
+                  >
                     <input
                       type="tel"
                       required
                       placeholder="Phone number (e.g. +91 98765 43210)"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-transparent outline-none text-sm text-white placeholder-slate-500 pl-1 pr-8"
+                      className="w-full bg-transparent outline-none text-sm pl-1 pr-8"
+                      style={{ color: isDark ? '#fff' : '#0f172a' }}
                     />
-                    <Phone size={16} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Phone size={16} className="absolute right-2 top-1/2 -translate-y-1/2" style={{ color: isDark ? '#64748b' : '#94a3b8' }} />
                   </div>
                   <div id="recaptcha-container" />
                   <button
@@ -261,23 +294,27 @@ export default function Login() {
               >
                 <button
                   onClick={() => { setScreen('phone'); setError(null); }}
-                  className="flex items-center gap-1 text-slate-400 hover:text-white text-xs mb-6 transition-colors cursor-pointer"
+                  className="flex items-center gap-1 text-xs mb-6 transition-colors cursor-pointer"
+                  style={{ color: isDark ? '#94a3b8' : '#64748b' }}
                 >
                   <ChevronLeft size={14} /> Back
                 </button>
-                <h2 className="text-xl font-extrabold text-white mb-1">Verify your number</h2>
-                <p className="text-slate-400 text-xs mb-6">
-                  Enter the 6-digit code sent to <span className="text-white font-semibold">{phone}</span>.
+                <h2 className="text-xl font-extrabold mb-1" style={{ color: isDark ? '#fff' : '#0f172a' }}>Verify your number</h2>
+                <p className="text-xs mb-6" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>
+                  Enter the 6-digit code sent to <span className="font-semibold" style={{ color: isDark ? '#fff' : '#1e40af' }}>{phone}</span>.
                 </p>
 
                 {error && (
-                  <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-3 rounded-xl text-xs font-semibold mb-4 text-center">
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-500 p-3 rounded-xl text-xs font-semibold mb-4 text-center">
                     {error}
                   </div>
                 )}
 
                 <form onSubmit={handleVerifyOtp} className="space-y-4">
-                  <div className="relative border-b-2 border-white/20 focus-within:border-blue-500 transition-colors py-2">
+                  <div
+                    className="relative py-2"
+                    style={{ borderBottom: `2px solid ${isDark ? 'rgba(255,255,255,0.2)' : '#bfdbfe'}` }}
+                  >
                     <input
                       type="text"
                       required
@@ -285,9 +322,10 @@ export default function Login() {
                       placeholder="6-digit OTP code"
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
-                      className="w-full bg-transparent outline-none text-xl tracking-[0.5em] text-white placeholder-slate-500 pl-1 pr-8 font-bold text-center"
+                      className="w-full bg-transparent outline-none text-xl tracking-[0.5em] pl-1 pr-8 font-bold text-center"
+                      style={{ color: isDark ? '#fff' : '#0f172a' }}
                     />
-                    <KeyRound size={16} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <KeyRound size={16} className="absolute right-2 top-1/2 -translate-y-1/2" style={{ color: isDark ? '#64748b' : '#94a3b8' }} />
                   </div>
                   <button
                     type="submit"
@@ -306,4 +344,3 @@ export default function Login() {
     </div>
   );
 }
-
