@@ -16,7 +16,8 @@ export default function PatientNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
+  const desktopDropdownRef = useRef(null);
+  const mobileDropdownRef = useRef(null);
 
   // Emergency SOS state variables
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
@@ -151,7 +152,10 @@ export default function PatientNavbar() {
   // Close dropdown on clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      const clickedOutsideDesktop = desktopDropdownRef.current && !desktopDropdownRef.current.contains(event.target);
+      const clickedOutsideMobile = mobileDropdownRef.current && !mobileDropdownRef.current.contains(event.target);
+      
+      if (clickedOutsideDesktop && clickedOutsideMobile) {
         setShowDropdown(false);
       }
     }
@@ -423,9 +427,10 @@ export default function PatientNavbar() {
 
   const pendingNotifications = userNotifications.filter(n => n.status === 'pending');
 
-  // Automatically mark pending notifications as read locally when dropdown is opened
+  // Automatically mark pending notifications as read in backend and locally when dropdown is opened
   useEffect(() => {
     if (showDropdown && pendingNotifications.length > 0) {
+      // 1. Mark them as read locally for instant UI update
       setNotifications(prev =>
         prev.map(n => {
           const isUserNotif = (userEmail && n.patientEmail && n.patientEmail.toLowerCase() === userEmail.toLowerCase()) ||
@@ -436,6 +441,15 @@ export default function PatientNavbar() {
           return n;
         })
       );
+
+      // 2. Persist read status in MongoDB via API calls
+      pendingNotifications.forEach(async (n) => {
+        try {
+          await notificationAPI.updateStatus(n._id, { status: 'sent' });
+        } catch (err) {
+          console.error(`Failed to update notification status for ${n._id}`, err);
+        }
+      });
     }
   }, [showDropdown]);
 
@@ -472,7 +486,7 @@ export default function PatientNavbar() {
         </nav>
         
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center space-x-3 relative" ref={dropdownRef}>
+        <div className="hidden md:flex items-center space-x-3 relative" ref={desktopDropdownRef}>
           {/* Notification Bell */}
           <div className="relative">
             <button 
@@ -561,10 +575,9 @@ export default function PatientNavbar() {
           <LanguageSelector dropdownPosition="bottom-right" />
         </div>
 
-        {/* Mobile Actions Bar */}
         <div className="md:hidden flex items-center gap-2 shrink-0">
           {/* Mobile Bell */}
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative" ref={mobileDropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
               className="p-1.5 text-gray-500 dark:text-slate-400 hover:text-blue-600 relative"
