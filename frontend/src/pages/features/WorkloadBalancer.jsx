@@ -57,27 +57,27 @@ export default function WorkloadBalancer() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-16 transition-colors duration-300">
       {/* Header Banner */}
-      <div className="bg-blue-600 dark:bg-blue-700 pt-8 pb-16 text-white relative overflow-hidden">
+      <div className="bg-blue-600 dark:bg-blue-700 pt-10 pb-24 text-white relative overflow-hidden">
         <PageContainer>
           <button 
             onClick={() => navigate('/home')} 
-            className="flex items-center gap-1.5 text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg border border-white/10 mb-6 transition-all font-bold cursor-pointer"
+            className="flex items-center gap-1.5 text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg border border-white/10 mb-8 transition-all font-bold cursor-pointer"
           >
-            <ArrowLeft size={14} /> Back to Dashboard
+            <ArrowLeft size={14} /> Back to Home
           </button>
-          <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-100 text-xs font-bold px-3 py-1 rounded-full border border-blue-400/30 mb-3">
+          <div className="max-w-xl">
+            <span className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-100 text-xs font-bold px-3 py-1 rounded-full border border-blue-400/30 mb-4">
               <Users size={12} /> Resource Allocation
             </span>
-            <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 tracking-tight">Doctor Workload Balancer</h1>
-            <p className="text-blue-100 text-sm sm:text-base leading-relaxed">
-              MediSlot AI distributes patient visits evenly across specialists, flag clinical burnout risks, and load balances bookings.
+            <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 tracking-tight">AI Workload Balancer</h1>
+            <p className="text-blue-100 text-sm sm:text-base leading-relaxed max-w-lg">
+              Dynamically balance doctor schedules and patient queues in real-time, redirecting load away from overloaded specialists to prevent staff burnout.
             </p>
           </div>
         </PageContainer>
       </div>
 
-      <PageContainer className="-mt-8">
+      <PageContainer className="-mt-10 relative z-10">
         <div className="grid lg:grid-cols-3 gap-8">
           
           {/* LEFT: Stats & Analytics Summary */}
