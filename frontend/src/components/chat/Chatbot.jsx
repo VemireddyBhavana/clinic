@@ -282,11 +282,11 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 80, scale: 0.8 }}
             transition={{ type: 'spring', damping: 20, stiffness: 280 }}
-            className="notranslate fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[calc(100vw-2rem)] sm:w-96 max-w-[380px] bg-white rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.12)] border border-slate-200 z-50 flex flex-col overflow-hidden"
+            className="notranslate fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[calc(100vw-2rem)] sm:w-96 max-w-[380px] bg-white dark:bg-slate-950 rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.12)] border border-slate-200 dark:border-slate-800 z-50 flex flex-col overflow-hidden"
             style={{ height: '500px', maxHeight: '80vh' }}
           >
             {/* Header */}
-            <div className="bg-blue-600 p-4 flex justify-between items-center text-white shrink-0">
+            <div className="bg-blue-600 dark:bg-blue-600 p-4 flex justify-between items-center text-white shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center overflow-hidden">
                   <RobotAvatar size={42} className="translate-y-1.5" />
@@ -328,7 +328,7 @@ export default function Chatbot() {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 bg-slate-50 space-y-4 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-4 bg-slate-50 dark:bg-slate-900/40 space-y-4 custom-scrollbar">
               {messages.map(msg => (
                 <motion.div 
                   initial={{ opacity: 0, y: 15 }}
@@ -338,18 +338,18 @@ export default function Chatbot() {
                   className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.sender === 'bot' && (
-                    <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center shrink-0 mt-auto border border-slate-200">
+                    <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 mt-auto border border-slate-200 dark:border-slate-700">
                       <RobotAvatar size={32} className="translate-y-1" />
                     </div>
                   )}
                   
-                  <div className={`p-3 rounded-2xl max-w-[75%] text-sm ${msg.sender === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none shadow-sm'}`}>
+                  <div className={`p-3 rounded-2xl max-w-[75%] text-sm ${msg.sender === 'user' ? 'bg-blue-600 text-white rounded-br-none dark:bg-blue-500' : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200'}`}>
                     {msg.id === 1 ? localBotStrings[chatbotLang].welcome : msg.text}
                   </div>
                   
                   {msg.sender === 'user' && (
-                    <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center shrink-0 mt-auto">
-                      <User size={16} className="text-slate-500" />
+                    <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center shrink-0 mt-auto">
+                      <User size={16} className="text-slate-500 dark:text-slate-400" />
                     </div>
                   )}
                 </motion.div>
@@ -361,24 +361,24 @@ export default function Chatbot() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex gap-3 justify-start"
                 >
-                  <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center shrink-0 mt-auto border border-slate-200">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 mt-auto border border-slate-200 dark:border-slate-700">
                     <RobotAvatar size={32} className="translate-y-1" />
                   </div>
-                  <div className="p-4 rounded-2xl bg-white border border-slate-200 rounded-bl-none shadow-sm flex items-center gap-1.5">
+                  <div className="p-4 rounded-2xl bg-white border border-slate-200 rounded-bl-none shadow-sm flex items-center gap-1.5 dark:bg-slate-900 dark:border-slate-800">
                     <motion.span 
                       animate={{ y: [0, -5, 0] }}
                       transition={{ repeat: Infinity, duration: 0.6, delay: 0 }}
-                      className="w-1.5 h-1.5 bg-blue-600 rounded-full inline-block"
+                      className="w-1.5 h-1.5 bg-blue-600 dark:bg-cyan-500 rounded-full inline-block"
                     />
                     <motion.span 
                       animate={{ y: [0, -5, 0] }}
                       transition={{ repeat: Infinity, duration: 0.6, delay: 0.15 }}
-                      className="w-1.5 h-1.5 bg-blue-600 rounded-full inline-block"
+                      className="w-1.5 h-1.5 bg-blue-600 dark:bg-cyan-500 rounded-full inline-block"
                     />
                     <motion.span 
                       animate={{ y: [0, -5, 0] }}
                       transition={{ repeat: Infinity, duration: 0.6, delay: 0.3 }}
-                      className="w-1.5 h-1.5 bg-blue-600 rounded-full inline-block"
+                      className="w-1.5 h-1.5 bg-blue-600 dark:bg-cyan-500 rounded-full inline-block"
                     />
                   </div>
                 </motion.div>
@@ -387,13 +387,13 @@ export default function Chatbot() {
             </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-slate-100 shrink-0 flex gap-2 items-center">
+            <form onSubmit={handleSendMessage} className="p-3 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-900 shrink-0 flex gap-2 items-center">
               <input 
                 type="text" 
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder={isRecording ? localBotStrings[chatbotLang].listening : localBotStrings[chatbotLang].placeholder} 
-                className={`flex-1 bg-slate-50 border border-slate-200 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all ${isRecording ? 'border-red-400 bg-red-50 text-red-700 animate-pulse' : ''}`}
+                className={`flex-1 bg-slate-50 border border-slate-200 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-white dark:focus:bg-slate-900 dark:focus:ring-blue-500 transition-all ${isRecording ? 'border-red-400 bg-red-50 text-red-700 animate-pulse' : ''}`}
               />
               {recognitionRef.current && (
                 <div className="relative shrink-0">
@@ -406,7 +406,7 @@ export default function Chatbot() {
                   <button
                     type="button"
                     onClick={toggleRecording}
-                    className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center border transition-all ${isRecording ? 'bg-red-500 text-white border-red-500 shadow-md shadow-red-200' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100 hover:text-slate-700'}`}
+                    className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center border transition-all ${isRecording ? 'bg-red-500 text-white border-red-500 shadow-md shadow-red-200' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100 hover:text-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-slate-800 dark:hover:text-white'}`}
                     title={isRecording ? localBotStrings[chatbotLang].stopMic : localBotStrings[chatbotLang].startMic}
                   >
                     {isRecording ? <MicOff size={16} /> : <Mic size={16} />}
@@ -416,7 +416,7 @@ export default function Chatbot() {
               <button 
                 type="submit"
                 disabled={!inputValue.trim()}
-                className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 disabled:bg-slate-300 transition-colors"
+                className="w-10 h-10 rounded-full bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600 text-white flex items-center justify-center shrink-0 disabled:bg-slate-300 dark:disabled:bg-slate-800 transition-colors"
               >
                 <Send size={16} className="ml-1" />
               </button>
