@@ -128,15 +128,23 @@ export const registerWithEmail = async (name, email, password, role = 'patient')
 let confirmationResultRef = null;
 
 export const sendOtp = async (phoneNumber, containerId) => {
+  // Strip all whitespace, dashes, parentheses
+  let cleanPhone = phoneNumber.replace(/[\s\-\(\)]/g, '');
+  
+  // Ensure it starts with '+'
+  if (!cleanPhone.startsWith('+')) {
+    cleanPhone = '+' + cleanPhone;
+  }
+
   if (isMock) {
-    console.log(`[Mock OTP] Verification code 123456 sent to ${phoneNumber}`);
+    console.log(`[Mock OTP] Verification code 123456 sent to ${cleanPhone}`);
     return { verificationId: 'mock-verification-id' };
   }
 
   const verifier = new RecaptchaVerifier(auth, containerId, {
     size: 'invisible'
   });
-  const result = await signInWithPhoneNumber(auth, phoneNumber, verifier);
+  const result = await signInWithPhoneNumber(auth, cleanPhone, verifier);
   confirmationResultRef = result;
   return { verificationId: result.verificationId };
 };
