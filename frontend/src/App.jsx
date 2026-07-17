@@ -27,11 +27,20 @@ import HospitalDetails from './pages/HospitalDetails';
 import ScrollToTop from './components/ScrollToTop';
 import Landing from './pages/Landing';
 import AppointmentsHistory from './pages/AppointmentsHistory';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import SmartScheduling from './pages/features/SmartScheduling';
+import NoShowPrediction from './pages/features/NoShowPrediction';
+import WorkloadBalancer from './pages/features/WorkloadBalancer';
+import Reminders from './pages/features/Reminders';
+import SymptomChecker from './pages/features/SymptomChecker';
+import PatientDashboard from './pages/PatientDashboard';
+import DoctorDashboard from './pages/DoctorDashboard';
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('adminToken');
   if (!token) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/login" replace />;
   }
   return children ? children : <Outlet />;
 }
@@ -41,6 +50,10 @@ function AnimatedRoutes() {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/legal" element={<Navigate to="/privacy-policy" replace />} />
+      
+      {/* Public Auth Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       
       {/* Protected Patient Routes */}
       <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
@@ -58,11 +71,25 @@ function AnimatedRoutes() {
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/cookie-policy" element={<CookiePolicy />} />
         <Route path="/patient-rights" element={<PatientRights />} />
+        <Route path="/patient/dashboard" element={<PatientDashboard />} />
+        
+        {/* Interactive Features */}
+        <Route path="/features/smart-scheduling" element={<SmartScheduling />} />
+        <Route path="/features/no-show-prediction" element={<NoShowPrediction />} />
+        <Route path="/features/workload-balancer" element={<WorkloadBalancer />} />
+        <Route path="/features/reminders" element={<Reminders />} />
+        <Route path="/features/symptom-checker" element={<SymptomChecker />} />
       </Route>
       
-      {/* Public Auth Routes */}
-      <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin/register" element={<AdminRegister />} />
+      {/* Protected Doctor Routes */}
+      <Route path="/doctor/dashboard" element={<ProtectedRoute><DoctorDashboard /></ProtectedRoute>} />
+      
+      {/* Hospital Dashboard Redirect */}
+      <Route path="/hospital/dashboard" element={<Navigate to="/admin/dashboard" replace />} />
+      
+      {/* Legacy Public Auth Routes */}
+      <Route path="/admin/login" element={<Navigate to="/login" replace />} />
+      <Route path="/admin/register" element={<Navigate to="/register" replace />} />
       <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
       <Route path="/admin/reset-password" element={<AdminResetPassword />} />
       

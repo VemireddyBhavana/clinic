@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, MotionConfig } from 'framer-motion';
+import { motion, MotionConfig, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, ShieldCheck, Activity, Bell,
   User, Clock, 
   CalendarCheck, ClipboardCheck,
-  TrendingUp, Users, Star, ArrowRight, Headset
+  TrendingUp, Users, Star, ArrowRight, Headset,
+  AlertTriangle, Stethoscope
 } from 'lucide-react';
 import PageContainer from '../components/layout/PageContainer';
+import { doctorAPI } from '../services/api';
+import { analyzeSymptoms } from '../services/gemini';
 
 // ── Animation Variants ────────────────────────────────────────────────────────
 // Reduced y-distance so animations feel smooth on all screen sizes
@@ -41,15 +44,52 @@ const cardMotion = {
 
 export default function Home() {
   const navigate = useNavigate();
-  const [specialization, setSpecialization] = useState('');
+  const [symptoms, setSymptoms] = useState('');
   const [preferredDate, setPreferredDate] = useState('');
+  const [triageLoading, setTriageLoading] = useState(false);
+  const [triageResult, setTriageResult] = useState(null);
+  const [dbDoctors, setDbDoctors] = useState([]);
 
-  const handleBookSlot = () => {
-    navigate('/hospitals', { state: { specialization, preferredDate } });
+  useEffect(() => {
+    // Fetch actual doctors from DB for matching
+    const fetchDoctors = async () => {
+      try {
+        const docs = await doctorAPI.getAll();
+        setDbDoctors(docs);
+      } catch (err) {
+        console.error("Failed to load doctor listings on Home page", err);
+      }
+    };
+    fetchDoctors();
+  }, []);
+
+  const handleAnalyzeSymptoms = async () => {
+    if (!symptoms.trim()) return;
+    setTriageLoading(true);
+    setTriageResult(null);
+    try {
+      const result = await analyzeSymptoms(symptoms);
+      // Filter db doctors that match the specialization
+      const matched = dbDoctors.filter(
+        d => d.specialization.toLowerCase() === result.specialization.toLowerCase() && d.isActive
+      );
+      setTriageResult({
+        ...result,
+        recommendedDoctors: matched.slice(0, 2)
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setTriageLoading(false);
+    }
   };
 
-  const handleBookDoctor = (doctorName) => {
-    navigate('/hospitals', { state: { doctorName } });
+  const handleBookSlot = (spec) => {
+    navigate('/hospitals', { state: { specialization: spec.toLowerCase(), preferredDate, symptoms } });
+  };
+
+  const handleBookDoctor = (doctorId, spec) => {
+    navigate('/hospitals', { state: { doctorId, specialization: spec.toLowerCase(), preferredDate, symptoms } });
   };
 
   return (
@@ -72,18 +112,18 @@ export default function Home() {
                 <Activity size={13} />
                 AI-Powered Smart Scheduling
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-bold text-slate-900 dark:text-white leading-[1.15] mb-4 tracking-tight">
-                Smarter Appointments.<br />
-                <span className="text-blue-600 dark:text-blue-500">Better Healthcare.</span>
+              <h1 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-bold text-slate-900 dark:text-white leading-[1.15] mb-4 tracking-tight">
+                Find the Right Doctor with AI.<br />
+                <span className="text-blue-600 dark:text-blue-500">Book Smarter. Get Care Faster.</span>
               </h1>
               <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 mb-7 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                MediSlot AI optimizes clinic scheduling, reduces no-shows, balances doctor workload, and helps you get the right care at the right time.
+                Describe your symptoms, let AI recommend the right specialist, compare available doctors, reduce waiting time, and book your appointment in minutes.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 mb-10 justify-center lg:justify-start">
                 <Link to="/hospitals" className="w-full sm:w-auto">
                   <motion.button 
                     whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-7 rounded-lg shadow-sm text-sm transition-colors"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-7 rounded-lg shadow-sm text-sm transition-colors cursor-pointer"
                   >
                     Book Appointment
                   </motion.button>
@@ -91,7 +131,7 @@ export default function Home() {
                 <Link to="/doctors" className="w-full sm:w-auto">
                   <motion.button 
                     whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    className="w-full bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-3 px-7 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors shadow-sm text-sm"
+                    className="w-full bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-3 px-7 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors shadow-sm text-sm cursor-pointer"
                   >
                     View Doctors
                   </motion.button>
@@ -146,51 +186,113 @@ export default function Home() {
                 <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">Book Your Appointment</h3>
                 <p className="text-[12px] text-slate-500 dark:text-slate-400 mb-4">Get AI-recommended slots based on availability &amp; wait time.</p>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
-                    <input type="text" placeholder="Enter full name" className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-400 dark:placeholder-slate-500" />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Mobile Number</label>
-                    <input type="text" placeholder="Enter mobile number" className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-400 dark:placeholder-slate-500" />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Specialization</label>
-                    <select 
-                      className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white cursor-pointer"
-                      value={specialization}
-                      onChange={(e) => setSpecialization(e.target.value)}
+                <AnimatePresence mode="wait">
+                  {!triageResult ? (
+                    <motion.div 
+                      key="step1" 
+                      initial={{ opacity: 0 }} 
+                      animate={{ opacity: 1 }} 
+                      exit={{ opacity: 0 }}
+                      className="space-y-4"
                     >
-                      <option value="" disabled>Select specialization</option>
-                      <option value="cardiology">Cardiology</option>
-                      <option value="dermatology">Dermatology</option>
-                      <option value="neurology">Neurology</option>
-                      <option value="orthopedics">Orthopedics</option>
-                      <option value="pediatrics">Pediatrics</option>
-                      <option value="general">General Medicine</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Preferred Date</label>
-                    <input 
-                      type="date" 
-                      value={preferredDate}
-                      onChange={(e) => setPreferredDate(e.target.value)}
-                      className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer" 
-                    />
-                  </div>
-                </div>
-                
-                <motion.button 
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                  onClick={handleBookSlot}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-xs mb-4 shadow-sm cursor-pointer transition-colors"
-                >
-                  Find Best Slots
-                </motion.button>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Describe Symptoms (Step 1)</label>
+                        <textarea 
+                          rows={3}
+                          placeholder="e.g. I have chest pain and shortness of breath"
+                          value={symptoms}
+                          onChange={(e) => setSymptoms(e.target.value)}
+                          className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-400 dark:placeholder-slate-500 resize-none font-sans"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Preferred Date</label>
+                        <input 
+                          type="date" 
+                          value={preferredDate}
+                          onChange={(e) => setPreferredDate(e.target.value)}
+                          className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer" 
+                        />
+                      </div>
+                      <motion.button 
+                        whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+                        onClick={handleAnalyzeSymptoms}
+                        disabled={triageLoading || !symptoms.trim()}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-xs mb-1 shadow-sm cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {triageLoading ? 'Analyzing Symptoms...' : 'Analyze Symptoms'}
+                      </motion.button>
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      key="step2" 
+                      initial={{ opacity: 0 }} 
+                      animate={{ opacity: 1 }} 
+                      exit={{ opacity: 0 }}
+                      className="space-y-4 text-left"
+                    >
+                      <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/60 p-3 rounded-xl">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-[10px] font-bold text-blue-800 dark:text-blue-300 uppercase tracking-wider">Recommended Specialty</span>
+                          <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded-full">{triageResult.confidence}% Confidence</span>
+                        </div>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                          <Stethoscope size={16} className="text-blue-500" />
+                          {triageResult.specialization}
+                        </p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">{triageResult.explanation}</p>
+                      </div>
 
-                <div className="flex justify-between items-start border-t border-slate-100 dark:border-slate-800 pt-3">
+                      {triageResult.emergencyWarning && (
+                        <div className="bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 p-3 rounded-xl text-xs font-semibold flex gap-2 items-start">
+                          <AlertTriangle size={16} className="shrink-0 mt-0.5" />
+                          <p>{triageResult.emergencyWarning}</p>
+                        </div>
+                      )}
+
+                      {triageResult.recommendedDoctors && triageResult.recommendedDoctors.length > 0 ? (
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide">Recommended Specialist Matches</label>
+                          {triageResult.recommendedDoctors.map(doc => (
+                            <div key={doc._id} className="flex justify-between items-center p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-700/60">
+                              <div>
+                                <p className="text-xs font-bold text-slate-900 dark:text-white">{doc.name}</p>
+                                <p className="text-[10px] text-slate-400">{doc.experienceYears} Years Exp. | Room {doc.roomNumber}</p>
+                              </div>
+                              <button 
+                                onClick={() => handleBookDoctor(doc._id, triageResult.specialization)}
+                                className="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer shadow-sm"
+                              >
+                                Book Now
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-2 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
+                          <p className="text-xs text-slate-500 dark:text-slate-400">No specific {triageResult.specialization} doctors available today.</p>
+                        </div>
+                      )}
+
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => setTriageResult(null)}
+                          className="flex-1 py-2 text-xs font-bold text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                        >
+                          Change Symptoms
+                        </button>
+                        <button 
+                          onClick={() => handleBookSlot(triageResult.specialization)}
+                          className="flex-1 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors cursor-pointer shadow-sm"
+                        >
+                          Find Hospitals
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="flex justify-between items-start border-t border-slate-100 dark:border-slate-800 pt-3 mt-4">
                   {[
                     { icon: Clock, title: 'Lower Wait Time', sub: 'AI finds best slot' },
                     { icon: ShieldCheck, title: 'No-Show Reduction', sub: 'Smart reminders' },
@@ -210,42 +312,44 @@ export default function Home() {
         </PageContainer>
       </section>
 
-      {/* ── Feature Cards ── */}
+      {/* 🌟🌟 Feature Cards 🌟🌟 */}
       <section className="py-10 sm:py-14 bg-white dark:bg-slate-950 transition-colors duration-300">
         <PageContainer>
           <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={viewport}
           >
             {[
-              { icon: CalendarCheck, title: 'Smart Slot Recommendation', desc: 'AI suggests the best available slots for you.' },
-              { icon: TrendingUp, title: 'No-Show Risk Prediction', desc: 'We predict no-show risk and prepare better.' },
-              { icon: Users, title: 'Workload Balancer', desc: 'Distributes appointments evenly across doctors.' },
-              { icon: Bell, title: 'Automated Reminders', desc: 'Timely SMS & email reminders for appointments.' },
-            ].map(({ icon: Icon, title, desc }) => (
-              <motion.div 
-                key={title}
-                variants={fadeInUp} 
-                {...cardMotion}
-                className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm dark:shadow-slate-950/20 border border-slate-100 dark:border-slate-800 flex items-center gap-4 hover:shadow-md hover:border-blue-100 dark:hover:border-blue-800 transition-colors duration-200 cursor-default"
-              >
-                <div className="w-11 h-11 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
-                  <Icon className="text-blue-600 dark:text-blue-400" size={22} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-[13px] leading-tight mb-1">{title}</h3>
-                  <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-snug">{desc}</p>
-                </div>
-              </motion.div>
+              { icon: CalendarCheck, title: 'AI Smart Scheduling', desc: 'AI suggests the best available slots for you.', path: '/features/smart-scheduling' },
+              { icon: TrendingUp, title: 'AI No-Show Prediction', desc: 'We predict no-show risk and prepare better.', path: '/features/no-show-prediction' },
+              { icon: Users, title: 'Doctor Workload Balancer', desc: 'Distributes appointments evenly across doctors.', path: '/features/workload-balancer' },
+              { icon: Bell, title: 'Smart Reminders', desc: 'Timely SMS & email reminders for appointments.', path: '/features/reminders' },
+              { icon: Stethoscope, title: 'AI Symptom Checker', desc: 'Analyze symptoms with Gemini and find the right doctors.', path: '/features/symptom-checker' },
+            ].map(({ icon: Icon, title, desc, path }) => (
+              <Link to={path} key={title} className="h-full block">
+                <motion.div 
+                  variants={fadeInUp} 
+                  {...cardMotion}
+                  className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm dark:shadow-slate-950/20 border border-slate-100 dark:border-slate-800 flex flex-col gap-3 justify-between hover:shadow-md hover:border-blue-100 dark:hover:border-blue-800 transition-all duration-200 h-full cursor-pointer"
+                >
+                  <div className="w-11 h-11 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
+                    <Icon className="text-blue-600 dark:text-blue-400" size={22} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-[13px] leading-tight mb-1">{title}</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-snug">{desc}</p>
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </motion.div>
         </PageContainer>
       </section>
 
-      {/* ── How It Works ── */}
+      {/* How It Works */}
       <section id="how-it-works" className="py-12 sm:py-16 bg-slate-50/70 dark:bg-slate-900/30 transition-colors duration-300">
         <PageContainer>
           <motion.div 
@@ -260,32 +364,35 @@ export default function Home() {
           </motion.div>
 
           <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 relative"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-5 relative"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={viewport}
           >
-            {/* Connecting line — desktop only */}
-            <div className="hidden lg:block absolute top-1/2 left-[12%] right-[12%] h-[2px] border-t-2 border-dashed border-slate-200 dark:border-slate-700 -z-0 transform -translate-y-1/2" />
+            {/* Connecting line */}
+            <div className="hidden lg:block absolute top-1/2 left-[10%] right-[10%] h-[2px] border-t-2 border-dashed border-slate-200 dark:border-slate-700 -z-0 transform -translate-y-1/2" />
 
             {[
-              { num: 1, icon: User, title: 'Choose Doctor', desc: 'Browse doctors by specialization or search.' },
-              { num: 2, icon: CalendarCheck, title: 'Select Best Slot', desc: 'AI shows recommended slots with lower wait time.' },
-              { num: 3, icon: ClipboardCheck, title: 'Confirm Booking', desc: 'Fill your details and confirm the appointment.' },
-              { num: 4, icon: Bell, title: 'Get Reminders', desc: 'Receive timely reminders and follow-ups.' },
+              { num: 1, icon: Stethoscope, title: 'Describe Symptoms', desc: 'Explain symptoms to our AI-powered booking helper.' },
+              { num: 2, icon: CalendarCheck, title: 'AI Finds Specialist', desc: 'Gemini reviews details and suggests the optimal specialist.' },
+              { num: 3, icon: User, title: 'Choose Recommended Doctor', desc: 'Select the workload-balanced doctor suggested for you.' },
+              { num: 4, icon: ClipboardCheck, title: 'Book Appointment', desc: 'Secure your calendar slot at nearby hospitals instantly.' },
+              { num: 5, icon: Bell, title: 'Get Smart Reminders', desc: 'Receive automated SMS, email, and WhatsApp re-engagement notes.' },
             ].map((step) => (
               <motion.div 
                 key={step.num} 
                 variants={fadeInUp}
                 whileTap={{ scale: 0.97 }}
-                className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm dark:shadow-slate-950/20 border border-slate-100 dark:border-slate-800 relative z-10 flex items-center gap-3 transition-colors duration-200"
+                className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm dark:shadow-slate-950/20 border border-slate-100 dark:border-slate-800 relative z-10 flex flex-col gap-3 transition-colors duration-200"
               >
-                <div className="flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-xs font-bold shrink-0">{step.num}</div>
-                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center shrink-0">
-                  <step.icon className="text-blue-600 dark:text-blue-400" size={20} />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-xs font-bold">{step.num}</div>
+                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-950/40 rounded-xl flex items-center justify-center">
+                    <step.icon className="text-blue-600 dark:text-blue-400" size={20} />
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
+                <div>
                   <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-0.5">{step.title}</h3>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">{step.desc}</p>
                 </div>
