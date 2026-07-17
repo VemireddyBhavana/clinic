@@ -24,7 +24,7 @@ export default function AdminRegister() {
       const res = await adminAPI.register({ name: formData.name, email: formData.email, password: formData.password });
       localStorage.setItem('adminToken', res.token);
       localStorage.setItem('adminInfo', JSON.stringify(res.admin));
-      navigate('/home');
+      navigate('/admin/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Register failed');
     } finally {

@@ -68,8 +68,8 @@ function AnimatedRoutes() {
       
       {/* Protected Admin Routes */}
       <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-        <Route index element={<Navigate to="/home" replace />} />
-        <Route path="dashboard" element={<Navigate to="/home" replace />} />
+        <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<AdminDashboard />} />
         <Route path="appointments" element={<AdminAppointments />} />
         <Route path="add-doctor" element={<AdminAddDoctor />} />
         <Route path="notifications" element={<AdminNotifications />} />

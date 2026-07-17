@@ -7,6 +7,7 @@ export default function AdminSidebar({ closeSidebar }) {
   const location = useLocation();
   
   const navItems = [
+    { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Appointments', path: '/admin/appointments', icon: Calendar },
     { name: 'Add Doctor', path: '/admin/add-doctor', icon: Users },
     { name: 'Notifications', path: '/admin/notifications', icon: Bell },
