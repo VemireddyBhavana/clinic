@@ -93,7 +93,7 @@ export default function BookAppointment() {
   // Generate fake time slots based on doctor's hours
   const generateTimeSlots = (doc) => {
     if (!doc || !doc.startTime || !doc.endTime) return [];
-    const slots = [];
+    let slots = [];
     
     const parseHour = (timeStr) => {
       const [time, period] = timeStr.split(' ');
@@ -112,7 +112,31 @@ export default function BookAppointment() {
       slots.push(`${displayHour}:00 ${period}`);
       slots.push(`${displayHour}:30 ${period}`);
     }
-    return slots.slice(0, 8); // Return sample slots
+    
+    slots = slots.slice(0, 8); // Get sample slots
+
+    // Filter past slots if the selected date is today
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
+
+    if (selectedDate === todayStr) {
+      const currentMinutes = today.getHours() * 60 + today.getMinutes();
+      
+      const parseSlotToMinutes = (slotStr) => {
+        const [time, period] = slotStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (period === 'PM' && hours !== 12) hours += 12;
+        if (period === 'AM' && hours === 12) hours = 0;
+        return hours * 60 + minutes;
+      };
+
+      slots = slots.filter(slot => parseSlotToMinutes(slot) > currentMinutes);
+    }
+
+    return slots;
   };
 
   const timeSlots = generateTimeSlots(selectedDoctor);
@@ -404,17 +428,23 @@ export default function BookAppointment() {
                     {selectedDate && (
                       <div>
                         <label className="block text-sm font-bold text-slate-700 mb-3">Available Time Slots</label>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                          {timeSlots.map(time => (
-                            <div 
-                              key={time}
-                              onClick={() => setSelectedTime(time)}
-                              className={`p-3 text-center rounded-xl border-2 cursor-pointer transition-all font-medium text-sm flex items-center justify-center gap-2 ${selectedTime === time ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50'}`}
-                            >
-                              <Clock size={14} className={selectedTime === time ? 'text-white' : 'text-slate-400'} /> {time}
-                            </div>
-                          ))}
-                        </div>
+                        {timeSlots.length > 0 ? (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {timeSlots.map(time => (
+                              <div 
+                                key={time}
+                                onClick={() => setSelectedTime(time)}
+                                className={`p-3 text-center rounded-xl border-2 cursor-pointer transition-all font-medium text-sm flex items-center justify-center gap-2 ${selectedTime === time ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50'}`}
+                              >
+                                <Clock size={14} className={selectedTime === time ? 'text-white' : 'text-slate-400'} /> {time}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm font-semibold text-amber-600 bg-amber-50 dark:bg-amber-950/20 dark:text-amber-400 p-4 rounded-xl border border-amber-200/50">
+                            No available slots left for today. Please select a future date.
+                          </p>
+                        )}
                       </div>
                     )}
                   </motion.div>
