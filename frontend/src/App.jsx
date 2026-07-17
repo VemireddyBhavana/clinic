@@ -2,19 +2,10 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import MainLayout from './layouts/MainLayout';
-import AdminLayout from './layouts/AdminLayout';
 import Home from './pages/Home';
 import Doctors from './pages/Doctors';
 import BookAppointment from './pages/BookAppointment';
 import Confirmation from './pages/Confirmation';
-import AdminLogin from './pages/AdminLogin';
-import AdminRegister from './pages/AdminRegister';
-import AdminForgotPassword from './pages/AdminForgotPassword';
-import AdminResetPassword from './pages/AdminResetPassword';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminAppointments from './pages/AdminAppointments';
-import AdminAddDoctor from './pages/AdminAddDoctor';
-import AdminNotifications from './pages/AdminNotifications';
 import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
@@ -84,23 +75,9 @@ function AnimatedRoutes() {
       {/* Protected Doctor Routes */}
       <Route path="/doctor/dashboard" element={<ProtectedRoute><DoctorDashboard /></ProtectedRoute>} />
       
-      {/* Hospital Dashboard Redirect */}
-      <Route path="/hospital/dashboard" element={<Navigate to="/admin/dashboard" replace />} />
-      
-      {/* Legacy Public Auth Routes */}
-      <Route path="/admin/login" element={<Navigate to="/login" replace />} />
-      <Route path="/admin/register" element={<Navigate to="/register" replace />} />
-      <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
-      <Route path="/admin/reset-password" element={<AdminResetPassword />} />
-      
-      {/* Protected Admin Routes */}
-      <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-        <Route index element={<Navigate to="dashboard" replace />} />
-        <Route path="dashboard" element={<AdminDashboard />} />
-        <Route path="appointments" element={<AdminAppointments />} />
-        <Route path="add-doctor" element={<AdminAddDoctor />} />
-        <Route path="notifications" element={<AdminNotifications />} />
-      </Route>
+      {/* Catch-all Redirect for old Admin paths */}
+      <Route path="/admin/*" element={<Navigate to="/home" replace />} />
+      <Route path="/hospital/*" element={<Navigate to="/home" replace />} />
     </Routes>
   );
 }
