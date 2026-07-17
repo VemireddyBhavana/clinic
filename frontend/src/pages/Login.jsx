@@ -205,20 +205,6 @@ export default function Login() {
                     </svg>
                     {loading ? 'Signing in...' : 'Continue with Google'}
                   </button>
-
-                  {/* Continue with Phone */}
-                  <button
-                    onClick={() => { setError(null); setScreen('phone'); }}
-                    className="w-full flex items-center justify-center gap-3 py-3.5 font-bold rounded-2xl text-sm transition-all active:scale-[0.98] cursor-pointer"
-                    style={{
-                      background: isDark ? 'rgba(255,255,255,0.05)' : '#eff6ff',
-                      color: isDark ? '#ffffff' : '#1d4ed8',
-                      border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #bfdbfe'
-                    }}
-                  >
-                    <Phone size={18} className="shrink-0 text-blue-500" />
-                    Continue with Phone Number
-                  </button>
                 </div>
 
                 <p className="text-center text-[11px] mt-6" style={{ color: isDark ? '#64748b' : '#94a3b8' }}>
