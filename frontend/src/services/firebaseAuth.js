@@ -74,28 +74,51 @@ export const signInWithGoogle = async (role = 'patient') => {
   return { user: userData, role };
 };
 
-// Email Login
+// Email Login — auto-creates account if user doesn't exist yet
 export const loginWithEmail = async (email, password, role = 'patient') => {
   if (isMock) {
-    // Find matching mock user
+    // In mock mode: accept any credentials
     const matched = mockUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (matched || password === 'medislot') {
-      const activeUser = matched || { email, name: email.split('@')[0], role, token: 'mock-token-' + Date.now() };
-      const finalUser = { ...activeUser, role };
-      localStorage.setItem('adminToken', finalUser.token);
-      localStorage.setItem('adminInfo', JSON.stringify(finalUser));
-      return { user: finalUser, role };
-    }
-    throw new Error('Invalid email or password in demo mode (use password: "medislot")');
+    const activeUser = matched || { email, name: email.split('@')[0], role, token: 'mock-token-' + Date.now() };
+    const finalUser = { ...activeUser, role };
+    localStorage.setItem('adminToken', finalUser.token);
+    localStorage.setItem('adminInfo', JSON.stringify(finalUser));
+    return { user: finalUser, role };
   }
 
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user;
+  let firebaseUser = null;
+
+  try {
+    // 1️⃣ Try signing in with existing account
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    firebaseUser = userCredential.user;
+  } catch (signInError) {
+    // 2️⃣ If user doesn't exist or credentials invalid, auto-create the account
+    const code = signInError.code || '';
+    if (
+      code === 'auth/user-not-found' ||
+      code === 'auth/invalid-credential' ||
+      code === 'auth/invalid-email' ||
+      code === 'auth/wrong-password' ||
+      code === 'auth/INVALID_LOGIN_CREDENTIALS'
+    ) {
+      try {
+        const newCredential = await createUserWithEmailAndPassword(auth, email, password);
+        firebaseUser = newCredential.user;
+      } catch (createError) {
+        // If creation also fails, rethrow the original sign-in error
+        throw signInError;
+      }
+    } else {
+      throw signInError;
+    }
+  }
+
   const userData = {
-    email: user.email,
-    name: user.displayName || email.split('@')[0],
+    email: firebaseUser.email,
+    name:  firebaseUser.displayName || email.split('@')[0],
     role,
-    token: user.uid
+    token: firebaseUser.uid
   };
   localStorage.setItem('adminToken', userData.token);
   localStorage.setItem('adminInfo', JSON.stringify(userData));
