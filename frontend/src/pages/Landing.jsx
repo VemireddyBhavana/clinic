@@ -77,17 +77,20 @@ export default function Landing() {
   return (
     <div
       className="min-h-screen relative landing-page-outer transition-colors duration-500"
-      style={{ background: isDark ? '#000' : '#eff6ff' }}
+      style={{
+        '--dark-color': isDark ? '#000' : '#eff6ff',
+      }}
     >
-      {/* Flower CSS Background Animation — only in dark mode */}
+      {/* Night sky — only in dark mode */}
       {isDark && <div className="night" style={{ position: 'fixed', zIndex: 0 }}></div>}
       {/* Light mode gradient background */}
       {!isDark && (
         <div className="fixed inset-0 z-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse at top left, #bfdbfe 0%, #eff6ff 40%, #dbeafe 100%)'
+          background: 'radial-gradient(ellipse at top left, #bfdbfe 0%, #eff6ff 50%, #e0f2fe 100%)'
         }} />
       )}
-      <div className="flowers-wrapper">
+      {/* Flowers — only in dark mode */}
+      <div className="flowers-wrapper" style={{ display: isDark ? undefined : 'none' }}>
         <div className="flowers">
           {/* Flower 1 */}
           <div className="flower flower--1">
