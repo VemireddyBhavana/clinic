@@ -300,8 +300,11 @@ export default function Login() {
                   <ChevronLeft size={14} /> Back
                 </button>
                 <h2 className="text-xl font-extrabold mb-1" style={{ color: isDark ? '#fff' : '#0f172a' }}>Verify your number</h2>
-                <p className="text-xs mb-6" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>
+                <p className="text-xs mb-2" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>
                   Enter the 6-digit code sent to <span className="font-semibold" style={{ color: isDark ? '#fff' : '#1e40af' }}>{phone}</span>.
+                </p>
+                <p className="text-[11px] mb-6 font-semibold" style={{ color: isDark ? '#38bdf8' : '#0284c7' }}>
+                  💡 Demo fallback code: <span className="underline">123456</span>
                 </p>
 
                 {error && (
