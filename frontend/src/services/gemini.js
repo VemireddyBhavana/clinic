@@ -67,6 +67,45 @@ export const analyzeSymptoms = async (symptoms) => {
     return localAnalyzeSymptoms(symptoms);
   }
 
+  // Helper to parse JSON safely from raw text response
+  const extractJson = (text) => {
+    try {
+      const cleanJson = text.replace(/```json|```/g, '').trim();
+      const data = JSON.parse(cleanJson);
+      if (data && data.specialization) {
+        data.estimatedWaitTime = Math.floor(Math.random() * 15) + 5;
+        return data;
+      }
+    } catch (e) {
+      console.warn("Failed to parse JSON from model response:", e);
+    }
+    return null;
+  };
+
+  const prompt = `
+    You are an expert AI symptom triage assistant for MediSlot AI clinic.
+    Analyze the user's symptoms: "${symptoms}".
+    
+    Determine the recommended specialization from the following list ONLY:
+    - Cardiology
+    - Dermatology
+    - Neurology
+    - Orthopedics
+    - Pediatrics
+    - General Practice
+    
+    Return a JSON object matching this schema:
+    {
+      "specialization": "One of: Cardiology, Dermatology, Neurology, Orthopedics, Pediatrics, General Practice",
+      "confidence": "number between 10 and 100",
+      "emergencyWarning": "string warning if symptoms indicate a life-threatening emergency (e.g. chest pain, severe breathing issues, sudden paralysis), or empty string if no emergency",
+      "possibleConditions": ["array of up to 3 possible conditions (clearly label as informational only)"],
+      "explanation": "brief 1-2 sentence explanation of why this specialist is recommended"
+    }
+    Do not return any other text, headers, or markdown wrappers. Return raw JSON.
+  `;
+
+  // Try 1: JSON Output Mode (supported in newer Gemini SDK regions)
   try {
     const model = genAI.getGenerativeModel({
       model: 'gemini-1.5-flash',
@@ -75,44 +114,29 @@ export const analyzeSymptoms = async (symptoms) => {
       }
     });
 
-    const prompt = `
-      You are an expert AI symptom triage assistant for MediSlot AI clinic.
-      Analyze the user's symptoms: "${symptoms}".
-      
-      Determine the recommended specialization from the following list ONLY:
-      - Cardiology
-      - Dermatology
-      - Neurology
-      - Orthopedics
-      - Pediatrics
-      - General Practice
-      
-      Return a JSON object matching this schema:
-      {
-        "specialization": "One of: Cardiology, Dermatology, Neurology, Orthopedics, Pediatrics, General Practice",
-        "confidence": "number between 10 and 100",
-        "emergencyWarning": "string warning if symptoms indicate a life-threatening emergency (e.g. chest pain, severe breathing issues, sudden paralysis), or empty string if no emergency",
-        "possibleConditions": ["array of up to 3 possible conditions (clearly label as informational only)"],
-        "explanation": "brief 1-2 sentence explanation of why this specialist is recommended"
-      }
-      Do not return any other text, headers, or markdown wrappers. Return raw JSON.
-    `;
-
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text().trim();
-    
-    // Attempt clean-up if the model wrapped it in markdown code blocks
-    const cleanJson = text.replace(/```json|```/g, '').trim();
-    const data = JSON.parse(cleanJson);
-    
-    // Ensure estimated wait time is included
-    data.estimatedWaitTime = Math.floor(Math.random() * 15) + 5;
-    return data;
-  } catch (error) {
-    console.error("Gemini analyzeSymptoms API Error, falling back:", error);
-    return localAnalyzeSymptoms(symptoms);
+    const parsed = extractJson(text);
+    if (parsed) return parsed;
+  } catch (jsonError) {
+    console.warn("Gemini JSON Mode failed, retrying with standard text mode...", jsonError);
   }
+
+  // Try 2: Standard Text Generation Mode (globally stable fallback)
+  try {
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text().trim();
+    const parsed = extractJson(text);
+    if (parsed) return parsed;
+  } catch (textError) {
+    console.error("Gemini standard text mode failed, falling back to local heuristics:", textError);
+  }
+
+  // Final Fallback: Run local client-side analysis
+  return localAnalyzeSymptoms(symptoms);
 };
 
 export const generateDoctorSummary = async (doctorName, appointments) => {
