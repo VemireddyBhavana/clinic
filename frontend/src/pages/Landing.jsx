@@ -50,25 +50,29 @@ export default function Landing() {
       title: "Smart AI Scheduling",
       description: "Optimize rosters, balance doctor workloads, and decrease queue wait times using smart slot recommendations.",
       icon: Zap,
-      color: "text-amber-400 bg-amber-500/10 border-amber-500/20"
+      darkColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+      lightColor: "text-amber-600 bg-amber-50 border-amber-200"
     },
     {
       title: "Nearby Hospital Locator",
       description: "Detect live coordinates automatically and map nearby clinics sorted by real-time calculated distance.",
       icon: Navigation,
-      color: "text-blue-400 bg-blue-500/10 border-blue-500/20"
+      darkColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+      lightColor: "text-blue-600 bg-blue-50 border-blue-200"
     },
     {
       title: "Google Street View",
       description: "Preview hospital surroundings, street details, and route coordinates in full 3D directly in a new tab.",
       icon: Activity,
-      color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+      darkColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+      lightColor: "text-emerald-600 bg-emerald-50 border-emerald-200"
     },
     {
       title: "System Alerts & Reminders",
       description: "Automate patient follow-ups, cancellations, and notifications across WhatsApp and system alert feeds.",
       icon: BellRing,
-      color: "text-purple-400 bg-purple-500/10 border-purple-500/20"
+      darkColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+      lightColor: "text-purple-600 bg-purple-50 border-purple-200"
     }
   ];
 
@@ -541,7 +545,7 @@ export default function Landing() {
                       border: isDark ? '1px solid rgba(30,41,59,0.5)' : '1px solid rgba(191,219,254,0.6)'
                     }}
                   >
-                    <div className={`w-8 h-8 rounded-lg border flex items-center justify-center ${feat.color}`}>
+                    <div className={`w-8 h-8 rounded-lg border flex items-center justify-center ${isDark ? feat.darkColor : feat.lightColor}`}>
                       <IconComp size={16} />
                     </div>
                     <div>
@@ -561,7 +565,7 @@ export default function Landing() {
         className="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 z-10 text-xs backdrop-blur-sm transition-colors duration-500"
         style={{
           borderTop: isDark ? '1px solid rgba(15,23,42,0.5)' : '1px solid rgba(191,219,254,0.6)',
-          color: isDark ? '#64748b' : '#64748b'
+          color: isDark ? '#64748b' : '#475569'
         }}
       >
         <div>© 2026 MediSlot AI. All rights reserved.</div>
