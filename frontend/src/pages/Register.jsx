@@ -4,9 +4,12 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, User, ArrowRight, Sun, Moon } from 'lucide-react';
 import AnimatedLogo from '../components/ui/AnimatedLogo';
 import { registerWithEmail } from '../services/firebaseAuth';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSelector from '../components/ui/LanguageSelector';
 
 export default function Register() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || 'light';
   });
@@ -75,7 +78,7 @@ export default function Register() {
       </video>
 
       {/* Floating Theme Toggle */}
-      <div className="fixed top-6 right-6 z-50">
+      <div className="fixed top-6 right-6 z-50 flex items-center gap-3">
         <label className="switch scale-75 origin-top-right cursor-pointer" title="Toggle Theme">
           <input type="checkbox" checked={theme === 'light'} onChange={toggleTheme}/>
           <span className="slider">
@@ -107,6 +110,7 @@ export default function Register() {
             </div>
           </span>
         </label>
+        <LanguageSelector dropdownPosition="bottom-left" />
       </div>
 
       {/* Glassmorphic Card */}
@@ -116,10 +120,10 @@ export default function Register() {
         </div>
 
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white text-center mb-2 tracking-tight">
-          Create Account
+          {t('register.title')}
         </h2>
         <p className="text-xs text-slate-400 text-center mb-6">
-          Join the MediSlot AI clinical optimization network.
+          {t('register.subtitle')}
         </p>
 
         {error && (
@@ -135,7 +139,7 @@ export default function Register() {
               id="name"
               type="text"
               required
-              placeholder="Full Name"
+              placeholder={t('register.name')}
               value={formData.name}
               onChange={handleInputChange}
               className="w-full bg-transparent outline-none text-sm text-white placeholder-slate-500 pl-1 pr-8"
@@ -149,7 +153,7 @@ export default function Register() {
               id="email"
               type="email"
               required
-              placeholder="Email Address"
+              placeholder={t('register.email')}
               value={formData.email}
               onChange={handleInputChange}
               className="w-full bg-transparent outline-none text-sm text-white placeholder-slate-500 pl-1 pr-8"
@@ -163,7 +167,7 @@ export default function Register() {
               id="password"
               type="password"
               required
-              placeholder="Password"
+              placeholder={t('register.password')}
               value={formData.password}
               onChange={handleInputChange}
               className="w-full bg-transparent outline-none text-sm text-white placeholder-slate-500 pl-1 pr-8"
@@ -179,15 +183,15 @@ export default function Register() {
             disabled={loading}
             className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs transition-colors shadow-[0_0_20px_rgba(37,99,235,0.3)] flex items-center justify-center gap-2 cursor-pointer"
           >
-            {loading ? 'Creating Account...' : 'Register'}
+            {loading ? 'Creating Account...' : t('register.signUpBtn')}
             <ArrowRight size={14} />
           </button>
         </form>
 
         <p className="text-center text-xs text-slate-500 mt-6">
-          Already have an account?{' '}
+          {t('register.hasAccount')}{' '}
           <Link to="/login" className="text-blue-400 font-bold hover:underline">
-            Log In
+            {t('register.loginNow')}
           </Link>
         </p>
       </div>

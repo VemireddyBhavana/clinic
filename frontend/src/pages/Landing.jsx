@@ -4,9 +4,12 @@ import { HeartPulse, ArrowRight, Activity, ShieldCheck, Zap, Navigation, BellRin
 import AnimatedLogo from '../components/ui/AnimatedLogo';
 import { motion } from 'framer-motion';
 import './LandingFlowers.css';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSelector from '../components/ui/LanguageSelector';
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || 'light';
   });
@@ -442,6 +445,7 @@ export default function Landing() {
               </div>
             </span>
           </label>
+          <LanguageSelector dropdownPosition="bottom-right" />
 
           <div
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md"
@@ -452,7 +456,7 @@ export default function Landing() {
             }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            System Live
+            {t('landing.systemLive')}
           </div>
         </div>
       </header>
@@ -482,7 +486,7 @@ export default function Landing() {
               }}
             >
               <Activity size={14} className="animate-pulse" />
-              AI-Powered Smart Scheduling
+              {t('landing.badge')}
             </div>
 
             <h1
@@ -492,7 +496,7 @@ export default function Landing() {
                   : 'bg-gradient-to-b from-slate-900 via-blue-950 to-blue-800'
               }`}
             >
-              Smarter Appointments.<br />
+              {t('landing.title1')}<br />
               <span
                 className={`bg-clip-text text-transparent ${
                   isDark
@@ -500,12 +504,12 @@ export default function Landing() {
                     : 'bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600'
                 }`}
               >
-                Better Healthcare.
+                {t('landing.title2')}
               </span>
             </h1>
 
             <p className="text-sm leading-relaxed" style={{ color: isDark ? '#94a3b8' : '#475569' }}>
-              MediSlot AI bridges the gap between patient slots booking and clinic administration. Discover nearby hospitals using live location mapping and preview directions in 3D.
+              {t('landing.desc')}
             </p>
 
             <div className="pt-2">
@@ -514,7 +518,7 @@ export default function Landing() {
                 onClick={() => navigate('/login')}
                 className="py-3 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(59,130,246,0.25)] hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] transition-all duration-300 text-sm hover:-translate-y-0.5"
               >
-                GET STARTED
+                {t('landing.getStarted').toUpperCase()}
                 <ArrowRight size={16} />
               </button>
             </div>
@@ -528,7 +532,7 @@ export default function Landing() {
             initial="hidden"
             animate="visible"
           >
-            <h2 className="text-xs font-bold uppercase tracking-wider mb-4" style={{ color: isDark ? '#64748b' : '#64748b' }}>Why Choose MediSlot AI?</h2>
+            <h2 className="text-xs font-bold uppercase tracking-wider mb-4" style={{ color: isDark ? '#64748b' : '#64748b' }}>{t('landing.whyChoose')}</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {features.map((feat, index) => {

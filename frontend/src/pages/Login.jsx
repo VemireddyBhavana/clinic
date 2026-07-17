@@ -5,9 +5,12 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import AnimatedLogo from '../components/ui/AnimatedLogo';
 import { signInWithGoogle, loginWithEmail } from '../services/firebaseAuth';
 import '../components/navigation/PatientNavbar.css';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSelector from '../components/ui/LanguageSelector';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const isDark = theme === 'dark';
@@ -94,7 +97,7 @@ export default function Login() {
       )}
 
       {/* Theme Toggle */}
-      <div className="fixed top-6 right-6 z-50">
+      <div className="fixed top-6 right-6 z-50 flex items-center gap-3">
         <label className="switch scale-75 origin-top-right cursor-pointer" title="Toggle Theme">
           <input type="checkbox" checked={theme === 'light'} onChange={toggleTheme}/>
           <span className="slider">
@@ -110,6 +113,7 @@ export default function Login() {
             </div>
           </span>
         </label>
+        <LanguageSelector dropdownPosition="bottom-left" />
       </div>
 
       {/* Card */}
@@ -133,11 +137,11 @@ export default function Login() {
           {/* Heading */}
           <h1 className="text-2xl sm:text-3xl font-extrabold text-center mb-1 tracking-tight"
               style={{ color: isDark ? '#ffffff' : '#0f172a' }}>
-            Welcome to MediSlot AI
+            {t('login.title')}
           </h1>
           <p className="text-xs text-center mb-7 leading-relaxed"
              style={{ color: isDark ? '#94a3b8' : '#475569' }}>
-            AI-powered smart scheduling for patients, doctors &amp; hospitals.
+            {t('login.subtitle')}
           </p>
 
           {/* Error */}
@@ -150,7 +154,7 @@ export default function Login() {
           {/* Email/Password Form */}
           <form onSubmit={handleEmailLogin} className="space-y-4 mb-5">
             <div className="relative">
-              <input id="login-email" type="email" required placeholder="Email"
+              <input id="login-email" type="email" required placeholder={t('login.email')}
                 value={email} onChange={e => setEmail(e.target.value)}
                 style={inputStyle} autoComplete="email"
                 className={placeholderClass} />
@@ -159,7 +163,7 @@ export default function Login() {
             </div>
 
             <div className="relative">
-              <input id="login-password" type={showPw ? 'text' : 'password'} required placeholder="Password"
+              <input id="login-password" type={showPw ? 'text' : 'password'} required placeholder={t('login.password')}
                 value={password} onChange={e => setPassword(e.target.value)}
                 style={inputStyle} autoComplete="current-password"
                 className={placeholderClass} />
@@ -172,7 +176,7 @@ export default function Login() {
 
             <button type="submit" disabled={loading}
               className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl text-sm transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 hover:-translate-y-0.5 active:scale-[0.98]">
-              {loading ? 'Signing in...' : 'Login'} <ArrowRight size={15} />
+              {loading ? 'Signing in...' : t('login.signInBtn')} <ArrowRight size={15} />
             </button>
           </form>
 
@@ -198,8 +202,8 @@ export default function Login() {
 
           {/* Footer */}
           <p className="text-center text-[11px] mt-6" style={{ color: isDark ? '#64748b' : '#94a3b8' }}>
-            Don't have an account?{' '}
-            <Link to="/register" className="text-blue-500 hover:text-blue-400 font-bold">Register</Link>
+            {t('login.noAccount')}{' '}
+            <Link to="/register" className="text-blue-500 hover:text-blue-400 font-bold">{t('login.registerNow')}</Link>
           </p>
         </div>
       </motion.div>

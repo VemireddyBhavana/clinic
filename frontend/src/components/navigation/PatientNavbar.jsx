@@ -7,8 +7,11 @@ import { notificationAPI } from '../../services/api';
 import { getNearbyHospitals, getDoctors, createNotification } from '../../api/services';
 import gsap from 'gsap';
 import './PatientNavbar.css';
+import { useLanguage } from '../../context/LanguageContext';
+import LanguageSelector from '../ui/LanguageSelector';
 
 export default function PatientNavbar() {
+  const { t } = useLanguage();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -166,13 +169,13 @@ export default function PatientNavbar() {
   };
 
   const navItems = [
-    { label: 'Home', path: '/home' },
-    { label: 'Doctors', path: '/doctors' },
-    { label: 'How it works', path: '/home#how-it-works', isHash: true },
-    { label: 'About us', path: '/about' },
-    { label: 'Services', path: '/services' },
-    { label: 'Contact', path: '/contact' },
-    { label: 'Appointments', path: '/appointments' },
+    { label: t('nav.home'), path: '/home' },
+    { label: t('nav.doctors'), path: '/doctors' },
+    { label: t('nav.howItWorks'), path: '/home#how-it-works', isHash: true },
+    { label: t('nav.about'), path: '/about' },
+    { label: t('nav.services'), path: '/services' },
+    { label: t('nav.contact'), path: '/contact' },
+    { label: t('nav.appointments'), path: '/appointments' },
   ];
 
   const activeIndex = navItems.findIndex(item => {
@@ -512,12 +515,12 @@ export default function PatientNavbar() {
             className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-4 rounded-lg transition-all animate-pulse flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-red-500/20"
           >
             <AlertTriangle size={14} className="shrink-0" />
-            SOS Emergency
+            {t('nav.sosEmergency')}
           </button>
 
           <Link to="/hospitals">
             <button className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-lg transition-all">
-              Book Now
+              {t('nav.bookNow')}
             </button>
           </Link>
 
@@ -553,6 +556,9 @@ export default function PatientNavbar() {
               </div>
             </span>
           </label>
+
+          {/* Language Selector */}
+          <LanguageSelector dropdownPosition="bottom-right" />
         </div>
 
         {/* Mobile Actions Bar */}
@@ -628,23 +634,29 @@ export default function PatientNavbar() {
                   {item.label}
                 </Link>
               ))}
-              <div className="pt-4 border-t border-gray-100 dark:border-slate-800 flex justify-between items-center">
-                <span className="text-sm font-bold text-gray-700 dark:text-slate-300">Theme</span>
-                <label className="switch scale-[0.8] cursor-pointer shrink-0">
-                  <input type="checkbox" checked={theme === 'light'} onChange={toggleTheme}/>
-                  <span className="slider">
-                    <div className="moons-hole"><div className="moon-hole"></div><div className="moon-hole"></div><div className="moon-hole"></div></div>
-                    <div className="black-clouds"><div className="black-cloud"></div><div className="black-cloud"></div><div className="black-cloud"></div></div>
-                    <div className="clouds"><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div></div>
-                    <div className="stars">
-                      <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
-                      <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
-                      <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
-                      <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
-                      <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
-                    </div>
-                  </span>
-                </label>
+              <div className="pt-4 border-t border-gray-100 dark:border-slate-800 flex flex-col gap-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-bold text-gray-700 dark:text-slate-300">{t('nav.theme')}</span>
+                  <label className="switch scale-[0.8] cursor-pointer shrink-0">
+                    <input type="checkbox" checked={theme === 'light'} onChange={toggleTheme}/>
+                    <span className="slider">
+                      <div className="moons-hole"><div className="moon-hole"></div><div className="moon-hole"></div><div className="moon-hole"></div></div>
+                      <div className="black-clouds"><div className="black-cloud"></div><div className="black-cloud"></div><div className="black-cloud"></div></div>
+                      <div className="clouds"><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div><div className="cloud"></div></div>
+                      <div className="stars">
+                        <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+                        <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+                        <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+                        <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+                        <svg className="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+                      </div>
+                    </span>
+                  </label>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-bold text-gray-700 dark:text-slate-300">{t('nav.language')}</span>
+                  <LanguageSelector dropdownPosition="top-right" />
+                </div>
               </div>
             </div>
           </motion.div>
