@@ -294,6 +294,31 @@ export function LanguageProvider({ children }) {
     return () => clearInterval(interval);
   }, [language]);
 
+  const retranslateCurrentPage = (targetLang = language) => {
+    if (!targetLang) return;
+    const selectEl = document.querySelector('.goog-te-combo');
+    if (selectEl) {
+      if (targetLang === 'en') {
+        if (selectEl.value !== 'en') {
+          selectEl.value = 'en';
+          selectEl.dispatchEvent(new Event('change'));
+        }
+      } else {
+        if (selectEl.value !== targetLang) {
+          selectEl.value = targetLang;
+          selectEl.dispatchEvent(new Event('change'));
+        } else {
+          selectEl.value = '';
+          selectEl.dispatchEvent(new Event('change'));
+          setTimeout(() => {
+            selectEl.value = targetLang;
+            selectEl.dispatchEvent(new Event('change'));
+          }, 40);
+        }
+      }
+    }
+  };
+
   const setLanguage = (lang) => {
     if (lang !== language) {
       setIsTranslating(true);
@@ -301,12 +326,7 @@ export function LanguageProvider({ children }) {
     }
     setLanguageState(lang);
     localStorage.setItem('language', lang);
-
-    const selectEl = document.querySelector('.goog-te-combo');
-    if (selectEl) {
-      selectEl.value = lang;
-      selectEl.dispatchEvent(new Event('change'));
-    }
+    retranslateCurrentPage(lang);
   };
 
   const t = (key) => {
@@ -314,7 +334,7 @@ export function LanguageProvider({ children }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, retranslateCurrentPage }}>
       {children}
       <AnimatePresence>
         {isTranslating && (

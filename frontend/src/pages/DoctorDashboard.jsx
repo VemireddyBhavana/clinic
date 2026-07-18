@@ -8,6 +8,8 @@ import {
 import PageContainer from '../components/layout/PageContainer';
 import CardWrapper from '../components/layout/CardWrapper';
 
+import LanguageSelector from '../components/ui/LanguageSelector';
+
 export default function DoctorDashboard() {
   const navigate = useNavigate();
   const [patients, setPatients] = useState([
@@ -57,9 +59,12 @@ export default function DoctorDashboard() {
             >
               <ArrowLeft size={14} /> Back to Dashboard
             </button>
-            <span className="text-xs bg-emerald-500/20 text-emerald-100 border border-emerald-400/30 px-3 py-1 rounded-full font-bold">
-              Provider Portal
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs bg-emerald-500/20 text-emerald-100 border border-emerald-400/30 px-3 py-1 rounded-full font-bold">
+                Provider Portal
+              </span>
+              <LanguageSelector dropdownPosition="bottom-right" />
+            </div>
           </div>
 
           <div className="max-w-2xl">

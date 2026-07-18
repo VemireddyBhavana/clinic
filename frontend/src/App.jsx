@@ -1,7 +1,30 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
+
+function RouteLanguageSync() {
+  const location = useLocation();
+  const { language, retranslateCurrentPage } = useLanguage();
+
+  useEffect(() => {
+    if (!language || language === 'en') return;
+
+    // Trigger retranslation on route navigation to ensure newly mounted DOM elements translate automatically
+    retranslateCurrentPage(language);
+    const t1 = setTimeout(() => retranslateCurrentPage(language), 150);
+    const t2 = setTimeout(() => retranslateCurrentPage(language), 400);
+    const t3 = setTimeout(() => retranslateCurrentPage(language), 850);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, [location.pathname, location.search, language, retranslateCurrentPage]);
+
+  return null;
+}
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
 import Doctors from './pages/Doctors';
@@ -99,6 +122,7 @@ function App() {
     <LanguageProvider>
       <Router>
         <ScrollToTop />
+        <RouteLanguageSync />
         <AnimatedRoutes />
       </Router>
     </LanguageProvider>

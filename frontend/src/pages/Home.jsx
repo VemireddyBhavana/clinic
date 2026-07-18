@@ -44,8 +44,19 @@ const cardMotion = {
 
 export default function Home() {
   const navigate = useNavigate();
-  const [symptoms, setSymptoms] = useState('');
-  const [preferredDate, setPreferredDate] = useState('');
+  const getISTDateStr = () => {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    return formatter.format(now);
+  };
+  const istTodayStr = getISTDateStr();
+
+  const [preferredDate, setPreferredDate] = useState(istTodayStr);
   const [triageLoading, setTriageLoading] = useState(false);
   const [triageResult, setTriageResult] = useState(null);
   const [dbDoctors, setDbDoctors] = useState([]);
@@ -211,6 +222,7 @@ export default function Home() {
                           type="date" 
                           value={preferredDate}
                           onChange={(e) => setPreferredDate(e.target.value)}
+                          min={istTodayStr}
                           className="w-full text-xs px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer" 
                         />
                       </div>

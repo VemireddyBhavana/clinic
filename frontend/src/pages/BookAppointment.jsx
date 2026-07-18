@@ -40,14 +40,42 @@ export default function BookAppointment() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  const getLocalTodayStr = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  const getISTNow = () => {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const istDateStr = formatter.format(now); // "YYYY-MM-DD"
+
+    const timeFormatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Kolkata',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    });
+    const timeParts = timeFormatter.formatToParts(now);
+    let hour = 0;
+    let minute = 0;
+    timeParts.forEach(p => {
+      if (p.type === 'hour') hour = parseInt(p.value, 10);
+      if (p.type === 'minute') minute = parseInt(p.value, 10);
+    });
+    const istCurrentMinutes = (hour % 24) * 60 + minute;
+
+    return { istDateStr, istCurrentMinutes };
   };
-  const localTodayStr = getLocalTodayStr();
+
+  const { istDateStr, istCurrentMinutes } = getISTNow();
+
+  // Auto-set or reset date if invalid/past
+  useEffect(() => {
+    if (!selectedDate || selectedDate < istDateStr) {
+      setSelectedDate(istDateStr);
+    }
+  }, [selectedDate, istDateStr]);
 
   // Pre-fill patient details from logged-in session (e.g. Google Login)
   useEffect(() => {
@@ -84,7 +112,7 @@ export default function BookAppointment() {
 
       if (initialState.hospitalId) {
         try {
-          const today = new Date().toISOString().split('T')[0];
+          const today = istDateStr;
           const workload = await getWorkloadSummary(initialState.hospitalId, today);
           if (workload && workload.recommended) {
             setRecommendedDoctorId(workload.recommended.doctorId);
@@ -95,13 +123,15 @@ export default function BookAppointment() {
       }
     };
     fetchDoctors();
-  }, [initialState]);
+  }, [initialState, istDateStr]);
 
   const selectedDoctor = doctors.find(d => d._id === selectedDoctorId);
 
-  // Generate fake time slots based on doctor's hours
+  // Generate time slots based on doctor's hours and filter by IST timezone
   const generateTimeSlots = (doc) => {
     if (!doc || !doc.startTime || !doc.endTime) return [];
+    if (selectedDate < istDateStr) return []; // No slots for past dates
+
     let slots = [];
     
     const parseHour = (timeStr) => {
@@ -122,18 +152,10 @@ export default function BookAppointment() {
       slots.push(`${displayHour}:30 ${period}`);
     }
     
-    slots = slots.slice(0, 8); // Get sample slots
+    slots = slots.slice(0, 8);
 
-    // Filter past slots if the selected date is today
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const todayStr = `${year}-${month}-${day}`;
-
-    if (selectedDate === todayStr) {
-      const currentMinutes = today.getHours() * 60 + today.getMinutes();
-      
+    // Filter past slots if selected date is today in IST
+    if (selectedDate === istDateStr) {
       const parseSlotToMinutes = (slotStr) => {
         const [time, period] = slotStr.split(' ');
         let [hours, minutes] = time.split(':').map(Number);
@@ -142,13 +164,20 @@ export default function BookAppointment() {
         return hours * 60 + minutes;
       };
 
-      slots = slots.filter(slot => parseSlotToMinutes(slot) > currentMinutes);
+      slots = slots.filter(slot => parseSlotToMinutes(slot) > istCurrentMinutes);
     }
 
     return slots;
   };
 
   const timeSlots = generateTimeSlots(selectedDoctor);
+
+  // Reset selected time if selected slot is no longer available
+  useEffect(() => {
+    if (selectedTime && !timeSlots.includes(selectedTime)) {
+      setSelectedTime('');
+    }
+  }, [selectedDate, selectedDoctorId, timeSlots, selectedTime]);
 
   const handleInputChange = (e) => {
     setPatientDetails({
@@ -424,35 +453,38 @@ export default function BookAppointment() {
                     <h2 className="text-2xl font-bold text-slate-900 mb-6">Select Date & Time</h2>
                     
                     <div className="mb-8">
-                      <label className="block text-sm font-bold text-slate-700 mb-2">Preferred Date</label>
+                      <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Preferred Date</label>
                       <input 
                         type="date" 
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-700 font-medium"
-                        min={localTodayStr}
+                        className="w-full p-4 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium cursor-pointer"
+                        min={istDateStr}
                       />
                     </div>
 
                     {selectedDate && (
                       <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-3">Available Time Slots</label>
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-3">Available Time Slots</label>
                         {timeSlots.length > 0 ? (
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             {timeSlots.map(time => (
                               <div 
                                 key={time}
                                 onClick={() => setSelectedTime(time)}
-                                className={`p-3 text-center rounded-xl border-2 cursor-pointer transition-all font-medium text-sm flex items-center justify-center gap-2 ${selectedTime === time ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50'}`}
+                                className={`p-3 text-center rounded-xl border-2 cursor-pointer transition-all font-medium text-sm flex items-center justify-center gap-2 ${selectedTime === time ? 'border-blue-600 bg-blue-600 text-white shadow-md' : 'border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'}`}
                               >
                                 <Clock size={14} className={selectedTime === time ? 'text-white' : 'text-slate-400'} /> {time}
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <p className="text-sm font-semibold text-amber-600 bg-amber-50 dark:bg-amber-950/20 dark:text-amber-400 p-4 rounded-xl border border-amber-200/50">
-                            No available slots left for today. Please select a future date.
-                          </p>
+                          <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-amber-800 dark:text-amber-300 text-xs font-semibold text-center leading-relaxed">
+                            {selectedDate < istDateStr
+                              ? 'Past dates cannot be selected for booking.'
+                              : 'No remaining consultation slots available for today (all today’s consultation hours have passed according to IST). Please select tomorrow or a future date.'
+                            }
+                          </div>
                         )}
                       </div>
                     )}

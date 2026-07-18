@@ -102,6 +102,51 @@ exports.bookAppointment = async (req, res) => {
       appointmentDate, appointmentTime, notes, priority, noShowRisk 
     } = req.body;
 
+    // 0. Validate appointment date & slot time against current IST time
+    const now = new Date();
+    const istDateFormatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const istToday = istDateFormatter.format(now);
+
+    if (appointmentDate < istToday) {
+      return res.status(400).json({
+        message: 'Appointments cannot be booked for past dates. Please select today or a future date.'
+      });
+    }
+
+    if (appointmentDate === istToday && appointmentTime) {
+      const timeFormatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Kolkata',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false
+      });
+      const timeParts = timeFormatter.formatToParts(now);
+      let hour = 0;
+      let minute = 0;
+      timeParts.forEach(p => {
+        if (p.type === 'hour') hour = parseInt(p.value, 10);
+        if (p.type === 'minute') minute = parseInt(p.value, 10);
+      });
+      const istCurrentMinutes = (hour % 24) * 60 + minute;
+
+      const [time, period] = appointmentTime.split(' ');
+      let [h, m] = time.split(':').map(Number);
+      if (period === 'PM' && h !== 12) h += 12;
+      if (period === 'AM' && h === 12) h = 0;
+      const slotMinutes = h * 60 + m;
+
+      if (slotMinutes <= istCurrentMinutes) {
+        return res.status(400).json({
+          message: 'This consultation time slot has already passed for today according to IST. Please select a future time slot.'
+        });
+      }
+    }
+
     // 1. Prevent Double Booking
     const existingAppointment = await Appointment.findOne({
       doctorId,
