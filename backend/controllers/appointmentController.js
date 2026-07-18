@@ -147,12 +147,12 @@ exports.bookAppointment = async (req, res) => {
       }
     }
 
-    // 1. Prevent Double Booking
+    // 1. Prevent Double Booking (Only active/completed appointments block the slot; cancelled appointments leave the slot free)
     const existingAppointment = await Appointment.findOne({
       doctorId,
       appointmentDate,
       appointmentTime,
-      status: { $ne: 'cancelled' } // Allow booking if previous was cancelled
+      status: { $in: ['booked', 'completed'] }
     });
 
     if (existingAppointment) {

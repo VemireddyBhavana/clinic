@@ -155,7 +155,7 @@ export default function AppointmentsHistory() {
                       </div>
                       <div className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
                         <Clock size={15} className="text-slate-400 dark:text-slate-500 shrink-0" />
-                        <span><strong className="text-slate-700 dark:text-slate-300">Time Slot:</strong> {apt.timeSlot}</span>
+                        <span><strong className="text-slate-700 dark:text-slate-300">Time Slot:</strong> {apt.appointmentTime || apt.timeSlot}</span>
                       </div>
                     </div>
                   </div>

@@ -4,6 +4,7 @@ import { User, Calendar, Clock, ClipboardList, CheckCircle, ArrowLeft, ArrowRigh
 import { motion, AnimatePresence } from 'framer-motion';
 import PageContainer from '../components/layout/PageContainer';
 import { getDoctors, bookAppointment, getWorkloadSummary } from '../api/services';
+import { appointmentAPI } from '../services/api';
 
 export default function BookAppointment() {
   const location = useLocation();
@@ -12,6 +13,7 @@ export default function BookAppointment() {
   const initialState = location.state || {};
   
   const [doctors, setDoctors] = useState([]);
+  const [existingAppointments, setExistingAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [recommendedDoctorId, setRecommendedDoctorId] = useState(null);
 
@@ -125,6 +127,29 @@ export default function BookAppointment() {
     fetchDoctors();
   }, [initialState, istDateStr]);
 
+  // Fetch active appointments to determine occupied slots vs freed/available slots
+  useEffect(() => {
+    const fetchExistingAppointments = async () => {
+      if (!selectedDoctorId || !selectedDate) return;
+      try {
+        const data = await appointmentAPI.getAll();
+        setExistingAppointments(data);
+      } catch (err) {
+        console.error("Failed to fetch existing appointments", err);
+      }
+    };
+    fetchExistingAppointments();
+  }, [selectedDoctorId, selectedDate]);
+
+  // Calculate occupied time slots (Only 'booked' or 'completed' status blocks the slot; 'cancelled' appointments leave the slot FREE)
+  const bookedSlotTimes = existingAppointments
+    .filter(apt => 
+      String(apt.doctorId) === String(selectedDoctorId) &&
+      apt.appointmentDate === selectedDate &&
+      (apt.status === 'booked' || apt.status === 'completed')
+    )
+    .map(apt => apt.appointmentTime);
+
   const selectedDoctor = doctors.find(d => d._id === selectedDoctorId);
 
   // Generate time slots based on doctor's hours and filter by IST timezone
@@ -172,12 +197,12 @@ export default function BookAppointment() {
 
   const timeSlots = generateTimeSlots(selectedDoctor);
 
-  // Reset selected time if selected slot is no longer available
+  // Reset selected time if selected slot is occupied or no longer available
   useEffect(() => {
-    if (selectedTime && !timeSlots.includes(selectedTime)) {
+    if (selectedTime && (bookedSlotTimes.includes(selectedTime) || !timeSlots.includes(selectedTime))) {
       setSelectedTime('');
     }
-  }, [selectedDate, selectedDoctorId, timeSlots, selectedTime]);
+  }, [selectedDate, selectedDoctorId, timeSlots, bookedSlotTimes, selectedTime]);
 
   const handleInputChange = (e) => {
     setPatientDetails({
@@ -468,15 +493,35 @@ export default function BookAppointment() {
                         <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-3">Available Time Slots</label>
                         {timeSlots.length > 0 ? (
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            {timeSlots.map(time => (
-                              <div 
-                                key={time}
-                                onClick={() => setSelectedTime(time)}
-                                className={`p-3 text-center rounded-xl border-2 cursor-pointer transition-all font-medium text-sm flex items-center justify-center gap-2 ${selectedTime === time ? 'border-blue-600 bg-blue-600 text-white shadow-md' : 'border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'}`}
-                              >
-                                <Clock size={14} className={selectedTime === time ? 'text-white' : 'text-slate-400'} /> {time}
-                              </div>
-                            ))}
+                            {timeSlots.map(time => {
+                              const isBooked = bookedSlotTimes.includes(time);
+                              if (isBooked) {
+                                return (
+                                  <div 
+                                    key={time} 
+                                    className="p-3 text-center rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/40 text-slate-400 cursor-not-allowed text-sm flex items-center justify-between px-3 font-medium opacity-70"
+                                    title="This slot is currently occupied"
+                                  >
+                                    <span className="flex items-center gap-1 line-through">
+                                      <Clock size={14} /> {time}
+                                    </span>
+                                    <span className="text-[10px] bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400 font-bold px-2 py-0.5 rounded-full">
+                                      Occupied
+                                    </span>
+                                  </div>
+                                );
+                              }
+
+                              return (
+                                <div 
+                                  key={time}
+                                  onClick={() => setSelectedTime(time)}
+                                  className={`p-3 text-center rounded-xl border-2 cursor-pointer transition-all font-medium text-sm flex items-center justify-center gap-2 ${selectedTime === time ? 'border-blue-600 bg-blue-600 text-white shadow-md' : 'border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'}`}
+                                >
+                                  <Clock size={14} className={selectedTime === time ? 'text-white' : 'text-slate-400'} /> {time}
+                                </div>
+                              );
+                            })}
                           </div>
                         ) : (
                           <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-amber-800 dark:text-amber-300 text-xs font-semibold text-center leading-relaxed">
