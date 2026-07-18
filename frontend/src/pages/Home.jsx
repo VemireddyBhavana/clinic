@@ -56,6 +56,7 @@ export default function Home() {
   };
   const istTodayStr = getISTDateStr();
 
+  const [symptoms, setSymptoms] = useState('');
   const [preferredDate, setPreferredDate] = useState(istTodayStr);
   const [triageLoading, setTriageLoading] = useState(false);
   const [triageResult, setTriageResult] = useState(null);
