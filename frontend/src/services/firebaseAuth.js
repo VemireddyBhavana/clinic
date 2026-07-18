@@ -142,15 +142,25 @@ export const signInWithGoogle = async (role = 'patient') => {
   }
 };
 
+// Helper to infer role from email if not explicitly set
+const inferRoleFromEmail = (email, requestedRole = 'patient') => {
+  const lower = (email || '').toLowerCase();
+  if (lower.startsWith('doctor') || lower.includes('doctor@') || lower.startsWith('dr.')) return 'doctor';
+  if (lower.startsWith('admin') || lower.includes('admin@')) return 'admin';
+  return requestedRole;
+};
+
 // Email Login
 export const loginWithEmail = async (email, password, role = 'patient') => {
+  const finalRole = inferRoleFromEmail(email, role);
+
   if (isMock || !auth) {
     const matched = mockUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
-    const activeUser = matched || { email, name: email.split('@')[0], role, token: 'user-session-' + Date.now() };
-    const finalUser = { ...activeUser, role };
+    const activeUser = matched || { email, name: email.split('@')[0], role: finalRole, token: 'user-session-' + Date.now() };
+    const finalUser = { ...activeUser, role: finalRole };
     localStorage.setItem('adminToken', finalUser.token);
     localStorage.setItem('adminInfo', JSON.stringify(finalUser));
-    return { user: finalUser, role };
+    return { user: finalUser, role: finalRole };
   }
 
   try {
@@ -160,12 +170,12 @@ export const loginWithEmail = async (email, password, role = 'patient') => {
     const userData = {
       email: firebaseUser.email,
       name: firebaseUser.displayName || email.split('@')[0],
-      role,
+      role: finalRole,
       token: firebaseUser.uid
     };
     localStorage.setItem('adminToken', userData.token);
     localStorage.setItem('adminInfo', JSON.stringify(userData));
-    return { user: userData, role };
+    return { user: userData, role: finalRole };
   } catch (signInError) {
     const code = signInError.code || '';
     
@@ -177,18 +187,18 @@ export const loginWithEmail = async (email, password, role = 'patient') => {
         const userData = {
           email: firebaseUser.email,
           name: firebaseUser.displayName || email.split('@')[0],
-          role,
+          role: finalRole,
           token: firebaseUser.uid
         };
         localStorage.setItem('adminToken', userData.token);
         localStorage.setItem('adminInfo', JSON.stringify(userData));
-        return { user: userData, role };
+        return { user: userData, role: finalRole };
       } catch (createError) {
         if (isSystemConfigError(createError)) {
-          const fallbackUser = { email, name: email.split('@')[0], role, token: 'user-session-' + Date.now() };
+          const fallbackUser = { email, name: email.split('@')[0], role: finalRole, token: 'user-session-' + Date.now() };
           localStorage.setItem('adminToken', fallbackUser.token);
           localStorage.setItem('adminInfo', JSON.stringify(fallbackUser));
-          return { user: fallbackUser, role };
+          return { user: fallbackUser, role: finalRole };
         }
         throw new Error(formatAuthError(createError));
       }
@@ -197,10 +207,10 @@ export const loginWithEmail = async (email, password, role = 'patient') => {
     // If domain / API key / config restriction error from Firebase, use fallback login session
     if (isSystemConfigError(signInError)) {
       console.warn("Firebase Auth system restriction encountered. Falling back to local auth session:", signInError);
-      const fallbackUser = { email, name: email.split('@')[0], role, token: 'user-session-' + Date.now() };
+      const fallbackUser = { email, name: email.split('@')[0], role: finalRole, token: 'user-session-' + Date.now() };
       localStorage.setItem('adminToken', fallbackUser.token);
       localStorage.setItem('adminInfo', JSON.stringify(fallbackUser));
-      return { user: fallbackUser, role };
+      return { user: fallbackUser, role: finalRole };
     }
 
     // Otherwise throw formatted auth error (e.g. wrong password)
